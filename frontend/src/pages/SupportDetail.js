@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import { FaDownload } from "react-icons/fa";
 import { getSupportArticleBySlug } from "../services/api";
@@ -8,18 +8,18 @@ const SupportDetail = () => {
   const { slug } = useParams();
   const [article, setArticle] = useState(null);
 
-  useEffect(() => {
-    fetchArticle();
-  }, [slug]);
-
-  const fetchArticle = async () => {
+  const fetchArticle = useCallback(async () => {
     try {
       const response = await getSupportArticleBySlug(slug);
       setArticle(response.data);
     } catch (error) {
       console.error("Error fetching article:", error);
     }
-  };
+  }, [slug]);
+
+  useEffect(() => {
+    fetchArticle();
+  }, [fetchArticle]);
 
   if (!article) {
     return <div className="loading">Loading...</div>;
