@@ -1,0 +1,230 @@
+.header {
+  background-color: white;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.top-section {
+  background-size: cover;
+  background-position: center;
+  border-bottom: 3px solid #f0f0f0;
+  transition: all 0.3s ease;
+}
+
+.top-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 25px;
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  transition: transform 0.3s ease;
+}
+
+.logo-section:hover {
+  transform: scale(1.02);
+}
+
+.logo {
+  height: 70px;
+  width: auto;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+.logo:hover {
+  transform: rotate(5deg);
+}
+
+.company-name {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #2c3e50;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
+
+.contact-info {
+  text-align: right;
+}
+
+.contact-info p {
+  margin: 8px 0;
+  color: #555;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.contact-info p::before {
+  content: "📍";
+  font-size: 1.1rem;
+}
+
+.contact-info .phone::before {
+  content: "📞";
+}
+
+.navbar {
+  background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+  padding: 0;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+.navbar .container {
+  position: relative;
+}
+
+.menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.8rem;
+  cursor: pointer;
+  padding: 15px;
+  transition: transform 0.3s ease;
+}
+
+.menu-toggle:hover {
+  transform: scale(1.1);
+}
+
+.nav-menu {
+  display: flex;
+  list-style: none;
+  justify-content: center;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-menu li {
+  margin: 0;
+  position: relative;
+}
+
+.nav-menu a {
+  display: block;
+  padding: 18px 30px;
+  color: white;
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  position: relative;
+  text-transform: uppercase;
+}
+
+.nav-menu a::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #667eea, #764ba2);
+  transition: width 0.3s ease;
+}
+
+.nav-menu a:hover::before,
+.nav-menu a.active::before {
+  width: 80%;
+}
+
+.nav-menu a:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+@media (max-width: 968px) {
+  .top-content {
+    justify-content: center;
+  }
+
+  .contact-info {
+    text-align: center;
+  }
+
+  .contact-info p {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .menu-toggle {
+    display: block;
+  }
+
+  .nav-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    background: linear-gradient(180deg, #2c3e50 0%, #34495e 100%);
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  }
+
+  .nav-menu.active {
+    max-height: 600px;
+  }
+
+  .nav-menu li {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .nav-menu a {
+    padding: 18px 25px;
+  }
+
+  .nav-menu a::before {
+    display: none;
+  }
+
+  .top-content {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .logo-section {
+    flex-direction: column;
+  }
+
+  .company-name {
+    font-size: 1.6rem;
+  }
+
+  .logo {
+    height: 60px;
+  }
+
+  .contact-info {
+    text-align: center;
+  }
+
+  .contact-info p {
+    justify-content: center;
+    font-size: 0.9rem;
+  }
+}

@@ -1,0 +1,360 @@
+.home-page {
+  background-color: #ffffff;
+}
+
+/* Slideshow Section - Full Width */
+.hero-slideshow-section {
+  position: relative;
+  width: 100%;
+  background-color: #000;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 600px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.slide-item {
+  position: relative;
+  background-color: #f5f5f5;
+  cursor: pointer;
+}
+
+/* Link wrapper cho slide có thể click */
+.slide-link-wrapper {
+  display: block;
+  position: relative;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.3s ease;
+}
+
+.slide-link-wrapper:hover {
+  transform: scale(1.02);
+}
+
+.slide-link-wrapper:hover .slide-overlay {
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.4));
+}
+
+.slide-no-link {
+  display: block;
+  position: relative;
+}
+
+.slide-image,
+.slide-video {
+  width: 100%;
+  height: 600px;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.slide-link-wrapper:hover .slide-image {
+  transform: scale(1.05);
+  filter: brightness(0.9);
+}
+
+/* Overlay với gradient */
+.slide-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.3));
+  padding: 40px;
+  transition: all 0.3s ease;
+}
+
+.slide-content {
+  color: white;
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.slide-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0 0 15px 0;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+}
+
+.slide-description {
+  font-size: 1.2rem;
+  opacity: 0.95;
+  margin: 0;
+  font-weight: 400;
+}
+
+.slide-link-wrapper:hover .slide-description {
+  opacity: 1;
+  transform: translateY(-5px);
+  transition: all 0.3s ease;
+}
+
+.slide-number {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 8px 15px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.no-slides {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 600px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-size: 1.2rem;
+}
+
+/* Stats Section */
+.stats-section {
+  padding: 60px 0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.stat-card {
+  text-align: center;
+  padding: 30px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  backdrop-filter: blur(10px);
+  transition: transform 0.3s ease, background 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-10px);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.stat-card .stat-number {
+  display: block;
+  font-size: 3rem;
+  font-weight: 700;
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  line-height: 1;
+  margin-bottom: 10px;
+}
+
+.stat-card .stat-label {
+  display: block;
+  font-size: 1.1rem;
+  color: white;
+  opacity: 0.9;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.slogan-section {
+  padding: 80px 0;
+  text-align: center;
+  background: linear-gradient(180deg, #f8f9fa 0%, #e9ecef 100%);
+  position: relative;
+}
+
+.slogan-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 4px;
+  background: linear-gradient(90deg, #667eea, #764ba2);
+  border-radius: 2px;
+}
+
+.slogan-item {
+  margin: 40px 0;
+  animation: fadeInUp 0.6s ease-out;
+  animation-fill-mode: both;
+}
+
+.slogan-item:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.slogan-item:nth-child(2) {
+  animation-delay: 0.3s;
+}
+
+.slogan-item:nth-child(3) {
+  animation-delay: 0.5s;
+}
+
+.slogan-item h2 {
+  font-size: 2.2rem;
+  color: #2c3e50;
+  font-weight: 400;
+  font-style: italic;
+  line-height: 1.5;
+  position: relative;
+  display: inline-block;
+  padding: 0 20px;
+}
+
+.slogan-item h2::before,
+.slogan-item h2::after {
+  content: '"';
+  font-size: 3rem;
+  color: #667eea;
+  font-weight: 700;
+  opacity: 0.3;
+}
+
+.slogan-item h2::before {
+  margin-right: 10px;
+}
+
+.slogan-item h2::after {
+  margin-left: 10px;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 968px) {
+  .slide-image,
+  .slide-video {
+    height: 450px;
+  }
+
+  .slide-title {
+    font-size: 2rem;
+  }
+
+  .slide-description {
+    font-size: 1rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .stat-card .stat-number {
+    font-size: 2.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .slide-image,
+  .slide-video {
+    height: 350px;
+  }
+
+  .slide-title {
+    font-size: 1.5rem;
+  }
+
+  .slide-description {
+    font-size: 0.9rem;
+  }
+
+  .slide-overlay {
+    padding: 25px;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .stat-card {
+    padding: 25px;
+  }
+
+  .slogan-section {
+    padding: 50px 0;
+  }
+
+  .slogan-item {
+    margin: 25px 0;
+  }
+
+  .slogan-item h2 {
+    font-size: 1.5rem;
+  }
+
+  .slogan-item h2::before,
+  .slogan-item h2::after {
+    font-size: 2rem;
+  }
+}
+
+/* Slider Navigation Arrows Styling */
+.hero-slider .slick-prev,
+.hero-slider .slick-next {
+  width: 50px;
+  height: 50px;
+  z-index: 10;
+}
+
+.hero-slider .slick-prev {
+  left: 25px;
+}
+
+.hero-slider .slick-next {
+  right: 25px;
+}
+
+.hero-slider .slick-prev:before,
+.hero-slider .slick-next:before {
+  font-size: 40px;
+  opacity: 0.75;
+}
+
+.hero-slider .slick-prev:hover:before,
+.hero-slider .slick-next:hover:before {
+  opacity: 1;
+}
+
+/* Slider Dots Styling */
+.hero-slider .slick-dots {
+  bottom: 25px;
+}
+
+.hero-slider .slick-dots li button:before {
+  font-size: 12px;
+  color: white;
+  opacity: 0.5;
+}
+
+.hero-slider .slick-dots li.slick-active button:before {
+  opacity: 1;
+  color: #007bff;
+}

@@ -1,0 +1,66 @@
+const mongoose = require("mongoose");
+
+const companyInfoSchema = new mongoose.Schema(
+  {
+    companyName: {
+      type: String,
+      required: true,
+    },
+    logo: {
+      type: String,
+      default: "",
+    },
+    address: {
+      type: String,
+      default: "",
+    },
+    phone: {
+      type: String,
+      default: "",
+    },
+    email: {
+      type: String,
+      default: "",
+    },
+    about: {
+      type: String,
+      default: "",
+    },
+    aboutImages: [
+      {
+        type: String,
+      },
+    ],
+    aboutVideos: [
+      {
+        type: String,
+      },
+    ],
+    socialLinks: {
+      zalo: { type: String, default: "" },
+      youtube: { type: String, default: "" },
+      instagram: { type: String, default: "" },
+      whatsapp: { type: String, default: "" },
+    },
+    partners: [
+      {
+        name: String,
+        logo: String,
+        website: String,
+      },
+    ],
+    topSectionBg: {
+      type: String,
+      default: "",
+    },
+    topSectionBgColor: {
+      type: String,
+      default: "#ffffff",
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
+
+module.exports = mongoose.model("CompanyInfo", companyInfoSchema);
