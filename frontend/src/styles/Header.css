@@ -1,15 +1,17 @@
 .header {
   background-color: white;
-  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.15);
   position: sticky;
   top: 0;
   z-index: 1000;
 }
 
 .top-section {
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
   background-size: cover;
   background-position: center;
-  border-bottom: 3px solid #f0f0f0;
+  border-bottom: 2px solid transparent;
+  border-image: linear-gradient(90deg, #1e3c72, #2a5298, #1e3c72) 1;
   transition: all 0.3s ease;
 }
 
@@ -33,14 +35,17 @@
 }
 
 .logo {
-  height: 70px;
+  height: 85px;
   width: auto;
+  max-width: 280px;
   object-fit: contain;
-  transition: transform 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  filter: drop-shadow(3px 3px 8px rgba(30, 60, 114, 0.2));
 }
 
 .logo:hover {
-  transform: rotate(5deg);
+  transform: scale(1.08) translateY(-2px);
+  filter: drop-shadow(5px 5px 15px rgba(30, 60, 114, 0.4));
 }
 
 .company-name {
@@ -82,29 +87,67 @@
   content: "📞";
 }
 
+/* ===== NAVBAR COLOR OPTIONS ===== */
+/* Uncomment one of the options below to match your logo colors */
+
+/* Option A: Gradient Xanh Dương Hiện Đại (Modern Blue) - ĐANG CHỌN */
 .navbar {
-  background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #1e3c72 100%);
   padding: 0;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.navbar::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  animation: shine 3s infinite;
+}
+
+@keyframes shine {
+  0% {
+    left: -100%;
+  }
+  50%,
+  100% {
+    left: 100%;
+  }
 }
 
 .navbar .container {
   position: relative;
+  z-index: 1;
 }
 
 .menu-toggle {
   display: none;
-  background: none;
-  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
   color: white;
   font-size: 1.8rem;
   cursor: pointer;
-  padding: 15px;
-  transition: transform 0.3s ease;
+  padding: 12px 15px;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
 }
 
 .menu-toggle:hover {
-  transform: scale(1.1);
+  transform: scale(1.05);
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
 .nav-menu {
@@ -127,8 +170,8 @@
   color: white;
   font-weight: 600;
   font-size: 1rem;
-  letter-spacing: 0.5px;
-  transition: all 0.3s ease;
+  letter-spacing: 1px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   text-transform: uppercase;
 }
@@ -140,18 +183,37 @@
   left: 50%;
   transform: translateX(-50%);
   width: 0;
-  height: 3px;
-  background: linear-gradient(90deg, #667eea, #764ba2);
-  transition: width 0.3s ease;
+  height: 4px;
+  background: linear-gradient(90deg, #ffffff, #a8d8ff, #ffffff);
+  border-radius: 2px;
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.nav-menu a::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.1);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.nav-menu a:hover::after {
+  opacity: 1;
 }
 
 .nav-menu a:hover::before,
 .nav-menu a.active::before {
-  width: 80%;
+  width: 85%;
 }
 
 .nav-menu a:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
 }
 
 @media (max-width: 968px) {

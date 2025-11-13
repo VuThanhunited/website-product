@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Slider from "react-slick";
 import { Link } from "react-router-dom";
-import { getMediaSlides, getSlogans } from "../services/api";
+import { getProducts, getSlogans } from "../services/api";
 import "../styles/Home.css";
 
 const Home = () => {
@@ -15,11 +15,23 @@ const Home = () => {
 
   const fetchHomeData = async () => {
     try {
-      const [slidesResponse, slogansResponse] = await Promise.all([
-        getMediaSlides(),
+      const [productsResponse, slogansResponse] = await Promise.all([
+        getProducts(),
         getSlogans(),
       ]);
-      setSlides(slidesResponse.data);
+      // Lấy 6 sản phẩm featured hoặc 6 sản phẩm đầu tiên có hình ảnh
+      const productsWithImages = productsResponse.data.filter(
+        (product) => product.images && product.images.length > 0
+      );
+      // Ưu tiên sản phẩm featured, nếu không đủ thì lấy thêm sản phẩm khác
+      const featuredProducts = productsWithImages.filter((p) => p.featured);
+      const remainingProducts = productsWithImages.filter((p) => !p.featured);
+      const selectedProducts = [
+        ...featuredProducts,
+        ...remainingProducts,
+      ].slice(0, 6);
+
+      setSlides(selectedProducts);
       setSlogans(slogansResponse.data);
     } catch (error) {
       console.error("Error fetching home data:", error);
@@ -49,101 +61,47 @@ const Home = () => {
           <div className="loading">Đang tải slideshow...</div>
         ) : slides.length > 0 ? (
           <Slider {...sliderSettings}>
-            {slides.map((slide, index) => (
-              <div key={index} className="slide-item">
-                {/* Bọc toàn bộ slide trong Link để có thể click */}
-                {slide.linkToProduct ? (
-                  <Link
-                    to={`/products/${slide.linkToProduct._id}`}
-                    className="slide-link-wrapper"
-                  >
-                    {/* Hình ảnh sản phẩm */}
-                    {slide.type === "image" ? (
+            {slides.map((product, index) => (
+              <div key={product._id} className="slide-item">
+                <Link
+                  to={`/products/${product._id}`}
+                  className="slide-link-wrapper"
+                >
+                  <div className="slide-layout">
+                    {/* Cột trái - Hình ảnh sản phẩm */}
+                    <div className="slide-image-container">
                       <img
-                        src={slide.url}
-                        alt={slide.caption || `Slide ${index + 1}`}
+                        src={product.images[0]}
+                        alt={product.name}
                         className="slide-image"
                       />
-                    ) : (
-                      <video className="slide-video">
-                        <source src={slide.url} type="video/mp4" />
-                        Trình duyệt không hỗ trợ video.
-                      </video>
-                    )}
+                    </div>
 
-                    {/* Overlay với caption và mô tả */}
-                    <div className="slide-overlay">
+                    {/* Cột phải - Mô tả sản phẩm */}
+                    <div className="slide-content-container">
                       <div className="slide-content">
-                        {slide.caption && (
-                          <h3 className="slide-title">{slide.caption}</h3>
-                        )}
+                        <h3 className="slide-title">{product.name}</h3>
                         <p className="slide-description">
-                          Click để xem chi tiết sản phẩm
+                          {product.description}
                         </p>
+                        <button className="slide-cta">Xem chi tiết →</button>
                       </div>
-                    </div>
-
-                    {/* Số thứ tự slide */}
-                    <div className="slide-number">
-                      {index + 1} / {slides.length}
-                    </div>
-                  </Link>
-                ) : (
-                  <div className="slide-no-link">
-                    {slide.type === "image" ? (
-                      <img
-                        src={slide.url}
-                        alt={slide.caption || `Slide ${index + 1}`}
-                        className="slide-image"
-                      />
-                    ) : (
-                      <video controls className="slide-video">
-                        <source src={slide.url} type="video/mp4" />
-                        Trình duyệt không hỗ trợ video.
-                      </video>
-                    )}
-
-                    {slide.caption && (
-                      <div className="slide-overlay">
-                        <div className="slide-content">
-                          <h3 className="slide-title">{slide.caption}</h3>
-                        </div>
-                      </div>
-                    )}
-
-                    <div className="slide-number">
-                      {index + 1} / {slides.length}
                     </div>
                   </div>
-                )}
+
+                  {/* Số thứ tự slide */}
+                  <div className="slide-number">
+                    {index + 1} / {slides.length}
+                  </div>
+                </Link>
               </div>
             ))}
           </Slider>
         ) : (
           <div className="no-slides">
-            <p>Chưa có media nào để hiển thị</p>
+            <p>Chưa có sản phẩm nào để hiển thị</p>
           </div>
         )}
-      </section>
-
-      {/* Phần thống kê nhanh */}
-      <section className="stats-section">
-        <div className="container">
-          <div className="stats-grid">
-            <div className="stat-card">
-              <span className="stat-number">{slides.length}</span>
-              <span className="stat-label">Sản phẩm nổi bật</span>
-            </div>
-            <div className="stat-card">
-              <span className="stat-number">100+</span>
-              <span className="stat-label">Sản phẩm</span>
-            </div>
-            <div className="stat-card">
-              <span className="stat-number">24/7</span>
-              <span className="stat-label">Hỗ trợ 24/7</span>
-            </div>
-          </div>
-        </div>
       </section>
 
       {/* Phần slogan */}
@@ -166,6 +124,102 @@ const Home = () => {
               </div>
             );
           })}
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="features-section">
+        <div className="container">
+          <div className="features-grid">
+            <div className="feature-card">
+              <div className="feature-icon">🚚</div>
+              <h3>Miễn Phí Vận Chuyển</h3>
+              <p>Giao hàng miễn phí cho đơn hàng trên 500.000₫</p>
+            </div>
+            <div className="feature-card">
+              <div className="feature-icon">✅</div>
+              <h3>Chính Hãng 100%</h3>
+              <p>Sản phẩm Kuiper chính hãng, bảo hành đầy đủ</p>
+            </div>
+            <div className="feature-card">
+              <div className="feature-icon">💳</div>
+              <h3>Thanh Toán Linh Hoạt</h3>
+              <p>Hỗ trợ nhiều hình thức thanh toán an toàn</p>
+            </div>
+            <div className="feature-card">
+              <div className="feature-icon">🎁</div>
+              <h3>Ưu Đãi Hấp Dẫn</h3>
+              <p>Nhiều chương trình khuyến mãi mỗi tuần</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Why Choose Us Section */}
+      <section className="why-choose-section">
+        <div className="container">
+          <h2 className="section-title">Tại Sao Chọn Chúng Tôi?</h2>
+          <div className="why-choose-grid">
+            <div className="why-item">
+              <div className="why-image">
+                <div className="why-icon-bg">🏆</div>
+              </div>
+              <div className="why-content">
+                <h3>Uy Tín Hàng Đầu</h3>
+                <p>
+                  Đối tác tin cậy của hàng nghìn khách hàng trên toàn quốc với
+                  5+ năm kinh nghiệm
+                </p>
+              </div>
+            </div>
+            <div className="why-item">
+              <div className="why-image">
+                <div className="why-icon-bg">🔬</div>
+              </div>
+              <div className="why-content">
+                <h3>Chất Lượng Đảm Bảo</h3>
+                <p>
+                  Sản phẩm được kiểm tra kỹ lưỡng, đạt chuẩn chất lượng quốc tế
+                </p>
+              </div>
+            </div>
+            <div className="why-item">
+              <div className="why-image">
+                <div className="why-icon-bg">💬</div>
+              </div>
+              <div className="why-content">
+                <h3>Hỗ Trợ 24/7</h3>
+                <p>
+                  Đội ngũ tư vấn chuyên nghiệp, nhiệt tình hỗ trợ mọi lúc mọi
+                  nơi
+                </p>
+              </div>
+            </div>
+            <div className="why-item">
+              <div className="why-image">
+                <div className="why-icon-bg">⚡</div>
+              </div>
+              <div className="why-content">
+                <h3>Giao Hàng Nhanh</h3>
+                <p>Xử lý đơn hàng trong 24h, giao hàng toàn quốc 2-5 ngày</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="home-cta-section">
+        <div className="container">
+          <div className="cta-content">
+            <h2>Khám Phá Sản Phẩm Kuiper</h2>
+            <p>
+              15+ sản phẩm chăm sóc xe hơi chất lượng cao đang chờ bạn khám phá
+            </p>
+            <Link to="/products" className="cta-button">
+              Xem Tất Cả Sản Phẩm →
+            </Link>
+          </div>
         </div>
       </section>
     </div>

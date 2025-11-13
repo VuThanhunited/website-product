@@ -39,12 +39,17 @@ const Header = () => {
         <div className="container">
           <div className="top-content">
             <Link to="/" className="logo-section">
-              {companyInfo?.logo && (
-                <img src={companyInfo.logo} alt="Logo" className="logo" />
+              {companyInfo?.logo ? (
+                <img
+                  src={`http://localhost:5000${companyInfo.logo}`}
+                  alt={companyInfo.companyName || "Logo"}
+                  className="logo"
+                />
+              ) : (
+                <h1 className="company-name">
+                  {companyInfo?.companyName || "Company Name"}
+                </h1>
               )}
-              <h1 className="company-name">
-                {companyInfo?.companyName || "Company Name"}
-              </h1>
             </Link>
             <div className="header-right">
               <div className="contact-info">

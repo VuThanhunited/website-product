@@ -24,21 +24,30 @@ const Support = () => {
       <div className="container">
         <h1>Trung tâm hỗ trợ</h1>
 
-        <div className="articles-list">
+        <div className="articles-grid">
           {articles.map((article) => (
             <Link
               to={`/support/${article.slug}`}
               key={article._id}
               className="article-card"
             >
-              {article.thumbnail && (
-                <img src={article.thumbnail} alt={article.title} />
-              )}
+              <div className="article-thumbnail">
+                {article.thumbnail ? (
+                  <img src={article.thumbnail} alt={article.title} />
+                ) : (
+                  <div className="no-thumbnail">
+                    <span>📄</span>
+                  </div>
+                )}
+              </div>
               <div className="article-info">
                 <h3>{article.title}</h3>
-                <p>{article.content?.substring(0, 150)}...</p>
+                <p className="article-excerpt">
+                  {article.content?.replace(/<[^>]*>/g, "").substring(0, 120)}
+                  ...
+                </p>
                 <div className="article-meta">
-                  <span className="views">{article.views} lượt xem</span>
+                  <span className="views">👁 {article.views} lượt xem</span>
                   <span className="date">
                     {new Date(article.createdAt).toLocaleDateString("vi-VN")}
                   </span>

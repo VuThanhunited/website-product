@@ -32,18 +32,41 @@ const seedDatabase = async () => {
 
     // Create Company Info
     const companyInfo = await CompanyInfo.create({
-      companyName: "My E-Commerce Company",
-      address: "123 Business Street, City, Country",
-      phone: "+1 234 567 8900",
-      email: "info@mycompany.com",
+      companyName: "Công Ty Thương Mại Điện Tử",
+      logo: "/uploads/logo.png",
+      address: "123 Đường Kinh Doanh, Thành Phố, Quốc Gia",
+      phone: "+84 234 567 890",
+      email: "info@congty.vn",
       about:
-        "<h2>About Our Company</h2><p>We are a leading provider of quality products...</p>",
+        "<h2>Về Công Ty Chúng Tôi</h2><p>Chúng tôi là nhà cung cấp hàng đầu các sản phẩm chất lượng cao...</p>",
       socialLinks: {
-        zalo: "https://zalo.me/yourcompany",
-        youtube: "https://youtube.com/@yourcompany",
-        instagram: "https://instagram.com/yourcompany",
-        whatsapp: "1234567890",
+        zalo: "https://zalo.me/congtyban",
+        youtube: "https://youtube.com/@congtyban",
+        instagram: "https://instagram.com/congtyban",
+        whatsapp: "84234567890",
       },
+      partners: [
+        {
+          name: "Shopee",
+          logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Shopee_logo.svg/200px-Shopee_logo.svg.png",
+          website: "https://shopee.vn",
+        },
+        {
+          name: "Lazada",
+          logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Lazada_Logo.png/200px-Lazada_Logo.png",
+          website: "https://lazada.vn",
+        },
+        {
+          name: "Tiki",
+          logo: "https://salt.tikicdn.com/ts/upload/e4/49/6c/270be9859abd5f5ec5071da65fab0a94.png",
+          website: "https://tiki.vn",
+        },
+        {
+          name: "Sendo",
+          logo: "https://media.sendo.vn/image/png/logo_sendo.png",
+          website: "https://sendo.vn",
+        },
+      ],
       topSectionBgColor: "#f0f0f0",
     });
     console.log("Created company info");
@@ -51,27 +74,27 @@ const seedDatabase = async () => {
     // Create Categories
     const categories = await Category.create([
       {
-        name: "Electronics",
-        slug: "electronics",
-        description: "Electronic devices and gadgets",
+        name: "Điện tử",
+        slug: "dien-tu",
+        description: "Thiết bị và đồ dùng điện tử",
         order: 1,
       },
       {
-        name: "Clothing",
-        slug: "clothing",
-        description: "Fashion and apparel",
+        name: "Quần áo",
+        slug: "quan-ao",
+        description: "Thời trang và trang phục",
         order: 2,
       },
       {
-        name: "Home & Garden",
-        slug: "home-garden",
-        description: "Home improvement and garden supplies",
+        name: "Nhà cửa & Vườn",
+        slug: "nha-cua-vuon",
+        description: "Đồ dùng cải thiện nhà cửa và vườn",
         order: 3,
       },
       {
-        name: "Sports",
-        slug: "sports",
-        description: "Sports equipment and accessories",
+        name: "Thể thao",
+        slug: "the-thao",
+        description: "Thiết bị và phụ kiện thể thao",
         order: 4,
       },
     ]);
@@ -80,71 +103,69 @@ const seedDatabase = async () => {
     // Create Products
     const products = await Product.create([
       {
-        name: "Wireless Headphones",
-        slug: "wireless-headphones",
-        description: "High-quality wireless headphones with noise cancellation",
-        price: 99.99,
+        name: "Tai Nghe Không Dây",
+        slug: "tai-nghe-khong-day",
+        description: "Tai nghe không dây chất lượng cao với chống ồn",
+        price: 2499000,
         category: categories[0]._id,
-        images: [
-          "https://via.placeholder.com/400x400?text=Wireless+Headphones",
-        ],
+        images: ["https://via.placeholder.com/400x400?text=Tai+Nghe"],
         featured: true,
         inStock: true,
-        options: [{ name: "Color", values: ["Black", "White", "Blue"] }],
+        options: [{ name: "Màu sắc", values: ["Đen", "Trắng", "Xanh"] }],
       },
       {
-        name: "Smart Watch",
-        slug: "smart-watch",
-        description: "Feature-rich smartwatch with fitness tracking",
-        price: 199.99,
+        name: "Đồng Hồ Thông Minh",
+        slug: "dong-ho-thong-minh",
+        description: "Đồng hồ thông minh đa tính năng với theo dõi sức khỏe",
+        price: 4999000,
         category: categories[0]._id,
-        images: ["https://via.placeholder.com/400x400?text=Smart+Watch"],
+        images: ["https://via.placeholder.com/400x400?text=Dong+Ho"],
         featured: true,
         inStock: true,
       },
       {
-        name: "Cotton T-Shirt",
-        slug: "cotton-tshirt",
-        description: "Comfortable 100% cotton t-shirt",
-        price: 19.99,
+        name: "Áo Thun Cotton",
+        slug: "ao-thun-cotton",
+        description: "Áo thun 100% cotton thoải mái",
+        price: 199000,
         category: categories[1]._id,
-        images: ["https://via.placeholder.com/400x400?text=T-Shirt"],
+        images: ["https://via.placeholder.com/400x400?text=Ao+Thun"],
         inStock: true,
         options: [
-          { name: "Size", values: ["S", "M", "L", "XL"] },
-          { name: "Color", values: ["Red", "Blue", "Green", "Black"] },
+          { name: "Kích cỡ", values: ["S", "M", "L", "XL"] },
+          { name: "Màu sắc", values: ["Đỏ", "Xanh", "Xanh Lá", "Đen"] },
         ],
       },
       {
-        name: "Denim Jeans",
-        slug: "denim-jeans",
-        description: "Classic denim jeans with modern fit",
-        price: 49.99,
+        name: "Quần Jean",
+        slug: "quan-jean",
+        description: "Quần jean cổ điển với kiểu dáng hiện đại",
+        price: 599000,
         category: categories[1]._id,
-        images: ["https://via.placeholder.com/400x400?text=Jeans"],
+        images: ["https://via.placeholder.com/400x400?text=Quan+Jean"],
         featured: true,
         inStock: true,
       },
       {
-        name: "Garden Tools Set",
-        slug: "garden-tools-set",
-        description: "Complete set of essential garden tools",
-        price: 79.99,
+        name: "Bộ Dụng Cụ Làm Vườn",
+        slug: "bo-dung-cu-lam-vuon",
+        description: "Bộ dụng cụ làm vườn đầy đủ thiết yếu",
+        price: 999000,
         category: categories[2]._id,
-        images: ["https://via.placeholder.com/400x400?text=Garden+Tools"],
+        images: ["https://via.placeholder.com/400x400?text=Dung+Cu+Vuon"],
         inStock: true,
       },
       {
-        name: "Yoga Mat",
-        slug: "yoga-mat",
-        description: "Non-slip yoga mat for comfortable practice",
-        price: 29.99,
+        name: "Thảm Tập Yoga",
+        slug: "tham-tap-yoga",
+        description: "Thảm yoga chống trượt cho buổi tập thoải mái",
+        price: 299000,
         category: categories[3]._id,
-        images: ["https://via.placeholder.com/400x400?text=Yoga+Mat"],
+        images: ["https://via.placeholder.com/400x400?text=Tham+Yoga"],
         featured: true,
         inStock: true,
         options: [
-          { name: "Color", values: ["Purple", "Blue", "Green", "Pink"] },
+          { name: "Màu sắc", values: ["Tím", "Xanh", "Xanh Lá", "Hồng"] },
         ],
       },
     ]);
@@ -205,44 +226,128 @@ const seedDatabase = async () => {
 
     // Create Slogans
     const slogans = await Slogan.create([
-      { text: "Quality Products at Affordable Prices", order: 1, active: true },
-      { text: "Fast Shipping Worldwide", order: 2, active: true },
-      { text: "Customer Satisfaction Guaranteed", order: 3, active: true },
+      {
+        text: "Sản Phẩm Chất Lượng Với Giá Cả Phải Chăng",
+        order: 1,
+        active: true,
+      },
+      { text: "Giao Hàng Nhanh Chóng Toàn Quốc", order: 2, active: true },
+      { text: "Đảm Bảo Sự Hài Lòng Của Khách Hàng", order: 3, active: true },
     ]);
     console.log("Created slogans");
 
     // Create Support Articles
     const articles = await SupportArticle.create([
       {
-        title: "How to Place an Order",
-        slug: "how-to-place-order",
+        title: "Hướng Dẫn Đặt Hàng",
+        slug: "huong-dan-dat-hang",
         content:
-          "<p>Follow these simple steps to place your order...</p><ol><li>Browse our products</li><li>Add items to cart</li><li>Proceed to checkout</li><li>Complete payment</li></ol>",
-        thumbnail: "https://via.placeholder.com/300x200?text=Order+Guide",
+          "<p>Làm theo các bước đơn giản sau để đặt hàng:</p><ol><li>Duyệt qua các sản phẩm của chúng tôi</li><li>Thêm sản phẩm vào giỏ hàng</li><li>Tiến hành thanh toán</li><li>Hoàn tất thanh toán</li></ol><p>Để biết thêm chi tiết, vui lòng xem video hướng dẫn và tải xuống tài liệu đầy đủ bên dưới.</p>",
+        thumbnail:
+          "https://via.placeholder.com/300x200?text=Huong+Dan+Dat+Hang",
+        images: [
+          "https://via.placeholder.com/600x400?text=Buoc+1+Duyet+San+Pham",
+          "https://via.placeholder.com/600x400?text=Buoc+2+Them+Gio+Hang",
+        ],
+        videos: [
+          "https://www.w3schools.com/html/mov_bbb.mp4",
+          "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        ],
+        attachments: [
+          {
+            filename: "Huong_Dan_Dat_Hang_Chi_Tiet.pdf",
+            filepath:
+              "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+            filesize: 245000,
+          },
+          {
+            filename: "Mau_Don_Dat_Hang.xlsx",
+            filepath:
+              "https://file-examples.com/storage/fe783855be66792c45d0f28/2017/02/file_example_XLSX_10.xlsx",
+            filesize: 15000,
+          },
+        ],
         published: true,
       },
       {
-        title: "Shipping Information",
-        slug: "shipping-information",
+        title: "Thông Tin Vận Chuyển",
+        slug: "thong-tin-van-chuyen",
         content:
-          "<p>We offer various shipping options to meet your needs...</p><p>Standard shipping: 5-7 business days</p><p>Express shipping: 2-3 business days</p>",
-        thumbnail: "https://via.placeholder.com/300x200?text=Shipping",
+          "<p>Chúng tôi cung cấp nhiều phương thức vận chuyển để đáp ứng nhu cầu của bạn:</p><p><strong>Vận chuyển tiêu chuẩn:</strong> 5-7 ngày làm việc</p><p><strong>Vận chuyển nhanh:</strong> 2-3 ngày làm việc</p><p><strong>Vận chuyển hỏa tốc:</strong> 1 ngày làm việc</p><p>Xem video hướng dẫn về quy trình vận chuyển và tải xuống bảng giá chi tiết bên dưới.</p>",
+        thumbnail: "https://via.placeholder.com/300x200?text=Van+Chuyen",
+        videos: [
+          "https://www.w3schools.com/html/mov_bbb.mp4",
+          "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+        ],
+        attachments: [
+          {
+            filename: "Bang_Gia_Van_Chuyen.pdf",
+            filepath:
+              "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+            filesize: 180000,
+          },
+          {
+            filename: "Dieu_Khoan_Van_Chuyen.docx",
+            filepath:
+              "https://file-examples.com/storage/fe783855be66792c45d0f28/2017/02/file-sample_100kB.doc",
+            filesize: 98000,
+          },
+        ],
         published: true,
       },
       {
-        title: "Return Policy",
-        slug: "return-policy",
+        title: "Chính Sách Đổi Trả",
+        slug: "chinh-sach-doi-tra",
         content:
-          "<p>We accept returns within 30 days of purchase...</p><p>Items must be unused and in original packaging.</p>",
-        thumbnail: "https://via.placeholder.com/300x200?text=Returns",
+          "<p>Chúng tôi chấp nhận đổi trả trong vòng <strong>30 ngày</strong> kể từ ngày mua hàng.</p><h3>Điều kiện đổi trả:</h3><ul><li>Sản phẩm phải chưa sử dụng và còn nguyên bao bì</li><li>Giữ nguyên tem mác, nhãn hiệu</li><li>Có hóa đơn mua hàng</li><li>Không áp dụng cho sản phẩm giảm giá trên 50%</li></ul><p>Xem video hướng dẫn quy trình đổi trả và tải xuống mẫu đơn.</p>",
+        thumbnail: "https://via.placeholder.com/300x200?text=Doi+Tra",
+        images: ["https://via.placeholder.com/600x400?text=Quy+Trinh+Doi+Tra"],
+        videos: [
+          "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+        ],
+        attachments: [
+          {
+            filename: "Mau_Don_Doi_Tra.pdf",
+            filepath:
+              "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+            filesize: 125000,
+          },
+          {
+            filename: "Chinh_Sach_Doi_Tra_Chi_Tiet.pdf",
+            filepath:
+              "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+            filesize: 220000,
+          },
+        ],
         published: true,
       },
       {
-        title: "Payment Methods",
-        slug: "payment-methods",
+        title: "Phương Thức Thanh Toán",
+        slug: "phuong-thuc-thanh-toan",
         content:
-          "<p>We accept the following payment methods:</p><ul><li>Credit Cards (Visa, MasterCard, Amex)</li><li>PayPal</li><li>Bank Transfer</li></ul>",
-        thumbnail: "https://via.placeholder.com/300x200?text=Payments",
+          "<p>Chúng tôi chấp nhận các phương thức thanh toán sau:</p><h3>Thanh toán trực tuyến:</h3><ul><li>Thẻ tín dụng (Visa, MasterCard, Amex)</li><li>Thẻ ATM nội địa</li><li>Ví điện tử (MoMo, ZaloPay, VNPay)</li><li>PayPal</li></ul><h3>Thanh toán khi nhận hàng (COD):</h3><p>Áp dụng cho đơn hàng dưới 5.000.000 VNĐ</p><h3>Chuyển khoản ngân hàng:</h3><p>Thông tin tài khoản được gửi qua email sau khi đặt hàng.</p><p>Xem video hướng dẫn thanh toán trực tuyến bên dưới.</p>",
+        thumbnail: "https://via.placeholder.com/300x200?text=Thanh+Toan",
+        images: [
+          "https://via.placeholder.com/600x400?text=Phuong+Thuc+Thanh+Toan",
+        ],
+        videos: [
+          "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+          "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
+        ],
+        attachments: [
+          {
+            filename: "Huong_Dan_Thanh_Toan_Online.pdf",
+            filepath:
+              "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+            filesize: 195000,
+          },
+          {
+            filename: "Thong_Tin_Tai_Khoan_Ngan_Hang.pdf",
+            filepath:
+              "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+            filesize: 85000,
+          },
+        ],
         published: true,
       },
     ]);

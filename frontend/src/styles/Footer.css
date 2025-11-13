@@ -22,6 +22,21 @@
   padding-bottom: 10px;
 }
 
+.footer-logo {
+  height: 50px;
+  width: auto;
+  max-width: 160px;
+  object-fit: contain;
+  margin-bottom: 15px;
+  filter: drop-shadow(2px 2px 6px rgba(255, 255, 255, 0.15));
+  transition: all 0.3s ease;
+}
+
+.footer-logo:hover {
+  transform: scale(1.03);
+  filter: drop-shadow(3px 3px 10px rgba(255, 255, 255, 0.3));
+}
+
 .footer-section h3::after {
   content: "";
   position: absolute;
@@ -85,25 +100,38 @@
 .partner-logos {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: 15px;
   align-items: center;
+  justify-content: flex-start;
+  margin-top: 20px;
 }
 
 .partner-logos a {
   transition: all 0.3s ease;
+  background: white;
+  padding: 0;
+  border-radius: 8px;
+  border: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  text-decoration: none;
+  overflow: hidden;
 }
 
-.partner-logos img {
-  height: 60px;
+.partner-logos a:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+}
+
+.partner-logo-img {
+  height: 40px;
   width: auto;
-  filter: brightness(0) invert(1);
-  opacity: 0.6;
+  max-width: 120px;
+  display: block;
   transition: all 0.3s ease;
 }
 
-.partner-logos a:hover img {
-  opacity: 1;
-  transform: scale(1.1);
+.partner-logos a:hover .partner-logo-img {
+  filter: brightness(1.1);
 }
 
 .footer-bottom {

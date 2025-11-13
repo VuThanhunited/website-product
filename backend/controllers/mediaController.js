@@ -32,7 +32,7 @@ exports.updateMediaSlide = async (req, res) => {
       new: true,
     });
     if (!slide) {
-      return res.status(404).json({ error: "Slide not found" });
+      return res.status(404).json({ error: "Không tìm thấy slide" });
     }
     res.json(slide);
   } catch (error) {
@@ -45,9 +45,9 @@ exports.deleteMediaSlide = async (req, res) => {
   try {
     const slide = await MediaSlide.findByIdAndDelete(req.params.id);
     if (!slide) {
-      return res.status(404).json({ error: "Slide not found" });
+      return res.status(404).json({ error: "Không tìm thấy slide" });
     }
-    res.json({ message: "Slide deleted successfully" });
+    res.json({ message: "Đã xóa slide thành công" });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -81,7 +81,7 @@ exports.updateSlogan = async (req, res) => {
       new: true,
     });
     if (!slogan) {
-      return res.status(404).json({ error: "Slogan not found" });
+      return res.status(404).json({ error: "Không tìm thấy slogan" });
     }
     res.json(slogan);
   } catch (error) {
@@ -94,9 +94,9 @@ exports.deleteSlogan = async (req, res) => {
   try {
     const slogan = await Slogan.findByIdAndDelete(req.params.id);
     if (!slogan) {
-      return res.status(404).json({ error: "Slogan not found" });
+      return res.status(404).json({ error: "Không tìm thấy slogan" });
     }
-    res.json({ message: "Slogan deleted successfully" });
+    res.json({ message: "Đã xóa slogan thành công" });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

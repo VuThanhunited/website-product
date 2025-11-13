@@ -15,7 +15,7 @@ exports.getCategoryBySlug = async (req, res) => {
   try {
     const category = await Category.findOne({ slug: req.params.slug });
     if (!category) {
-      return res.status(404).json({ error: "Category not found" });
+      return res.status(404).json({ error: "Không tìm thấy danh mục" });
     }
     res.json(category);
   } catch (error) {
@@ -41,7 +41,7 @@ exports.updateCategory = async (req, res) => {
       new: true,
     });
     if (!category) {
-      return res.status(404).json({ error: "Category not found" });
+      return res.status(404).json({ error: "Không tìm thấy danh mục" });
     }
     res.json(category);
   } catch (error) {
@@ -54,9 +54,9 @@ exports.deleteCategory = async (req, res) => {
   try {
     const category = await Category.findByIdAndDelete(req.params.id);
     if (!category) {
-      return res.status(404).json({ error: "Category not found" });
+      return res.status(404).json({ error: "Không tìm thấy danh mục" });
     }
-    res.json({ message: "Category deleted successfully" });
+    res.json({ message: "Đã xóa danh mục thành công" });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

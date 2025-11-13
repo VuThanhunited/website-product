@@ -25,7 +25,15 @@ const Footer = () => {
       <div className="container">
         <div className="footer-content">
           <div className="footer-section">
-            <h3>{companyInfo?.companyName || "Công ty"}</h3>
+            {companyInfo?.logo ? (
+              <img
+                src={`http://localhost:5000${companyInfo.logo}`}
+                alt={companyInfo.companyName}
+                className="footer-logo"
+              />
+            ) : (
+              <h3>{companyInfo?.companyName || "Công ty"}</h3>
+            )}
             <p>{companyInfo?.address}</p>
             <p>Điện thoại: {companyInfo?.phone}</p>
             <p>Email: {companyInfo?.email}</p>
@@ -83,8 +91,17 @@ const Footer = () => {
                     href={partner.website}
                     target="_blank"
                     rel="noopener noreferrer"
+                    className="partner-link"
                   >
-                    <img src={partner.logo} alt={partner.name} />
+                    <img
+                      src={
+                        partner.logo.startsWith("http")
+                          ? partner.logo
+                          : `http://localhost:5000${partner.logo}`
+                      }
+                      alt={partner.name}
+                      className="partner-logo-img"
+                    />
                   </a>
                 ))}
               </div>

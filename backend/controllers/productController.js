@@ -22,7 +22,7 @@ exports.getProductBySlug = async (req, res) => {
       "category"
     );
     if (!product) {
-      return res.status(404).json({ error: "Product not found" });
+      return res.status(404).json({ error: "Không tìm thấy sản phẩm" });
     }
     res.json(product);
   } catch (error) {
@@ -35,7 +35,7 @@ exports.getProductById = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id).populate("category");
     if (!product) {
-      return res.status(404).json({ error: "Product not found" });
+      return res.status(404).json({ error: "Không tìm thấy sản phẩm" });
     }
     res.json(product);
   } catch (error) {
@@ -73,7 +73,7 @@ exports.updateProduct = async (req, res) => {
       new: true,
     });
     if (!product) {
-      return res.status(404).json({ error: "Product not found" });
+      return res.status(404).json({ error: "Không tìm thấy sản phẩm" });
     }
     res.json(product);
   } catch (error) {
@@ -86,9 +86,9 @@ exports.deleteProduct = async (req, res) => {
   try {
     const product = await Product.findByIdAndDelete(req.params.id);
     if (!product) {
-      return res.status(404).json({ error: "Product not found" });
+      return res.status(404).json({ error: "Không tìm thấy sản phẩm" });
     }
-    res.json({ message: "Product deleted successfully" });
+    res.json({ message: "Đã xóa sản phẩm thành công" });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

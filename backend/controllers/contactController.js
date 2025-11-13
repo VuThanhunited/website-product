@@ -43,7 +43,7 @@ exports.submitContact = async (req, res) => {
 
     await transporter.sendMail(mailOptions);
 
-    res.status(201).json({ message: "Contact message sent successfully" });
+    res.status(201).json({ message: "Đã gửi tin nhắn thành công" });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -68,7 +68,7 @@ exports.markAsRead = async (req, res) => {
       { new: true }
     );
     if (!message) {
-      return res.status(404).json({ error: "Message not found" });
+      return res.status(404).json({ error: "Không tìm thấy tin nhắn" });
     }
     res.json(message);
   } catch (error) {
@@ -81,9 +81,9 @@ exports.deleteMessage = async (req, res) => {
   try {
     const message = await ContactMessage.findByIdAndDelete(req.params.id);
     if (!message) {
-      return res.status(404).json({ error: "Message not found" });
+      return res.status(404).json({ error: "Không tìm thấy tin nhắn" });
     }
-    res.json({ message: "Message deleted successfully" });
+    res.json({ message: "Đã xóa tin nhắn thành công" });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

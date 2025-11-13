@@ -17,7 +17,7 @@ exports.getArticleBySlug = async (req, res) => {
   try {
     const article = await SupportArticle.findOne({ slug: req.params.slug });
     if (!article) {
-      return res.status(404).json({ error: "Article not found" });
+      return res.status(404).json({ error: "Không tìm thấy bài viết" });
     }
 
     // Increment views
@@ -50,7 +50,7 @@ exports.updateArticle = async (req, res) => {
       { new: true }
     );
     if (!article) {
-      return res.status(404).json({ error: "Article not found" });
+      return res.status(404).json({ error: "Không tìm thấy bài viết" });
     }
     res.json(article);
   } catch (error) {
@@ -63,9 +63,9 @@ exports.deleteArticle = async (req, res) => {
   try {
     const article = await SupportArticle.findByIdAndDelete(req.params.id);
     if (!article) {
-      return res.status(404).json({ error: "Article not found" });
+      return res.status(404).json({ error: "Không tìm thấy bài viết" });
     }
-    res.json({ message: "Article deleted successfully" });
+    res.json({ message: "Đã xóa bài viết thành công" });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
