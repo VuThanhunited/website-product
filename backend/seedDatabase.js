@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 require("dotenv").config();
+const fs = require("fs");
+const path = require("path");
 
 // Import models
 const Category = require("./models/Category");
@@ -11,12 +13,67 @@ const SupportArticle = require("./models/SupportArticle");
 
 // Connect to MongoDB
 mongoose
-  .connect(process.env.MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(process.env.MONGODB_URI)
   .then(() => console.log("MongoDB Connected"))
   .catch((err) => console.error("MongoDB Connection Error:", err));
+
+// Helper function to create slug from Vietnamese text
+const createSlug = (text) => {
+  return text
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/đ/g, "d")
+    .replace(/Đ/g, "D")
+    .replace(/[^a-z0-9\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .trim();
+};
+
+// Helper function to generate English product name and description
+const generateEnglishContent = (product) => {
+  const categoryMap = {
+    "Chăm sóc lốp và cao su": "Tire & Rubber Care",
+    "Vệ sinh và làm sạch": "Cleaning & Washing",
+    "Nước làm mát động cơ": "Engine Coolant",
+  };
+
+  // Simple translation patterns
+  let nameEn = product.name
+    .replace(
+      /Dung dịch làm bóng cao su và lốp xe/gi,
+      "Tire & Rubber Shine Solution"
+    )
+    .replace(/Dung dịch làm sạch bề mặt ô tô/gi, "Car Surface Cleaner")
+    .replace(
+      /Dung dịch vệ sinh vành, lốp và cao su ngoại thất/gi,
+      "Wheel, Tire & Rubber Cleaner"
+    )
+    .replace(/Nước làm mát động cơ/gi, "Engine Coolant")
+    .replace(/Nước rửa kính ô tô/gi, "Car Glass Cleaner")
+    .replace(/Nước rửa xe không chạm/gi, "Touchless Car Wash")
+    .replace(/tím/gi, "Purple")
+    .replace(/xanh/gi, "Green")
+    .replace(/Can/gi, "Can")
+    .replace(/lít/gi, "L")
+    .replace(/tỉ lệ/gi, "Ratio")
+    .replace(/Mã Kuiper/gi, "Kuiper Code");
+
+  let descEn = product.description
+    .replace(/chuyên dụng/gi, "professional")
+    .replace(/dung tích/gi, "capacity")
+    .replace(/sản phẩm/gi, "product")
+    .replace(/chất lượng cao/gi, "high quality")
+    .replace(/bảo vệ/gi, "protect")
+    .replace(/an toàn/gi, "safe")
+    .replace(/hiệu quả/gi, "effective")
+    .replace(/nhanh chóng/gi, "fast")
+    .replace(/tiện dụng/gi, "convenient")
+    .replace(/phù hợp/gi, "suitable");
+
+  return { nameEn, descEn };
+};
 
 const seedDatabase = async () => {
   try {
@@ -32,7 +89,7 @@ const seedDatabase = async () => {
 
     // Create Company Info
     const companyInfo = await CompanyInfo.create({
-      companyName: "Công Ty Thương Mại Điện Tử",
+      companyName: "EFT Technology Co., Ltd.",
       logo: "/uploads/logo.png",
       address: "123 Đường Kinh Doanh, Thành Phố, Quốc Gia",
       phone: "+84 234 567 890",
@@ -53,7 +110,7 @@ const seedDatabase = async () => {
         },
         {
           name: "Lazada",
-          logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Lazada_Logo.png/200px-Lazada_Logo.png",
+          logo: "https://lzd-img-global.slatic.net/g/p/c8045982f9234585c82ed024ed29861f.png",
           website: "https://lazada.vn",
         },
         {
@@ -61,178 +118,89 @@ const seedDatabase = async () => {
           logo: "https://salt.tikicdn.com/ts/upload/e4/49/6c/270be9859abd5f5ec5071da65fab0a94.png",
           website: "https://tiki.vn",
         },
-        {
-          name: "Sendo",
-          logo: "https://media.sendo.vn/image/png/logo_sendo.png",
-          website: "https://sendo.vn",
-        },
       ],
       topSectionBgColor: "#f0f0f0",
     });
     console.log("Created company info");
 
-    // Create Categories
-    const categories = await Category.create([
-      {
-        name: "Điện tử",
-        slug: "dien-tu",
-        description: "Thiết bị và đồ dùng điện tử",
-        order: 1,
-      },
-      {
-        name: "Quần áo",
-        slug: "quan-ao",
-        description: "Thời trang và trang phục",
-        order: 2,
-      },
-      {
-        name: "Nhà cửa & Vườn",
-        slug: "nha-cua-vuon",
-        description: "Đồ dùng cải thiện nhà cửa và vườn",
-        order: 3,
-      },
-      {
-        name: "Thể thao",
-        slug: "the-thao",
-        description: "Thiết bị và phụ kiện thể thao",
-        order: 4,
-      },
-    ]);
-    console.log("Created categories");
+    // Load products from product.json
+    const productsData = JSON.parse(
+      fs.readFileSync(path.join(__dirname, "product.json"), "utf-8")
+    );
 
-    // Create Products
-    const products = await Product.create([
-      {
-        name: "Tai Nghe Không Dây",
-        slug: "tai-nghe-khong-day",
-        description: "Tai nghe không dây chất lượng cao với chống ồn",
-        price: 2499000,
-        category: categories[0]._id,
-        images: ["https://via.placeholder.com/400x400?text=Tai+Nghe"],
-        featured: true,
-        inStock: true,
-        options: [{ name: "Màu sắc", values: ["Đen", "Trắng", "Xanh"] }],
-      },
-      {
-        name: "Đồng Hồ Thông Minh",
-        slug: "dong-ho-thong-minh",
-        description: "Đồng hồ thông minh đa tính năng với theo dõi sức khỏe",
-        price: 4999000,
-        category: categories[0]._id,
-        images: ["https://via.placeholder.com/400x400?text=Dong+Ho"],
-        featured: true,
-        inStock: true,
-      },
-      {
-        name: "Áo Thun Cotton",
-        slug: "ao-thun-cotton",
-        description: "Áo thun 100% cotton thoải mái",
-        price: 199000,
-        category: categories[1]._id,
-        images: ["https://via.placeholder.com/400x400?text=Ao+Thun"],
-        inStock: true,
-        options: [
-          { name: "Kích cỡ", values: ["S", "M", "L", "XL"] },
-          { name: "Màu sắc", values: ["Đỏ", "Xanh", "Xanh Lá", "Đen"] },
-        ],
-      },
-      {
-        name: "Quần Jean",
-        slug: "quan-jean",
-        description: "Quần jean cổ điển với kiểu dáng hiện đại",
-        price: 599000,
-        category: categories[1]._id,
-        images: ["https://via.placeholder.com/400x400?text=Quan+Jean"],
-        featured: true,
-        inStock: true,
-      },
-      {
-        name: "Bộ Dụng Cụ Làm Vườn",
-        slug: "bo-dung-cu-lam-vuon",
-        description: "Bộ dụng cụ làm vườn đầy đủ thiết yếu",
-        price: 999000,
-        category: categories[2]._id,
-        images: ["https://via.placeholder.com/400x400?text=Dung+Cu+Vuon"],
-        inStock: true,
-      },
-      {
-        name: "Thảm Tập Yoga",
-        slug: "tham-tap-yoga",
-        description: "Thảm yoga chống trượt cho buổi tập thoải mái",
-        price: 299000,
-        category: categories[3]._id,
-        images: ["https://via.placeholder.com/400x400?text=Tham+Yoga"],
-        featured: true,
-        inStock: true,
-        options: [
-          { name: "Màu sắc", values: ["Tím", "Xanh", "Xanh Lá", "Hồng"] },
-        ],
-      },
-    ]);
-    console.log("Created products");
+    // Create Categories from products
+    const categoryNames = [...new Set(productsData.map((p) => p.category))];
+
+    const categories = await Category.create(
+      categoryNames.map((name, index) => ({
+        name: name,
+        slug: createSlug(name),
+        description: `Sản phẩm ${name}`,
+        order: index + 1,
+      }))
+    );
+    console.log(`Created ${categories.length} categories`);
+
+    // Create Products from product.json
+    const products = await Product.create(
+      productsData.map((product, index) => {
+        const category = categories.find((c) => c.name === product.category);
+        const priceValue = parseInt(product.price.replace(/[^0-9]/g, ""));
+        const { nameEn, descEn } = generateEnglishContent(product);
+
+        return {
+          name: product.name,
+          nameEn: nameEn,
+          slug: createSlug(product.name).substring(0, 100),
+          description: product.description,
+          descriptionEn: descEn,
+          price: priceValue,
+          category: category._id,
+          images: [product.image],
+          featured: index < 6, // First 6 products are featured
+          inStock: true,
+          stock: 100,
+        };
+      })
+    );
+    console.log(`Created ${products.length} products`);
 
     // Create Media Slides (linked to products)
-    const slides = await MediaSlide.create([
-      {
+    const slides = await MediaSlide.create(
+      products.slice(0, 6).map((product, index) => ({
         type: "image",
-        url: "https://via.placeholder.com/1200x500/667eea/ffffff?text=Welcome+to+Our+Store",
-        caption: "Chào Mừng Đến Với Cửa Hàng Của Chúng Tôi",
-        linkToProduct: products[0]._id, // Link to first product
-        order: 1,
+        url: product.images[0],
+        caption:
+          product.name.length > 100
+            ? product.name.substring(0, 97) + "..."
+            : product.name,
+        linkToProduct: product._id,
+        order: index + 1,
         active: true,
-      },
-      {
-        type: "image",
-        url: "https://via.placeholder.com/1200x500/764ba2/ffffff?text=New+Arrivals",
-        caption: "Hàng Mới Về - Khám Phá Ngay",
-        linkToProduct: products[1]._id, // Link to second product
-        order: 2,
-        active: true,
-      },
-      {
-        type: "image",
-        url: "https://via.placeholder.com/1200x500/007bff/ffffff?text=Special+Offers",
-        caption: "Ưu Đãi Đặc Biệt Trong Tuần",
-        linkToProduct: products[2]._id, // Link to third product
-        order: 3,
-        active: true,
-      },
-      {
-        type: "image",
-        url: "https://via.placeholder.com/1200x500/28a745/ffffff?text=Best+Sellers",
-        caption: "Sản Phẩm Bán Chạy Nhất",
-        linkToProduct: products[3]._id, // Link to fourth product
-        order: 4,
-        active: true,
-      },
-      {
-        type: "image",
-        url: "https://via.placeholder.com/1200x500/ffc107/333333?text=Summer+Collection",
-        caption: "Bộ Sưu Tập Mùa Hè 2025",
-        linkToProduct: products[4]._id, // Link to fifth product
-        order: 5,
-        active: true,
-      },
-      {
-        type: "image",
-        url: "https://via.placeholder.com/1200x500/dc3545/ffffff?text=Limited+Time+Deals",
-        caption: "Giảm Giá Có Hạn - Lên Đến 50%",
-        linkToProduct: products[5]._id, // Link to sixth product
-        order: 6,
-        active: true,
-      },
-    ]);
-    console.log("Created media slides");
+      }))
+    );
+    console.log(`Created ${slides.length} media slides`);
 
     // Create Slogans
     const slogans = await Slogan.create([
       {
         text: "Sản Phẩm Chất Lượng Với Giá Cả Phải Chăng",
+        textEn: "Quality Products at Affordable Prices",
         order: 1,
         active: true,
       },
-      { text: "Giao Hàng Nhanh Chóng Toàn Quốc", order: 2, active: true },
-      { text: "Đảm Bảo Sự Hài Lòng Của Khách Hàng", order: 3, active: true },
+      {
+        text: "Giao Hàng Nhanh Chóng Toàn Quốc",
+        textEn: "Fast Nationwide Delivery",
+        order: 2,
+        active: true,
+      },
+      {
+        text: "Đảm Bảo Sự Hài Lòng Của Khách Hàng",
+        textEn: "Customer Satisfaction Guaranteed",
+        order: 3,
+        active: true,
+      },
     ]);
     console.log("Created slogans");
 

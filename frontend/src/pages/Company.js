@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { getCompanyInfo } from "../services/api";
+import { useLanguage } from "../contexts/LanguageContext";
+import { translations } from "../utils/translations";
 import "../styles/Company.css";
 
 const Company = () => {
   const [companyInfo, setCompanyInfo] = useState(null);
+  const { language } = useLanguage();
+  const t = translations[language];
 
   useEffect(() => {
     fetchCompanyInfo();
@@ -19,7 +23,7 @@ const Company = () => {
   };
 
   if (!companyInfo) {
-    return <div className="loading">Đang tải...</div>;
+    return <div className="loading">{t.loadingText}</div>;
   }
 
   return (
@@ -28,10 +32,10 @@ const Company = () => {
       <div className="company-hero">
         <div className="hero-overlay">
           <div className="container">
-            <h1>Về chúng tôi - {companyInfo.companyName}</h1>
-            <p className="hero-subtitle">
-              Đối tác tin cậy của bạn trong lĩnh vực chăm sóc xe hơi
-            </p>
+            <h1>
+              {t.aboutCompany} - {t.companyName}
+            </h1>
+            <p className="hero-subtitle">{t.trustedPartner}</p>
           </div>
         </div>
       </div>
@@ -40,19 +44,9 @@ const Company = () => {
         {/* Giới thiệu */}
         <div className="company-intro">
           <div className="intro-content">
-            <h2>Câu Chuyện Của Chúng Tôi</h2>
-            <p>
-              Chúng tôi là nhà cung cấp hàng đầu các sản phẩm chăm sóc xe hơi
-              chất lượng cao với giá cả cạnh tranh. Với nhiều năm kinh nghiệm
-              trong ngành, chúng tôi cam kết mang đến cho khách hàng những sản
-              phẩm tốt nhất và dịch vụ chăm sóc khách hàng xuất sắc.
-            </p>
-            <p>
-              Sứ mệnh của chúng tôi là cung cấp các sản phẩm chất lượng cao từ
-              thương hiệu Kuiper, đáp ứng nhu cầu đa dạng của khách hàng với giá
-              cả hợp lý. Chúng tôi luôn đặt sự hài lòng của khách hàng lên hàng
-              đầu.
-            </p>
+            <h2>{t.ourStory}</h2>
+            <p>{t.companyIntro1}</p>
+            <p>{t.companyIntro2}</p>
           </div>
           <div className="intro-image">
             {companyInfo.logo && (
@@ -67,50 +61,50 @@ const Company = () => {
 
         {/* Giá trị cốt lõi */}
         <div className="company-values">
-          <h2>Giá Trị Cốt Lõi</h2>
+          <h2>{t.ourValues}</h2>
           <div className="values-grid">
             <div className="value-card">
               <div className="value-icon">🎯</div>
-              <h3>Chất Lượng</h3>
-              <p>Sản phẩm Kuiper chính hãng, đảm bảo chất lượng cao nhất</p>
+              <h3>{t.valueQuality}</h3>
+              <p>{t.valueQualityDesc}</p>
             </div>
             <div className="value-card">
               <div className="value-icon">🤝</div>
-              <h3>Uy Tín</h3>
-              <p>Đối tác tin cậy của hàng nghìn khách hàng trên toàn quốc</p>
+              <h3>{t.valueReputation}</h3>
+              <p>{t.valueReputationDesc}</p>
             </div>
             <div className="value-card">
               <div className="value-icon">💡</div>
-              <h3>Sáng Tạo</h3>
-              <p>Không ngừng cải tiến và phát triển sản phẩm mới</p>
+              <h3>{t.valueInnovation}</h3>
+              <p>{t.valueInnovationDesc}</p>
             </div>
             <div className="value-card">
               <div className="value-icon">❤️</div>
-              <h3>Tận Tâm</h3>
-              <p>Chăm sóc khách hàng tận tình, hỗ trợ 24/7</p>
+              <h3>{t.valueDedication}</h3>
+              <p>{t.valueDedicationDesc}</p>
             </div>
           </div>
         </div>
 
         {/* Thành tựu */}
         <div className="company-achievements">
-          <h2>Thành Tựu Của Chúng Tôi</h2>
+          <h2>{t.ourAchievements}</h2>
           <div className="achievements-grid">
             <div className="achievement-item">
               <div className="achievement-number">15+</div>
-              <div className="achievement-label">Sản phẩm Kuiper</div>
+              <div className="achievement-label">{t.kuiperProducts}</div>
             </div>
             <div className="achievement-item">
               <div className="achievement-number">1000+</div>
-              <div className="achievement-label">Khách hàng hài lòng</div>
+              <div className="achievement-label">{t.satisfiedCustomers}</div>
             </div>
             <div className="achievement-item">
               <div className="achievement-number">5+</div>
-              <div className="achievement-label">Năm kinh nghiệm</div>
+              <div className="achievement-label">{t.yearsExperience}</div>
             </div>
             <div className="achievement-item">
               <div className="achievement-number">99%</div>
-              <div className="achievement-label">Đánh giá 5 sao</div>
+              <div className="achievement-label">{t.fiveStarRating}</div>
             </div>
           </div>
         </div>
@@ -118,7 +112,7 @@ const Company = () => {
         {/* Gallery */}
         {companyInfo.aboutImages && companyInfo.aboutImages.length > 0 && (
           <div className="company-gallery">
-            <h2>Hình Ảnh Của Chúng Tôi</h2>
+            <h2>{t.ourGallery}</h2>
             <div className="gallery-grid">
               {companyInfo.aboutImages.map((image, index) => (
                 <div key={index} className="gallery-item">
@@ -135,17 +129,14 @@ const Company = () => {
 
         {/* CTA Section */}
         <div className="company-cta">
-          <h2>Sẵn sàng trải nghiệm sản phẩm của chúng tôi?</h2>
-          <p>
-            Hãy liên hệ với chúng tôi ngay hôm nay để được tư vấn và hỗ trợ tốt
-            nhất!
-          </p>
+          <h2>{t.readyToExperience}</h2>
+          <p>{t.contactUsToday}</p>
           <div className="cta-buttons">
             <a href="/products" className="btn-primary">
-              Xem Sản Phẩm
+              {t.viewProducts}
             </a>
             <a href="/contact" className="btn-secondary">
-              Liên Hệ Ngay
+              {t.contactNow}
             </a>
           </div>
         </div>

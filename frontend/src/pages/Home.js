@@ -2,12 +2,16 @@ import React, { useState, useEffect } from "react";
 import Slider from "react-slick";
 import { Link } from "react-router-dom";
 import { getProducts, getSlogans } from "../services/api";
+import { useLanguage } from "../contexts/LanguageContext";
+import { translations } from "../utils/translations";
 import "../styles/Home.css";
 
 const Home = () => {
   const [slides, setSlides] = useState([]);
   const [slogans, setSlogans] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { language } = useLanguage();
+  const t = translations[language];
 
   useEffect(() => {
     fetchHomeData();
@@ -58,7 +62,7 @@ const Home = () => {
       {/* Slideshow chiếm toàn bộ width */}
       <section className="hero-slideshow-section">
         {loading ? (
-          <div className="loading">Đang tải slideshow...</div>
+          <div className="loading">{t.loading}</div>
         ) : slides.length > 0 ? (
           <Slider {...sliderSettings}>
             {slides.map((product, index) => (
@@ -80,18 +84,26 @@ const Home = () => {
                     {/* Cột phải - Mô tả sản phẩm */}
                     <div className="slide-content-container">
                       <div className="slide-content">
-                        <h3 className="slide-title">{product.name}</h3>
+                        <h3 className="slide-title">
+                          {language === "en" && product.nameEn
+                            ? product.nameEn
+                            : product.name}
+                        </h3>
                         <p className="slide-description">
-                          {product.description}
+                          {language === "en" && product.descriptionEn
+                            ? product.descriptionEn
+                            : product.description}
                         </p>
-                        <button className="slide-cta">Xem chi tiết →</button>
+                        <button className="slide-cta">
+                          {t.viewDetailsButton}
+                        </button>
                       </div>
                     </div>
                   </div>
 
                   {/* Số thứ tự slide */}
                   <div className="slide-number">
-                    {index + 1} / {slides.length}
+                    {index + 1} {t.slideNumber} {slides.length}
                   </div>
                 </Link>
               </div>
@@ -99,7 +111,7 @@ const Home = () => {
           </Slider>
         ) : (
           <div className="no-slides">
-            <p>Chưa có sản phẩm nào để hiển thị</p>
+            <p>{t.noMedia}</p>
           </div>
         )}
       </section>
@@ -108,19 +120,12 @@ const Home = () => {
       <section className="slogan-section">
         <div className="container">
           {slogans.map((slogan, index) => {
-            // Dịch slogans từ tiếng Anh sang tiếng Việt
-            const translatedSlogan =
-              slogan.text === "Quality Products at Affordable Prices"
-                ? "Sản Phẩm Chất Lượng Với Giá Cả Phải Chăng"
-                : slogan.text === "Fast Shipping Worldwide"
-                ? "Giao Hàng Nhanh Toàn Quốc"
-                : slogan.text === "Customer Satisfaction Guaranteed"
-                ? "Cam Kết Hài Lòng Khách Hàng"
-                : slogan.text;
+            const displayText =
+              language === "en" && slogan.textEn ? slogan.textEn : slogan.text;
 
             return (
               <div key={index} className="slogan-item">
-                <h2>{translatedSlogan}</h2>
+                <h2>{displayText}</h2>
               </div>
             );
           })}
@@ -133,23 +138,23 @@ const Home = () => {
           <div className="features-grid">
             <div className="feature-card">
               <div className="feature-icon">🚚</div>
-              <h3>Miễn Phí Vận Chuyển</h3>
-              <p>Giao hàng miễn phí cho đơn hàng trên 500.000₫</p>
+              <h3>{t.freeShipping}</h3>
+              <p>{t.freeShippingDesc}</p>
             </div>
             <div className="feature-card">
               <div className="feature-icon">✅</div>
-              <h3>Chính Hãng 100%</h3>
-              <p>Sản phẩm Kuiper chính hãng, bảo hành đầy đủ</p>
+              <h3>{t.authentic}</h3>
+              <p>{t.authenticDesc}</p>
             </div>
             <div className="feature-card">
               <div className="feature-icon">💳</div>
-              <h3>Thanh Toán Linh Hoạt</h3>
-              <p>Hỗ trợ nhiều hình thức thanh toán an toàn</p>
+              <h3>{t.flexiblePayment}</h3>
+              <p>{t.flexiblePaymentDesc}</p>
             </div>
             <div className="feature-card">
               <div className="feature-icon">🎁</div>
-              <h3>Ưu Đãi Hấp Dẫn</h3>
-              <p>Nhiều chương trình khuyến mãi mỗi tuần</p>
+              <h3>{t.attractiveOffers}</h3>
+              <p>{t.attractiveOffersDesc}</p>
             </div>
           </div>
         </div>
@@ -158,18 +163,15 @@ const Home = () => {
       {/* Why Choose Us Section */}
       <section className="why-choose-section">
         <div className="container">
-          <h2 className="section-title">Tại Sao Chọn Chúng Tôi?</h2>
+          <h2 className="section-title">{t.whyChooseUs}</h2>
           <div className="why-choose-grid">
             <div className="why-item">
               <div className="why-image">
                 <div className="why-icon-bg">🏆</div>
               </div>
               <div className="why-content">
-                <h3>Uy Tín Hàng Đầu</h3>
-                <p>
-                  Đối tác tin cậy của hàng nghìn khách hàng trên toàn quốc với
-                  5+ năm kinh nghiệm
-                </p>
+                <h3>{t.topReputation}</h3>
+                <p>{t.topReputationDesc}</p>
               </div>
             </div>
             <div className="why-item">
@@ -177,10 +179,8 @@ const Home = () => {
                 <div className="why-icon-bg">🔬</div>
               </div>
               <div className="why-content">
-                <h3>Chất Lượng Đảm Bảo</h3>
-                <p>
-                  Sản phẩm được kiểm tra kỹ lưỡng, đạt chuẩn chất lượng quốc tế
-                </p>
+                <h3>{t.guaranteedQuality}</h3>
+                <p>{t.guaranteedQualityDesc}</p>
               </div>
             </div>
             <div className="why-item">
@@ -188,11 +188,8 @@ const Home = () => {
                 <div className="why-icon-bg">💬</div>
               </div>
               <div className="why-content">
-                <h3>Hỗ Trợ 24/7</h3>
-                <p>
-                  Đội ngũ tư vấn chuyên nghiệp, nhiệt tình hỗ trợ mọi lúc mọi
-                  nơi
-                </p>
+                <h3>{t.support247}</h3>
+                <p>{t.support247Desc}</p>
               </div>
             </div>
             <div className="why-item">
@@ -200,8 +197,8 @@ const Home = () => {
                 <div className="why-icon-bg">⚡</div>
               </div>
               <div className="why-content">
-                <h3>Giao Hàng Nhanh</h3>
-                <p>Xử lý đơn hàng trong 24h, giao hàng toàn quốc 2-5 ngày</p>
+                <h3>{t.fastDelivery}</h3>
+                <p>{t.fastDeliveryDesc}</p>
               </div>
             </div>
           </div>
@@ -212,12 +209,10 @@ const Home = () => {
       <section className="home-cta-section">
         <div className="container">
           <div className="cta-content">
-            <h2>Khám Phá Sản Phẩm Kuiper</h2>
-            <p>
-              15+ sản phẩm chăm sóc xe hơi chất lượng cao đang chờ bạn khám phá
-            </p>
+            <h2>{t.discoverProducts}</h2>
+            <p>{t.discoverProductsDesc}</p>
             <Link to="/products" className="cta-button">
-              Xem Tất Cả Sản Phẩm →
+              {t.viewAllProducts}
             </Link>
           </div>
         </div>

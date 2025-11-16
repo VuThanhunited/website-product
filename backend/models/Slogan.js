@@ -6,6 +6,10 @@ const sloganSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    textEn: {
+      type: String,
+      default: "",
+    },
     order: {
       type: Number,
       default: 0,

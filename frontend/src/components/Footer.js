@@ -2,10 +2,14 @@ import React, { useState, useEffect } from "react";
 import { FaYoutube, FaInstagram, FaWhatsapp } from "react-icons/fa";
 import { SiZalo } from "react-icons/si";
 import { getCompanyInfo } from "../services/api";
+import { useLanguage } from "../contexts/LanguageContext";
+import { translations } from "../utils/translations";
 import "../styles/Footer.css";
 
 const Footer = () => {
   const [companyInfo, setCompanyInfo] = useState(null);
+  const { language } = useLanguage();
+  const t = translations[language];
 
   useEffect(() => {
     fetchCompanyInfo();
@@ -32,15 +36,19 @@ const Footer = () => {
                 className="footer-logo"
               />
             ) : (
-              <h3>{companyInfo?.companyName || "Công ty"}</h3>
+              <h3>{companyInfo?.companyName || t.company}</h3>
             )}
             <p>{companyInfo?.address}</p>
-            <p>Điện thoại: {companyInfo?.phone}</p>
-            <p>Email: {companyInfo?.email}</p>
+            <p>
+              {t.phone}: {companyInfo?.phone}
+            </p>
+            <p>
+              {t.email}: {companyInfo?.email}
+            </p>
           </div>
 
           <div className="footer-section">
-            <h3>Theo dõi chúng tôi</h3>
+            <h3>{t.followUs}</h3>
             <div className="social-links">
               {companyInfo?.socialLinks?.zalo && (
                 <a
@@ -83,7 +91,7 @@ const Footer = () => {
 
           {companyInfo?.partners && companyInfo.partners.length > 0 && (
             <div className="footer-section partners">
-              <h3>Đối tác</h3>
+              <h3>{t.ourPartners}</h3>
               <div className="partner-logos">
                 {companyInfo.partners.map((partner, index) => (
                   <a
@@ -111,8 +119,8 @@ const Footer = () => {
 
         <div className="footer-bottom">
           <p>
-            &copy; {new Date().getFullYear()} {companyInfo?.companyName}. Bản
-            quyền thuộc về
+            &copy; {new Date().getFullYear()} {companyInfo?.companyName}.{" "}
+            {t.allRightsReserved}
           </p>
         </div>
       </div>

@@ -1,14 +1,32 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { getProductBySlug, getProductById } from "../services/api";
+import { useLanguage } from "../contexts/LanguageContext";
+import { useCart } from "../contexts/CartContext";
+import { translations } from "../utils/translations";
 import "../styles/ProductDetail.css";
 
 const ProductDetail = () => {
   const { slug } = useParams();
+  const navigate = useNavigate();
   const [product, setProduct] = useState(null);
   const [selectedImage, setSelectedImage] = useState(0);
+  const [quantity, setQuantity] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { language } = useLanguage();
+  const { addToCart } = useCart();
+  const t = translations[language];
+
+  const handleAddToCart = () => {
+    addToCart(product, quantity);
+    alert(t.addedToCart || "Added to cart!");
+  };
+
+  const handleBuyNow = () => {
+    addToCart(product, quantity);
+    navigate("/cart");
+  };
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -29,7 +47,7 @@ const ProductDetail = () => {
         setProduct(response.data);
       } catch (error) {
         console.error("Error fetching product:", error);
-        setError("Không tìm thấy sản phẩm");
+        setError(t.productNotFound);
       } finally {
         setLoading(false);
       }
@@ -42,7 +60,7 @@ const ProductDetail = () => {
     return (
       <div className="loading-container">
         <div className="loading-spinner"></div>
-        <p>Đang tải sản phẩm...</p>
+        <p>{t.loadingProduct}</p>
       </div>
     );
   }
@@ -56,7 +74,7 @@ const ProductDetail = () => {
   }
 
   if (!product) {
-    return <div className="loading">Không tìm thấy sản phẩm</div>;
+    return <div className="loading">{t.productNotFound}</div>;
   }
 
   return (
@@ -96,7 +114,11 @@ const ProductDetail = () => {
           </div>
 
           <div className="product-info">
-            <h1>{product.name}</h1>
+            <h1>
+              {language === "en" && product.nameEn
+                ? product.nameEn
+                : product.name}
+            </h1>
             <p className="price">{product.price.toLocaleString("vi-VN")} ₫</p>
 
             {product.options && product.options.length > 0 && (
@@ -115,18 +137,61 @@ const ProductDetail = () => {
             )}
 
             <div className="product-actions">
-              <button className="btn-primary">Thêm vào giỏ hàng</button>
+              <div className="quantity-selector">
+                <label>{t.quantity || "Quantity"}:</label>
+                <div className="quantity-controls">
+                  <button
+                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                    className="quantity-btn"
+                  >
+                    -
+                  </button>
+                  <input
+                    type="number"
+                    value={quantity}
+                    onChange={(e) =>
+                      setQuantity(Math.max(1, parseInt(e.target.value) || 1))
+                    }
+                    min="1"
+                    className="quantity-input"
+                  />
+                  <button
+                    onClick={() => setQuantity(quantity + 1)}
+                    className="quantity-btn"
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+              <div className="action-buttons">
+                <button className="btn-primary" onClick={handleAddToCart}>
+                  {t.addToCart}
+                </button>
+                <button className="btn-buy-now" onClick={handleBuyNow}>
+                  {t.buyNow || "Buy Now"}
+                </button>
+              </div>
             </div>
 
             <div className="product-category">
-              <strong>Danh mục:</strong> {product.category?.name}
+              <strong>{t.categories}:</strong>{" "}
+              {language === "en" && product.category?.nameEn
+                ? product.category.nameEn
+                : product.category?.name}
             </div>
           </div>
         </div>
 
         <div className="product-description">
-          <h2>Mô tả sản phẩm</h2>
-          <div dangerouslySetInnerHTML={{ __html: product.description }} />
+          <h2>{t.description}</h2>
+          <div
+            dangerouslySetInnerHTML={{
+              __html:
+                language === "en" && product.descriptionEn
+                  ? product.descriptionEn
+                  : product.description,
+            }}
+          />
         </div>
       </div>
     </div>

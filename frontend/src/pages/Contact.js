@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { submitContactForm } from "../services/api";
+import { useLanguage } from "../contexts/LanguageContext";
+import { translations } from "../utils/translations";
 import "../styles/Contact.css";
 
 const Contact = () => {
@@ -12,6 +14,8 @@ const Contact = () => {
   });
   const [status, setStatus] = useState({ type: "", message: "" });
   const [loading, setLoading] = useState(false);
+  const { language } = useLanguage();
+  const t = translations[language];
 
   const handleChange = (e) => {
     setFormData({
@@ -29,8 +33,7 @@ const Contact = () => {
       await submitContactForm(formData);
       setStatus({
         type: "success",
-        message:
-          "Tin nhắn của bạn đã được gửi thành công! Chúng tôi sẽ phản hồi sớm nhất có thể.",
+        message: t.successMessage,
       });
       setFormData({
         name: "",
@@ -42,7 +45,7 @@ const Contact = () => {
     } catch (error) {
       setStatus({
         type: "error",
-        message: "Gửi tin nhắn thất bại. Vui lòng thử lại sau.",
+        message: t.errorMessage,
       });
     } finally {
       setLoading(false);
@@ -52,16 +55,15 @@ const Contact = () => {
   return (
     <div className="contact-page">
       <div className="container">
-        <h1>Liên hệ với chúng tôi</h1>
-        <p className="subtitle">
-          Có câu hỏi hoặc thắc mắc? Gửi tin nhắn cho chúng tôi và chúng tôi sẽ
-          phản hồi sớm nhất có thể.
-        </p>
+        <h1>{t.contactUs}</h1>
+        <p className="subtitle">{t.contactSubtitle}</p>
 
         <div className="contact-content">
           <form onSubmit={handleSubmit} className="contact-form">
             <div className="form-group">
-              <label htmlFor="name">Tên của bạn *</label>
+              <label htmlFor="name">
+                {t.yourName} {t.required}
+              </label>
               <input
                 type="text"
                 id="name"
@@ -73,7 +75,9 @@ const Contact = () => {
             </div>
 
             <div className="form-group">
-              <label htmlFor="email">Email của bạn *</label>
+              <label htmlFor="email">
+                {t.yourEmail} {t.required}
+              </label>
               <input
                 type="email"
                 id="email"
@@ -85,7 +89,7 @@ const Contact = () => {
             </div>
 
             <div className="form-group">
-              <label htmlFor="phone">Điện thoại</label>
+              <label htmlFor="phone">{t.yourPhone}</label>
               <input
                 type="tel"
                 id="phone"
@@ -96,7 +100,9 @@ const Contact = () => {
             </div>
 
             <div className="form-group">
-              <label htmlFor="subject">Tiêu đề *</label>
+              <label htmlFor="subject">
+                {t.subject} {t.required}
+              </label>
               <input
                 type="text"
                 id="subject"
@@ -108,7 +114,9 @@ const Contact = () => {
             </div>
 
             <div className="form-group">
-              <label htmlFor="message">Nội dung *</label>
+              <label htmlFor="message">
+                {t.message} {t.required}
+              </label>
               <textarea
                 id="message"
                 name="message"
@@ -126,7 +134,7 @@ const Contact = () => {
             )}
 
             <button type="submit" className="btn-primary" disabled={loading}>
-              {loading ? "Đang gửi..." : "Gửi tin nhắn"}
+              {loading ? t.sending : t.sendMessage}
             </button>
           </form>
         </div>

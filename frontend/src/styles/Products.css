@@ -55,11 +55,126 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 30px;
+  flex-wrap: wrap;
+  gap: 20px;
 }
 
 .products-header h1 {
   font-size: 2rem;
   color: #333;
+  margin: 0;
+}
+
+.products-controls {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.products-search-form {
+  display: flex;
+  align-items: center;
+  background: #f8f9fa;
+  border-radius: 25px;
+  padding: 5px;
+  border: 2px solid #e0e0e0;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.products-search-form:focus-within {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.products-search-input {
+  border: none;
+  background: transparent;
+  padding: 8px 15px;
+  font-size: 0.95rem;
+  outline: none;
+  width: 250px;
+  color: #333;
+}
+
+.products-search-input::placeholder {
+  color: #999;
+}
+
+.clear-search-btn {
+  background: transparent;
+  border: none;
+  color: #999;
+  cursor: pointer;
+  padding: 5px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.3s ease;
+}
+
+.clear-search-btn:hover {
+  color: #ff4444;
+}
+
+.products-search-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+}
+
+.products-search-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.search-info {
+  background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+  padding: 15px 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-left: 4px solid #667eea;
+}
+
+.search-info p {
+  margin: 0;
+  color: #333;
+  font-size: 0.95rem;
+}
+
+.search-info strong {
+  color: #667eea;
+  font-weight: 600;
+}
+
+.clear-search-link {
+  background: transparent;
+  border: 2px solid #667eea;
+  color: #667eea;
+  padding: 6px 18px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.clear-search-link:hover {
+  background: #667eea;
+  color: white;
+  transform: translateY(-2px);
 }
 
 .view-toggle {
@@ -171,5 +286,30 @@
     flex-direction: column;
     gap: 15px;
     align-items: flex-start;
+  }
+
+  .products-controls {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .products-search-form {
+    width: 100%;
+  }
+
+  .products-search-input {
+    width: 100%;
+    flex: 1;
+  }
+
+  .search-info {
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+  }
+
+  .clear-search-link {
+    width: 100%;
   }
 }

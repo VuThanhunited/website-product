@@ -7,7 +7,16 @@ const productSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    nameEn: {
+      type: String,
+      trim: true,
+      default: "",
+    },
     description: {
+      type: String,
+      default: "",
+    },
+    descriptionEn: {
       type: String,
       default: "",
     },

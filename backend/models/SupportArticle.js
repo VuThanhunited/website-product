@@ -7,9 +7,18 @@ const supportArticleSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    titleEn: {
+      type: String,
+      trim: true,
+      default: "",
+    },
     content: {
       type: String,
       required: true,
+    },
+    contentEn: {
+      type: String,
+      default: "",
     },
     thumbnail: {
       type: String,

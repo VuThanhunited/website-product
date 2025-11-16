@@ -1,14 +1,23 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { FaTh, FaList } from "react-icons/fa";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { FaTh, FaList, FaSearch, FaTimes } from "react-icons/fa";
 import { getProducts, getCategories } from "../services/api";
+import { useLanguage } from "../contexts/LanguageContext";
+import { translations } from "../utils/translations";
 import "../styles/Products.css";
 
 const Products = () => {
   const [products, setProducts] = useState([]);
+  const [allProducts, setAllProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [viewMode, setViewMode] = useState("grid"); // 'grid' or 'list'
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isSearching, setIsSearching] = useState(false);
+  const { language } = useLanguage();
+  const t = translations[language];
+  const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchCategories();
@@ -16,8 +25,21 @@ const Products = () => {
   }, []);
 
   useEffect(() => {
-    fetchProducts(selectedCategory);
-  }, [selectedCategory]);
+    // Check for search query in URL
+    const params = new URLSearchParams(location.search);
+    const search = params.get("search");
+    if (search) {
+      setSearchQuery(search);
+      setIsSearching(true);
+      handleSearchFilter(search, allProducts);
+    }
+  }, [location.search, allProducts]);
+
+  useEffect(() => {
+    if (!isSearching) {
+      fetchProducts(selectedCategory);
+    }
+  }, [selectedCategory, isSearching]);
 
   const fetchCategories = async () => {
     try {
@@ -32,9 +54,52 @@ const Products = () => {
     try {
       const response = await getProducts(categoryId);
       setProducts(response.data);
+      if (!categoryId) {
+        setAllProducts(response.data);
+      }
     } catch (error) {
       console.error("Error fetching products:", error);
     }
+  };
+
+  const handleSearchFilter = (query, productsToFilter) => {
+    if (!query.trim()) {
+      setProducts(productsToFilter);
+      return;
+    }
+
+    const searchLower = query.toLowerCase().trim();
+    const filtered = productsToFilter.filter((product) => {
+      const name = product.name?.toLowerCase() || "";
+      const nameEn = product.nameEn?.toLowerCase() || "";
+      const description = product.description?.toLowerCase() || "";
+      const descriptionEn = product.descriptionEn?.toLowerCase() || "";
+
+      return (
+        name.includes(searchLower) ||
+        nameEn.includes(searchLower) ||
+        description.includes(searchLower) ||
+        descriptionEn.includes(searchLower)
+      );
+    });
+
+    setProducts(filtered);
+  };
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      setIsSearching(true);
+      setSelectedCategory(null);
+      navigate(`/products?search=${encodeURIComponent(searchQuery)}`);
+    }
+  };
+
+  const clearSearch = () => {
+    setSearchQuery("");
+    setIsSearching(false);
+    navigate("/products");
+    fetchProducts();
   };
 
   return (
@@ -42,24 +107,19 @@ const Products = () => {
       <div className="container">
         <div className="products-layout">
           <aside className="sidebar">
-            <h3>Danh mục</h3>
+            <h3>{t.productCategories}</h3>
             <ul className="category-list">
               <li
                 className={!selectedCategory ? "active" : ""}
                 onClick={() => setSelectedCategory(null)}
               >
-                Tất cả sản phẩm
+                {t.allProducts}
               </li>
               {categories.map((category) => {
-                // Dịch tên danh mục
-                const categoryNames = {
-                  Electronics: "Điện tử",
-                  Clothing: "Quần áo",
-                  "Home & Garden": "Nhà cửa & Vườn",
-                  Sports: "Thể thao",
-                };
-                const translatedName =
-                  categoryNames[category.name] || category.name;
+                const displayName =
+                  language === "en" && category.nameEn
+                    ? category.nameEn
+                    : category.name;
 
                 return (
                   <li
@@ -69,7 +129,7 @@ const Products = () => {
                     }
                     onClick={() => setSelectedCategory(category._id)}
                   >
-                    {translatedName}
+                    {displayName}
                   </li>
                 );
               })}
@@ -78,22 +138,61 @@ const Products = () => {
 
           <div className="products-content">
             <div className="products-header">
-              <h1>Sản phẩm</h1>
-              <div className="view-toggle">
-                <button
-                  className={viewMode === "grid" ? "active" : ""}
-                  onClick={() => setViewMode("grid")}
+              <h1>{t.products}</h1>
+              <div className="products-controls">
+                <form
+                  className="products-search-form"
+                  onSubmit={handleSearchSubmit}
                 >
-                  <FaTh />
-                </button>
-                <button
-                  className={viewMode === "list" ? "active" : ""}
-                  onClick={() => setViewMode("list")}
-                >
-                  <FaList />
-                </button>
+                  <input
+                    type="text"
+                    placeholder={t.searchProducts}
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="products-search-input"
+                  />
+                  {searchQuery && (
+                    <button
+                      type="button"
+                      onClick={clearSearch}
+                      className="clear-search-btn"
+                    >
+                      <FaTimes />
+                    </button>
+                  )}
+                  <button type="submit" className="products-search-btn">
+                    <FaSearch />
+                  </button>
+                </form>
+                <div className="view-toggle">
+                  <button
+                    className={viewMode === "grid" ? "active" : ""}
+                    onClick={() => setViewMode("grid")}
+                  >
+                    <FaTh />
+                  </button>
+                  <button
+                    className={viewMode === "list" ? "active" : ""}
+                    onClick={() => setViewMode("list")}
+                  >
+                    <FaList />
+                  </button>
+                </div>
               </div>
             </div>
+
+            {isSearching && (
+              <div className="search-info">
+                <p>
+                  {t.searchResults || "Kết quả tìm kiếm"}:{" "}
+                  <strong>"{searchQuery}"</strong> ({products.length}{" "}
+                  {t.products?.toLowerCase() || "sản phẩm"})
+                </p>
+                <button onClick={clearSearch} className="clear-search-link">
+                  {t.clearSearch || "Xóa tìm kiếm"}
+                </button>
+              </div>
+            )}
 
             <div className={`products-grid ${viewMode}`}>
               {products.map((product) => (
@@ -103,16 +202,31 @@ const Products = () => {
                   className="product-card"
                 >
                   {product.images && product.images[0] && (
-                    <img src={product.images[0]} alt={product.name} />
+                    <img
+                      src={product.images[0]}
+                      alt={
+                        language === "en" && product.nameEn
+                          ? product.nameEn
+                          : product.name
+                      }
+                    />
                   )}
                   <div className="product-info">
-                    <h3>{product.name}</h3>
+                    <h3>
+                      {language === "en" && product.nameEn
+                        ? product.nameEn
+                        : product.name}
+                    </h3>
                     <p className="price">
                       {product.price.toLocaleString("vi-VN")} ₫
                     </p>
                     {viewMode === "list" && (
                       <p className="description">
-                        {product.description?.substring(0, 100)}...
+                        {(language === "en" && product.descriptionEn
+                          ? product.descriptionEn
+                          : product.description
+                        )?.substring(0, 100)}
+                        ...
                       </p>
                     )}
                   </div>

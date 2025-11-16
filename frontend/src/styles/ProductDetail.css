@@ -162,10 +162,83 @@
   margin-bottom: 30px;
 }
 
-.product-actions .btn-primary {
-  width: 100%;
+.quantity-selector {
+  margin-bottom: 20px;
+}
+
+.quantity-selector label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: 600;
+  color: #333;
+}
+
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.quantity-btn {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #ddd;
+  background: white;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+}
+
+.quantity-btn:hover {
+  background: #f0f0f0;
+  border-color: #007bff;
+}
+
+.quantity-input {
+  width: 80px;
+  text-align: center;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 10px;
+  font-size: 1rem;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 15px;
+}
+
+.product-actions .btn-primary,
+.btn-buy-now {
+  flex: 1;
   padding: 15px;
   font-size: 1.1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.product-actions .btn-primary {
+  background: #007bff;
+  color: white;
+}
+
+.product-actions .btn-primary:hover {
+  background: #0056b3;
+}
+
+.btn-buy-now {
+  background: #28a745;
+  color: white;
+}
+
+.btn-buy-now:hover {
+  background: #218838;
 }
 
 .product-category {
