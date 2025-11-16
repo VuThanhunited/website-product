@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useCart } from "../contexts/CartContext";
 import { useLanguage } from "../contexts/LanguageContext";
 import { translations } from "../utils/translations";
-import axios from "axios";
+import api from "../services/api";
 import "../styles/Checkout.css";
 
 const Checkout = () => {
@@ -98,10 +98,7 @@ const Checkout = () => {
 
       console.log("📦 Sending order data:", orderData);
 
-      const response = await axios.post(
-        "http://localhost:5000/api/orders",
-        orderData
-      );
+      const response = await api.post("/orders", orderData);
 
       console.log("✅ Order response:", response.data);
 
