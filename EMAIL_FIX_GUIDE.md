@@ -3,12 +3,14 @@
 ## ✅ Đã Fix
 
 ### 1. **Code Improvements:**
+
 - ✅ Thêm `transporter.verify()` để kiểm tra kết nối trước khi gửi
 - ✅ Thêm `replyTo` field trong mailOptions
 - ✅ Enhanced error logging với details (code, command, response)
 - ✅ Console log chi tiết khi gửi email thành công
 
 ### 2. **Email Template:**
+
 - ✅ Template HTML đã được kiểm tra và hoàn chỉnh
 - ✅ Responsive design cho mobile
 - ✅ Hỗ trợ đa ngôn ngữ (Vietnamese/English)
@@ -62,14 +64,17 @@ node testOrderEmail.js
 ## ❌ Troubleshooting
 
 ### **Lỗi: "Invalid login"**
+
 - ✅ Kiểm tra EMAIL_USER và EMAIL_PASS đúng
 - ✅ Dùng App Password, không phải password Gmail thường
 
 ### **Lỗi: "Connection timeout"**
+
 - ✅ Kiểm tra Render có cho phép outbound SMTP
 - ✅ Thử port 465 (SSL) thay vì 587 (TLS)
 
 ### **Email vào Spam:**
+
 - ✅ Thêm SPF record cho domain
 - ✅ Dùng email domain riêng thay vì Gmail
 - ✅ Add recipient email vào contacts trước
@@ -91,6 +96,7 @@ const transporter = nodemailer.createTransport({
 ```
 
 **Lấy API Key:**
+
 1. Đăng ký: https://sendgrid.com/
 2. Settings → API Keys → Create API Key
 3. Copy và set `SENDGRID_API_KEY` trong .env
@@ -98,6 +104,7 @@ const transporter = nodemailer.createTransport({
 ## 📊 Logs để Debug
 
 Khi email gửi thành công, bạn sẽ thấy:
+
 ```
 📧 Email service ready
 ✅ Order confirmation email sent: <message-id>
@@ -105,6 +112,7 @@ Khi email gửi thành công, bạn sẽ thấy:
 ```
 
 Khi có lỗi:
+
 ```
 ❌ Error sending order confirmation email: [error message]
 Error details: {
