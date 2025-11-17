@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 60" width="200" height="60">
+  <!-- Background -->
+  <rect width="200" height="60" fill="#1976D2" rx="4"/>
+  
+  <!-- EFT Text -->
+  <text x="20" y="40" font-family="Arial, sans-serif" font-size="32" font-weight="bold" fill="#FFFFFF">
+    EFT
+  </text>
+  
+  <!-- Technology Text -->
+  <text x="85" y="40" font-family="Arial, sans-serif" font-size="16" fill="#FFD700">
+    Technology
+  </text>
+  
+  <!-- Decorative elements -->
+  <circle cx="170" cy="30" r="12" fill="none" stroke="#FFD700" stroke-width="2"/>
+  <circle cx="170" cy="30" r="6" fill="#FFD700"/>
+</svg>
