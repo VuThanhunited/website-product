@@ -27,7 +27,8 @@ async function updateCompanyLogo() {
       });
     } else {
       console.log("📝 Updating existing company info...");
-      company.logo = "https://ui-avatars.com/api/?name=EFT+Technology&size=200&background=1976D2&color=fff&bold=true&font-size=0.4";
+      company.logo =
+        "https://ui-avatars.com/api/?name=EFT+Technology&size=200&background=1976D2&color=fff&bold=true&font-size=0.4";
       company.companyName = company.companyName || "EFT Technology";
     }
 
