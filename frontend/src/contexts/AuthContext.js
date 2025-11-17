@@ -31,7 +31,7 @@ export const AuthProvider = ({ children }) => {
       }
 
       // Verify token with backend
-      const response = await axios.get("http://localhost:5000/api/auth/me", {
+      const response = await api.get("/auth/me", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -81,8 +81,8 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (username, email, password) => {
     try {
-      await axios.post(
-        "http://localhost:5000/api/auth/register",
+      await api.post(
+        "/auth/register",
         { username, email, password },
         { withCredentials: true }
       );

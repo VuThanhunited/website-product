@@ -52,7 +52,7 @@ const Company = () => {
           <div className="intro-image">
             {companyInfo.logo && (
               <img
-                src={`http://localhost:5000${companyInfo.logo}`}
+                src={getAssetUrl(companyInfo.logo)}
                 alt={companyInfo.companyName}
                 className="company-logo-large"
               />
