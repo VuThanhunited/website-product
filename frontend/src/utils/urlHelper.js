@@ -9,10 +9,8 @@ const API_BASE_URL = process.env.REACT_APP_API_URL
 console.log("🔧 [urlHelper] API_BASE_URL:", API_BASE_URL);
 console.log("🔧 [urlHelper] NODE_ENV:", process.env.NODE_ENV);
 console.log("🔧 [urlHelper] REACT_APP_API_URL:", process.env.REACT_APP_API_URL);
-console.log(
-  "🔧 [urlHelper] window.location.hostname:",
-  window.location.hostname
-);
+console.log("🔧 [urlHelper] window.location.hostname:", window.location.hostname);
+console.log("🔧 [urlHelper] Version: 2.0 - Data URL support added");
 
 // Placeholder image when original fails
 const PLACEHOLDER_IMAGE =
