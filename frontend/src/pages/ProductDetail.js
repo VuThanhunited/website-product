@@ -54,7 +54,7 @@ const ProductDetail = () => {
     };
 
     fetchProduct();
-  }, [slug]);
+  }, [slug, t.productNotFound]);
 
   if (loading) {
     return (
