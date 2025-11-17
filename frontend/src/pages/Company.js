@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { getCompanyInfo } from "../services/api";
 import { useLanguage } from "../contexts/LanguageContext";
 import { translations } from "../utils/translations";
+import { getAssetUrl } from "../utils/urlHelper";
 import "../styles/Company.css";
 
 const Company = () => {

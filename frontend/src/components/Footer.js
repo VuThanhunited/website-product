@@ -4,6 +4,7 @@ import { SiZalo } from "react-icons/si";
 import { getCompanyInfo } from "../services/api";
 import { useLanguage } from "../contexts/LanguageContext";
 import { translations } from "../utils/translations";
+import { getAssetUrl } from "../utils/urlHelper";
 import "../styles/Footer.css";
 
 const Footer = () => {
@@ -31,7 +32,7 @@ const Footer = () => {
           <div className="footer-section">
             {companyInfo?.logo ? (
               <img
-                src={`http://localhost:5000${companyInfo.logo}`}
+                src={getAssetUrl(companyInfo.logo)}
                 alt={companyInfo.companyName}
                 className="footer-logo"
               />
@@ -105,7 +106,7 @@ const Footer = () => {
                       src={
                         partner.logo.startsWith("http")
                           ? partner.logo
-                          : `http://localhost:5000${partner.logo}`
+                          : getAssetUrl(partner.logo)
                       }
                       alt={partner.name}
                       className="partner-logo-img"

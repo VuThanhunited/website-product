@@ -15,6 +15,7 @@ import { useLanguage } from "../contexts/LanguageContext";
 import { useCart } from "../contexts/CartContext";
 import { useAuth } from "../contexts/AuthContext";
 import { translations } from "../utils/translations";
+import { getAssetUrl } from "../utils/urlHelper";
 import "../styles/Header.css";
 
 const Header = () => {
