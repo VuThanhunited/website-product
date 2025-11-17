@@ -56,7 +56,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 60px;
+  padding: 40px;
   background: linear-gradient(135deg, #f8f9fa 0%, #e8edf2 100%);
   border-right: 2px solid rgba(102, 126, 234, 0.1);
   position: relative;
@@ -103,7 +103,9 @@
 
 .slide-image {
   width: 100%;
-  max-height: 450px;
+  max-width: 100%;
+  height: 100%;
+  max-height: 500px;
   object-fit: contain;
   transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.15));
@@ -766,4 +768,33 @@
     padding: 15px 40px;
     font-size: 1rem;
   }
+}
+
+/* Lazy Image Support for Slideshow */
+.slide-image-container .lazy-image-wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+}
+
+.slide-image-container .lazy-image {
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  max-height: 500px;
+  object-fit: contain;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.3s ease-in-out;
+  filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.15));
+  position: relative;
+  z-index: 1;
+  border-radius: 8px;
+}
+
+.slide-link-wrapper:hover .slide-image-container .lazy-image.loaded {
+  transform: scale(1.05) rotate(-2deg);
+  filter: drop-shadow(0 15px 40px rgba(102, 126, 234, 0.3));
 }

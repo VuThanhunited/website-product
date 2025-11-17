@@ -218,6 +218,10 @@ const generateOrderEmailTemplate = (order, language = "vi") => {
 // Gửi email xác nhận đơn hàng
 const sendOrderConfirmationEmail = async (order, language = "vi") => {
   try {
+    // Verify connection first
+    await transporter.verify();
+    console.log("📧 Email service ready");
+
     const isVietnamese = language === "vi";
     const subject = isVietnamese
       ? `Xác nhận đơn hàng #${order._id
@@ -237,13 +241,20 @@ const sendOrderConfirmationEmail = async (order, language = "vi") => {
       to: order.customerInfo.email,
       subject: subject,
       html: generateOrderEmailTemplate(order, language),
+      replyTo: process.env.EMAIL_USER,
     };
 
     const info = await transporter.sendMail(mailOptions);
     console.log("✅ Order confirmation email sent:", info.messageId);
+    console.log("📬 Sent to:", order.customerInfo.email);
     return { success: true, messageId: info.messageId };
   } catch (error) {
     console.error("❌ Error sending order confirmation email:", error);
+    console.error("Error details:", {
+      code: error.code,
+      command: error.command,
+      response: error.response,
+    });
     return { success: false, error: error.message };
   }
 };
