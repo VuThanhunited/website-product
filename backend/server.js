@@ -42,7 +42,16 @@ app.use(
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
+// Serve static files with cache headers
+app.use(
+  "/uploads",
+  (req, res, next) => {
+    res.set("Cache-Control", "public, max-age=31536000, immutable");
+    next();
+  },
+  express.static(path.join(__dirname, "uploads"))
+);
 
 // MongoDB Connection
 mongoose
@@ -71,6 +80,15 @@ app.use("/api/contact", contactRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/cart", cartRoutes);
+
+// Health check endpoint
+app.get("/api/health", (req, res) => {
+  res.json({
+    status: "OK",
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+  });
+});
 
 // Default Route
 app.get("/", (req, res) => {

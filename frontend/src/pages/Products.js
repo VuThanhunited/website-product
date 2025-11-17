@@ -4,6 +4,7 @@ import { FaTh, FaList, FaSearch, FaTimes } from "react-icons/fa";
 import { getProducts, getCategories } from "../services/api";
 import { useLanguage } from "../contexts/LanguageContext";
 import { translations } from "../utils/translations";
+import LazyImage from "../components/LazyImage";
 import "../styles/Products.css";
 
 const Products = () => {
@@ -202,13 +203,14 @@ const Products = () => {
                   className="product-card"
                 >
                   {product.images && product.images[0] && (
-                    <img
+                    <LazyImage
                       src={product.images[0]}
                       alt={
                         language === "en" && product.nameEn
                           ? product.nameEn
                           : product.name
                       }
+                      className="product-image"
                     />
                   )}
                   <div className="product-info">

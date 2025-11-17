@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { getProducts, getSlogans } from "../services/api";
 import { useLanguage } from "../contexts/LanguageContext";
 import { translations } from "../utils/translations";
+import LazyImage from "../components/LazyImage";
 import "../styles/Home.css";
 
 const Home = () => {
@@ -74,7 +75,7 @@ const Home = () => {
                   <div className="slide-layout">
                     {/* Cột trái - Hình ảnh sản phẩm */}
                     <div className="slide-image-container">
-                      <img
+                      <LazyImage
                         src={product.images[0]}
                         alt={product.name}
                         className="slide-image"

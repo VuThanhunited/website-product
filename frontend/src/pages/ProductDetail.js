@@ -4,6 +4,7 @@ import { getProductBySlug, getProductById } from "../services/api";
 import { useLanguage } from "../contexts/LanguageContext";
 import { useCart } from "../contexts/CartContext";
 import { translations } from "../utils/translations";
+import LazyImage from "../components/LazyImage";
 import "../styles/ProductDetail.css";
 
 const ProductDetail = () => {
@@ -84,17 +85,25 @@ const ProductDetail = () => {
           <div className="product-media">
             <div className="main-media">
               {product.images && product.images[selectedImage] && (
-                <img src={product.images[selectedImage]} alt={product.name} />
+                <LazyImage
+                  src={product.images[selectedImage]}
+                  alt={product.name}
+                  className="main-product-image"
+                />
               )}
             </div>
             <div className="media-thumbnails">
               {product.images &&
                 product.images.map((image, index) => (
-                  <img
+                  <LazyImage
                     key={index}
                     src={image}
                     alt={`${product.name} ${index + 1}`}
-                    className={selectedImage === index ? "active" : ""}
+                    className={
+                      selectedImage === index
+                        ? "active thumbnail-image"
+                        : "thumbnail-image"
+                    }
                     onClick={() => setSelectedImage(index)}
                   />
                 ))}
