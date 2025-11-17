@@ -5,6 +5,13 @@ const API_BASE_URL = process.env.REACT_APP_API_URL
   ? "https://website-product-1.onrender.com"
   : "http://localhost:5000";
 
+// Debug log (will be removed in production build)
+if (process.env.NODE_ENV !== 'production') {
+  console.log('🔧 urlHelper.js - API_BASE_URL:', API_BASE_URL);
+  console.log('🔧 NODE_ENV:', process.env.NODE_ENV);
+  console.log('🔧 REACT_APP_API_URL:', process.env.REACT_APP_API_URL);
+}
+
 // Placeholder image when original fails
 const PLACEHOLDER_IMAGE =
   'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="400"%3E%3Crect fill="%23f0f0f0" width="400" height="400"/%3E%3Ctext fill="%23999" font-family="sans-serif" font-size="24" x="50%25" y="50%25" text-anchor="middle" dy=".3em"%3ENo Image%3C/text%3E%3C/svg%3E';
