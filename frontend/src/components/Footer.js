@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { FaYoutube, FaInstagram, FaWhatsapp } from "react-icons/fa";
 import { SiZalo } from "react-icons/si";
-import { getCompanyInfo } from "../services/api";
+import { getCompanyInfo, getPartners } from "../services/api";
 import { useLanguage } from "../contexts/LanguageContext";
 import { translations } from "../utils/translations";
 import { getAssetUrl } from "../utils/urlHelper";
+import logoImage from "../assets/logo.png";
 import "../styles/Footer.css";
 
 const Footer = () => {
@@ -30,15 +31,11 @@ const Footer = () => {
       <div className="container">
         <div className="footer-content">
           <div className="footer-section">
-            {companyInfo?.logo ? (
-              <img
-                src={getAssetUrl(companyInfo.logo)}
-                alt={companyInfo.companyName}
-                className="footer-logo"
-              />
-            ) : (
-              <h3>{companyInfo?.companyName || t.company}</h3>
-            )}
+            <img
+              src={logoImage}
+              alt={companyInfo?.companyName || "EFT Technology"}
+              className="footer-logo"
+            />
             <p>{companyInfo?.address}</p>
             <p>
               {t.phone}: {companyInfo?.phone}

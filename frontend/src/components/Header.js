@@ -15,7 +15,7 @@ import { useLanguage } from "../contexts/LanguageContext";
 import { useCart } from "../contexts/CartContext";
 import { useAuth } from "../contexts/AuthContext";
 import { translations } from "../utils/translations";
-import { getAssetUrl, handleImageError } from "../utils/urlHelper";
+import logoImage from "../assets/logo.png";
 import "../styles/Header.css";
 
 const Header = () => {
@@ -78,18 +78,11 @@ const Header = () => {
             {/* Bên trái - Logo, địa chỉ, số điện thoại */}
             <div className="header-left">
               <Link to="/" className="logo-section">
-                {companyInfo?.logo ? (
-                  <img
-                    src={getAssetUrl(companyInfo.logo)}
-                    alt={companyInfo.companyName || "Logo"}
-                    className="logo"
-                    onError={handleImageError}
-                  />
-                ) : (
-                  <h2 className="company-name">
-                    {companyInfo?.companyName || "EFT Technology"}
-                  </h2>
-                )}
+                <img
+                  src={logoImage}
+                  alt={companyInfo?.companyName || "EFT Technology"}
+                  className="logo"
+                />
               </Link>
               <div className="company-details">
                 <p className="address">📍 {companyInfo?.address}</p>
