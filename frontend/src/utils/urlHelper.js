@@ -5,12 +5,14 @@ const API_BASE_URL = process.env.REACT_APP_API_URL
   ? "https://website-product-1.onrender.com"
   : "http://localhost:5000";
 
-// Debug log (will be removed in production build)
-if (process.env.NODE_ENV !== 'production') {
-  console.log('🔧 urlHelper.js - API_BASE_URL:', API_BASE_URL);
-  console.log('🔧 NODE_ENV:', process.env.NODE_ENV);
-  console.log('🔧 REACT_APP_API_URL:', process.env.REACT_APP_API_URL);
-}
+// Debug log - Always show to verify environment
+console.log("🔧 [urlHelper] API_BASE_URL:", API_BASE_URL);
+console.log("🔧 [urlHelper] NODE_ENV:", process.env.NODE_ENV);
+console.log("🔧 [urlHelper] REACT_APP_API_URL:", process.env.REACT_APP_API_URL);
+console.log(
+  "🔧 [urlHelper] window.location.hostname:",
+  window.location.hostname
+);
 
 // Placeholder image when original fails
 const PLACEHOLDER_IMAGE =
