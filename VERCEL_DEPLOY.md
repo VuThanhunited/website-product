@@ -3,6 +3,7 @@
 ## ✅ Đã hoàn thành tự động
 
 Các file sau đã được tạo/cập nhật:
+
 - ✅ `.env.production` - Production environment variables
 - ✅ `vercel.json` - Vercel configuration
 - ✅ `src/services/api.js` - Tự động dùng production URL
@@ -79,16 +80,19 @@ Sau khi deploy xong:
 ## 🐛 Troubleshooting
 
 ### CORS Error
+
 - Check backend logs: https://dashboard.render.com
 - Đảm bảo FRONTEND_URL đã set đúng
 - Redeploy backend
 
 ### API Connection Failed
+
 - Check backend status: https://website-product-1.onrender.com/api/health
 - Check Network tab trong Chrome DevTools
 - Verify REACT_APP_API_URL
 
 ### Build Failed
+
 - Check Vercel logs
 - Run `npm run build` locally để test
 - Check package.json dependencies
