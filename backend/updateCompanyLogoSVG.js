@@ -23,7 +23,8 @@ async function updateCompanyLogo() {
         address: "123 Đường Kinh Doanh, Thành Phố, Quốc Gia",
         phone: "+84 234 567 890",
         email: "contact@eft-tech.com",
-        about: "EFT Technology - Công ty chuyên cung cấp các sản phẩm chăm sóc ô tô chất lượng cao",
+        about:
+          "EFT Technology - Công ty chuyên cung cấp các sản phẩm chăm sóc ô tô chất lượng cao",
         partnerLogos: [],
       });
     } else {
@@ -39,7 +40,6 @@ async function updateCompanyLogo() {
     console.log("   ✓ No external dependencies");
     console.log("   ✓ Works immediately without network requests");
     console.log("   ✓ No CORS issues");
-    
   } catch (error) {
     console.error("❌ Error:", error.message);
   } finally {
