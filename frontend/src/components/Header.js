@@ -15,7 +15,7 @@ import { useLanguage } from "../contexts/LanguageContext";
 import { useCart } from "../contexts/CartContext";
 import { useAuth } from "../contexts/AuthContext";
 import { translations } from "../utils/translations";
-import { getAssetUrl } from "../utils/urlHelper";
+import { getAssetUrl, handleImageError } from "../utils/urlHelper";
 import "../styles/Header.css";
 
 const Header = () => {
@@ -80,14 +80,15 @@ const Header = () => {
               <Link to="/" className="logo-section">
                 {companyInfo?.logo ? (
                   <img
-                    src={`http://localhost:5000${companyInfo.logo}`}
+                    src={getAssetUrl(companyInfo.logo)}
                     alt={companyInfo.companyName || "Logo"}
                     className="logo"
+                    onError={handleImageError}
                   />
                 ) : (
-                  <h1 className="company-name">
-                    {companyInfo?.companyName || "Company Name"}
-                  </h1>
+                  <h2 className="company-name">
+                    {companyInfo?.companyName || "EFT Technology"}
+                  </h2>
                 )}
               </Link>
               <div className="company-details">
