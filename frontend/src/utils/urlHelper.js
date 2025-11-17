@@ -21,9 +21,15 @@ const PLACEHOLDER_IMAGE =
 // Get full URL for static assets (images, uploads)
 export const getAssetUrl = (path) => {
   if (!path) return PLACEHOLDER_IMAGE;
+  // Handle data URLs (inline SVG, base64, etc.)
+  if (path.startsWith("data:")) {
+    return path;
+  }
+  // Handle external URLs
   if (path.startsWith("http://") || path.startsWith("https://")) {
     return path;
   }
+  // Handle relative paths
   return `${API_BASE_URL}${path}`;
 };
 
