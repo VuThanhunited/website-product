@@ -3,7 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { FaCheckCircle } from "react-icons/fa";
 import { useLanguage } from "../contexts/LanguageContext";
 import { translations } from "../utils/translations";
-import axios from "axios";
+import api from "../services/api";
 import "../styles/OrderSuccess.css";
 
 const OrderSuccess = () => {

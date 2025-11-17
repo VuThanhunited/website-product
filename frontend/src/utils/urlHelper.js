@@ -43,9 +43,11 @@ export const handleImageError = (e) => {
 // Get API base URL
 export const getApiBaseUrl = () => API_BASE_URL;
 
-export default {
+const urlHelper = {
   getAssetUrl,
   getApiBaseUrl,
   handleImageError,
   PLACEHOLDER_IMAGE,
 };
+
+export default urlHelper;

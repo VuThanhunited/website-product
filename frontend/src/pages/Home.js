@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import { getProducts, getSlogans } from "../services/api";
 import { useLanguage } from "../contexts/LanguageContext";
 import { translations } from "../utils/translations";
-import { handleImageError } from "../utils/urlHelper";
 import "../styles/Home.css";
 
 const Home = () => {

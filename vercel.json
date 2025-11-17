@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "name": "eft-company",
+  "buildCommand": "cd frontend && npm install && npm run build",
+  "outputDirectory": "frontend/build",
+  "installCommand": "cd frontend && npm install",
+  "framework": null,
+  "env": {
+    "REACT_APP_API_URL": "https://website-product-1.onrender.com/api"
+  }
+}
