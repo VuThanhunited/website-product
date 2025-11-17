@@ -3,14 +3,16 @@
 ## ✅ ĐÃ FIX
 
 ### 1. **Email Service - ✅ Working Locally**
+
 - ✅ Đổi từ `service: "gmail"` sang config SMTP chi tiết
 - ✅ Port: 587 (TLS)
 - ✅ Add timeout settings
 - ✅ Test thành công local: `node testEmailDirect.js`
 
 ### 2. **Partner Logos - ✅ Fixed**
+
 - ✅ Shopee: Wikipedia CDN
-- ✅ Lazada: Wikipedia CDN  
+- ✅ Lazada: Wikipedia CDN
 - ✅ Tiki: Tiki CDN official
 - ✅ Database đã update
 
@@ -45,12 +47,14 @@ NODE_ENV=production
 ### **Bước 3: Verify Deploy**
 
 **Check Logs:**
+
 ```
 ✅ MongoDB Connected Successfully
 ✅ Server is running on port 5000
 ```
 
 **Test API:**
+
 - Health: https://website-product-1.onrender.com/api/health
 - Products: https://website-product-1.onrender.com/api/products
 
@@ -97,10 +101,12 @@ Refresh website để thấy logos mới!
 ## ⚠️ LƯU Ý
 
 **Email password đang dùng App Password của Gmail:**
+
 - User: `vtu21102000@gmail.com`
 - Pass: `jujnhapozgyjaiuw` (16 chars App Password)
 
 **Nếu email vẫn fail trên Render:**
+
 1. Check Render có block outbound port 587 không
 2. Thử đổi sang port 465 (SSL)
 3. Hoặc dùng SendGrid (free tier)
@@ -108,6 +114,7 @@ Refresh website để thấy logos mới!
 ## 🎯 KẾT QUẢ MONG ĐỢI
 
 Sau khi deploy:
+
 - ✅ Customer nhận email xác nhận đơn hàng
 - ✅ Admin nhận thông báo đơn hàng mới
 - ✅ 3 logo partner (Shopee, Lazada, Tiki) hiển thị rõ ràng

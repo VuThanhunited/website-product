@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { FaYoutube, FaInstagram, FaWhatsapp } from "react-icons/fa";
 import { SiZalo } from "react-icons/si";
-import { getCompanyInfo, getPartners } from "../services/api";
+import { getCompanyInfo } from "../services/api";
 import { useLanguage } from "../contexts/LanguageContext";
 import { translations } from "../utils/translations";
-import { getAssetUrl } from "../utils/urlHelper";
 import logoImage from "../assets/logo.png";
+import shopeeLogo from "../assets/shopee-logo.jpg";
+import lazadaLogo from "../assets/lazada-logo.png";
+import tikiLogo from "../assets/tiki-logo.jpg";
 import "../styles/Footer.css";
 
 const Footer = () => {
@@ -87,32 +89,44 @@ const Footer = () => {
             </div>
           </div>
 
-          {companyInfo?.partners && companyInfo.partners.length > 0 && (
-            <div className="footer-section partners">
-              <h3>{t.ourPartners}</h3>
-              <div className="partner-logos">
-                {companyInfo.partners.map((partner, index) => (
-                  <a
-                    key={index}
-                    href={partner.website}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="partner-link"
-                  >
-                    <img
-                      src={
-                        partner.logo.startsWith("http")
-                          ? partner.logo
-                          : getAssetUrl(partner.logo)
-                      }
-                      alt={partner.name}
-                      className="partner-logo-img"
-                    />
-                  </a>
-                ))}
-              </div>
+          {/* Partner Logos - Hardcoded with local assets */}
+          <div className="footer-section partners">
+            <h3>{t.ourPartners}</h3>
+            <div className="partner-logos">
+              <a
+                href="https://shopee.vn"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="partner-link"
+              >
+                <img
+                  src={shopeeLogo}
+                  alt="Shopee"
+                  className="partner-logo-img"
+                />
+              </a>
+              <a
+                href="https://lazada.vn"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="partner-link"
+              >
+                <img
+                  src={lazadaLogo}
+                  alt="Lazada"
+                  className="partner-logo-img"
+                />
+              </a>
+              <a
+                href="https://tiki.vn"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="partner-link"
+              >
+                <img src={tikiLogo} alt="Tiki" className="partner-logo-img" />
+              </a>
             </div>
-          )}
+          </div>
         </div>
 
         <div className="footer-bottom">
