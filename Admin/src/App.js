@@ -6,12 +6,20 @@ import {
   FaImages,
   FaEnvelope,
   FaQuestionCircle,
+  FaBuilding,
+  FaCommentDots,
+  FaShoppingCart,
+  FaHandshake,
 } from "react-icons/fa";
 import AdminProducts from "./pages/AdminProducts";
 import AdminCategories from "./pages/AdminCategories";
 import AdminMedia from "./pages/AdminMedia";
 import AdminMessages from "./pages/AdminMessages";
 import AdminSupport from "./pages/AdminSupport";
+import AdminCompany from "./pages/AdminCompany";
+import AdminSlogans from "./pages/AdminSlogans";
+import AdminOrders from "./pages/AdminOrders";
+import AdminPartners from "./pages/AdminPartners";
 import "./App.css";
 
 function App() {
@@ -29,8 +37,20 @@ function App() {
             <Link to="/categories" className="nav-item">
               <FaTags /> Quản Lý Danh Mục
             </Link>
+            <Link to="/orders" className="nav-item">
+              <FaShoppingCart /> Quản Lý Đơn Hàng
+            </Link>
             <Link to="/media" className="nav-item">
               <FaImages /> Quản Lý Media
+            </Link>
+            <Link to="/slogans" className="nav-item">
+              <FaCommentDots /> Quản Lý Slogan
+            </Link>
+            <Link to="/company" className="nav-item">
+              <FaBuilding /> Thông Tin Công Ty
+            </Link>
+            <Link to="/partners" className="nav-item">
+              <FaHandshake /> Quản Lý Đối Tác
             </Link>
             <Link to="/support" className="nav-item">
               <FaQuestionCircle /> Bài Viết Hỗ Trợ
@@ -46,7 +66,11 @@ function App() {
             <Route path="/" element={<AdminProducts />} />
             <Route path="/products" element={<AdminProducts />} />
             <Route path="/categories" element={<AdminCategories />} />
+            <Route path="/orders" element={<AdminOrders />} />
             <Route path="/media" element={<AdminMedia />} />
+            <Route path="/slogans" element={<AdminSlogans />} />
+            <Route path="/company" element={<AdminCompany />} />
+            <Route path="/partners" element={<AdminPartners />} />
             <Route path="/support" element={<AdminSupport />} />
             <Route path="/messages" element={<AdminMessages />} />
           </Routes>
