@@ -77,11 +77,13 @@ const AdminOrders = () => {
     if (searchTerm) {
       filtered = filtered.filter(
         (order) =>
-          order.customerName
+          order.customerInfo?.fullName
             ?.toLowerCase()
             .includes(searchTerm.toLowerCase()) ||
-          order.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          order.phone?.includes(searchTerm) ||
+          order.customerInfo?.email
+            ?.toLowerCase()
+            .includes(searchTerm.toLowerCase()) ||
+          order.customerInfo?.phone?.includes(searchTerm) ||
           order._id?.includes(searchTerm)
       );
     }
@@ -228,14 +230,16 @@ const AdminOrders = () => {
                   {getStatusBadge(order.status)}
                 </div>
                 <div className="order-info">
-                  <div className="customer-name">{order.customerName}</div>
+                  <div className="customer-name">
+                    {order.customerInfo?.fullName}
+                  </div>
                   <div className="order-date">
                     {formatDate(order.createdAt)}
                   </div>
                 </div>
                 <div className="order-footer">
                   <div className="order-total">
-                    {formatCurrency(order.totalAmount)}
+                    {formatCurrency(order.total || 0)}
                   </div>
                   <button className="btn-view">
                     <FaEye /> Xem chi tiết
@@ -263,24 +267,29 @@ const AdminOrders = () => {
               <div className="info-grid">
                 <div className="info-item">
                   <label>Họ tên:</label>
-                  <span>{selectedOrder.customerName}</span>
+                  <span>{selectedOrder.customerInfo?.fullName}</span>
                 </div>
                 <div className="info-item">
                   <label>Email:</label>
-                  <span>{selectedOrder.email}</span>
+                  <span>{selectedOrder.customerInfo?.email}</span>
                 </div>
                 <div className="info-item">
                   <label>Số điện thoại:</label>
-                  <span>{selectedOrder.phone}</span>
+                  <span>{selectedOrder.customerInfo?.phone}</span>
                 </div>
                 <div className="info-item full-width">
                   <label>Địa chỉ:</label>
-                  <span>{selectedOrder.address}</span>
+                  <span>
+                    {selectedOrder.customerInfo?.address},{" "}
+                    {selectedOrder.customerInfo?.ward},{" "}
+                    {selectedOrder.customerInfo?.district},{" "}
+                    {selectedOrder.customerInfo?.city}
+                  </span>
                 </div>
-                {selectedOrder.notes && (
+                {selectedOrder.customerInfo?.notes && (
                   <div className="info-item full-width">
                     <label>Ghi chú:</label>
-                    <span>{selectedOrder.notes}</span>
+                    <span>{selectedOrder.customerInfo?.notes}</span>
                   </div>
                 )}
               </div>
@@ -309,9 +318,39 @@ const AdminOrders = () => {
                   </div>
                 ))}
               </div>
-              <div className="total-amount">
-                <strong>Tổng cộng:</strong>
-                <strong>{formatCurrency(selectedOrder.totalAmount)}</strong>
+              <div className="order-summary">
+                <div className="summary-row">
+                  <span>Tạm tính:</span>
+                  <span>{formatCurrency(selectedOrder.subtotal || 0)}</span>
+                </div>
+                <div className="summary-row">
+                  <span>Phí vận chuyển:</span>
+                  <span>{formatCurrency(selectedOrder.shippingFee || 0)}</span>
+                </div>
+                <div className="summary-row total">
+                  <strong>Tổng cộng:</strong>
+                  <strong>{formatCurrency(selectedOrder.total || 0)}</strong>
+                </div>
+                <div className="summary-row">
+                  <span>Phương thức thanh toán:</span>
+                  <span>
+                    {selectedOrder.paymentMethod === "cod"
+                      ? "Thanh toán khi nhận hàng"
+                      : selectedOrder.paymentMethod === "bank"
+                      ? "Chuyển khoản"
+                      : "MoMo"}
+                  </span>
+                </div>
+                <div className="summary-row">
+                  <span>Trạng thái thanh toán:</span>
+                  <span
+                    className={selectedOrder.paidStatus ? "paid" : "unpaid"}
+                  >
+                    {selectedOrder.paidStatus
+                      ? "Đã thanh toán"
+                      : "Chưa thanh toán"}
+                  </span>
+                </div>
               </div>
             </div>
 
