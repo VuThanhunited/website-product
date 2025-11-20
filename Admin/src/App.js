@@ -10,7 +10,9 @@ import {
   FaCommentDots,
   FaShoppingCart,
   FaHandshake,
+  FaChartLine,
 } from "react-icons/fa";
+import Dashboard from "./pages/Dashboard";
 import AdminProducts from "./pages/AdminProducts";
 import AdminCategories from "./pages/AdminCategories";
 import AdminMedia from "./pages/AdminMedia";
@@ -31,6 +33,9 @@ function App() {
             <h2>🛒 Admin Panel</h2>
           </div>
           <nav className="sidebar-nav">
+            <Link to="/" className="nav-item">
+              <FaChartLine /> Dashboard
+            </Link>
             <Link to="/products" className="nav-item">
               <FaBoxOpen /> Quản Lý Sản Phẩm
             </Link>
@@ -63,7 +68,7 @@ function App() {
 
         <main className="admin-main">
           <Routes>
-            <Route path="/" element={<AdminProducts />} />
+            <Route path="/" element={<Dashboard />} />
             <Route path="/products" element={<AdminProducts />} />
             <Route path="/categories" element={<AdminCategories />} />
             <Route path="/orders" element={<AdminOrders />} />
