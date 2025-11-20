@@ -37,15 +37,32 @@ const AdminOrders = () => {
   const fetchOrders = async () => {
     try {
       const response = await axios.get(`${API_URL}/orders`);
-      setOrders(
-        response.data.sort(
-          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-        )
-      );
+      // Backend returns { success: true, data: orders }
+      let ordersData = [];
+
+      if (Array.isArray(response.data)) {
+        ordersData = response.data;
+      } else if (response.data.data && Array.isArray(response.data.data)) {
+        ordersData = response.data.data;
+      } else if (response.data.orders && Array.isArray(response.data.orders)) {
+        ordersData = response.data.orders;
+      }
+
+      // Ensure ordersData is an array before sorting
+      if (Array.isArray(ordersData)) {
+        setOrders(
+          ordersData.sort(
+            (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+          )
+        );
+      } else {
+        setOrders([]);
+      }
       setLoading(false);
     } catch (error) {
       console.error("Error fetching orders:", error);
       setMessage("Lỗi khi tải đơn hàng");
+      setOrders([]);
       setLoading(false);
     }
   };
