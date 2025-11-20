@@ -58,8 +58,8 @@ const Dashboard = () => {
         axios.get(`${API_URL}/products`),
       ]);
 
-      const ordersData = ordersRes.data;
-      const productsData = productsRes.data;
+      const ordersData = Array.isArray(ordersRes.data) ? ordersRes.data : [];
+      const productsData = Array.isArray(productsRes.data) ? productsRes.data : [];
 
       setOrders(ordersData);
 
@@ -112,6 +112,10 @@ const Dashboard = () => {
 
   // Prepare chart data
   const getOrdersChartData = () => {
+    if (!Array.isArray(orders) || orders.length === 0) {
+      return [];
+    }
+    
     const days = timeRange === "7days" ? 7 : timeRange === "30days" ? 30 : 90;
     const chartData = [];
 
@@ -119,7 +123,7 @@ const Dashboard = () => {
       const date = subDays(new Date(), i);
       const dateStr = format(date, "MM/dd");
       const dayOrders = orders.filter(
-        (order) => format(new Date(order.createdAt), "MM/dd") === dateStr
+        (order) => order && order.createdAt && format(new Date(order.createdAt), "MM/dd") === dateStr
       );
 
       chartData.push({
@@ -137,6 +141,10 @@ const Dashboard = () => {
 
   // Order status distribution
   const getOrderStatusData = () => {
+    if (!Array.isArray(orders) || orders.length === 0) {
+      return [];
+    }
+    
     const statusCount = {
       pending: 0,
       confirmed: 0,
@@ -146,7 +154,9 @@ const Dashboard = () => {
     };
 
     orders.forEach((order) => {
-      statusCount[order.status] = (statusCount[order.status] || 0) + 1;
+      if (order && order.status) {
+        statusCount[order.status] = (statusCount[order.status] || 0) + 1;
+      }
     });
 
     return [
@@ -160,24 +170,32 @@ const Dashboard = () => {
 
   // Top selling products
   const getTopProducts = () => {
+    if (!Array.isArray(orders) || orders.length === 0) {
+      return [];
+    }
+    
     const productSales = {};
 
     orders.forEach((order) => {
-      order.items?.forEach((item) => {
-        const productId = item.productId?._id || item.productId;
-        const productName = item.productId?.name || "Unknown";
+      if (order && Array.isArray(order.items)) {
+        order.items.forEach((item) => {
+          if (item && item.productId) {
+            const productId = item.productId._id || item.productId;
+            const productName = item.productId.name || "Unknown";
 
-        if (!productSales[productId]) {
-          productSales[productId] = {
-            name: productName,
-            quantity: 0,
-            revenue: 0,
-          };
-        }
+            if (!productSales[productId]) {
+              productSales[productId] = {
+                name: productName,
+                quantity: 0,
+                revenue: 0,
+              };
+            }
 
-        productSales[productId].quantity += item.quantity;
-        productSales[productId].revenue += item.price * item.quantity;
-      });
+            productSales[productId].quantity += item.quantity || 0;
+            productSales[productId].revenue += (item.price || 0) * (item.quantity || 0);
+          }
+        });
+      }
     });
 
     return Object.values(productSales)
@@ -194,6 +212,9 @@ const Dashboard = () => {
   };
 
   const formatCurrency = (amount) => {
+    if (!amount || isNaN(amount)) {
+      return "0 ₫";
+    }
     return new Intl.NumberFormat("vi-VN", {
       style: "currency",
       currency: "VND",
