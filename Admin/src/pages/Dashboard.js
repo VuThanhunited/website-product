@@ -28,7 +28,11 @@ import {
 import { format, subDays, startOfDay } from "date-fns";
 import "./Dashboard.css";
 
-const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000/api";
+const API_URL =
+  process.env.REACT_APP_API_URL ||
+  (process.env.NODE_ENV === "production"
+    ? "https://website-product-1.onrender.com/api"
+    : "http://localhost:5000/api");
 
 const Dashboard = () => {
   const [stats, setStats] = useState({
@@ -59,7 +63,9 @@ const Dashboard = () => {
       ]);
 
       const ordersData = Array.isArray(ordersRes.data) ? ordersRes.data : [];
-      const productsData = Array.isArray(productsRes.data) ? productsRes.data : [];
+      const productsData = Array.isArray(productsRes.data)
+        ? productsRes.data
+        : [];
 
       setOrders(ordersData);
 
@@ -115,7 +121,7 @@ const Dashboard = () => {
     if (!Array.isArray(orders) || orders.length === 0) {
       return [];
     }
-    
+
     const days = timeRange === "7days" ? 7 : timeRange === "30days" ? 30 : 90;
     const chartData = [];
 
@@ -123,7 +129,10 @@ const Dashboard = () => {
       const date = subDays(new Date(), i);
       const dateStr = format(date, "MM/dd");
       const dayOrders = orders.filter(
-        (order) => order && order.createdAt && format(new Date(order.createdAt), "MM/dd") === dateStr
+        (order) =>
+          order &&
+          order.createdAt &&
+          format(new Date(order.createdAt), "MM/dd") === dateStr
       );
 
       chartData.push({
@@ -144,7 +153,7 @@ const Dashboard = () => {
     if (!Array.isArray(orders) || orders.length === 0) {
       return [];
     }
-    
+
     const statusCount = {
       pending: 0,
       confirmed: 0,
@@ -173,7 +182,7 @@ const Dashboard = () => {
     if (!Array.isArray(orders) || orders.length === 0) {
       return [];
     }
-    
+
     const productSales = {};
 
     orders.forEach((order) => {
@@ -192,7 +201,8 @@ const Dashboard = () => {
             }
 
             productSales[productId].quantity += item.quantity || 0;
-            productSales[productId].revenue += (item.price || 0) * (item.quantity || 0);
+            productSales[productId].revenue +=
+              (item.price || 0) * (item.quantity || 0);
           }
         });
       }
