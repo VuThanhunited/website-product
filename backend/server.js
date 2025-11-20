@@ -17,6 +17,7 @@ const allowedOrigins = [
   "http://localhost:3000",
   "http://localhost:3001",
   "https://eft-company.vercel.app",
+  "https://admin-eft.vercel.app",
   "https://website-product-ohic.vercel.app",
   process.env.FRONTEND_URL,
 ].filter(Boolean);
