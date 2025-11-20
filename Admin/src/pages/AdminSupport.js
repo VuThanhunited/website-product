@@ -25,9 +25,13 @@ const AdminSupport = () => {
   const fetchArticles = async () => {
     try {
       const response = await axios.get("/api/support");
-      setArticles(response.data);
+      const articlesData = Array.isArray(response.data)
+        ? response.data
+        : response.data.data || response.data.articles || [];
+      setArticles(articlesData);
     } catch (error) {
       console.error("Error fetching articles:", error);
+      setArticles([]);
     }
   };
 
@@ -67,9 +71,11 @@ const AdminSupport = () => {
       title: article.title,
       content: article.content,
       thumbnail: article.thumbnail || "",
-      images: article.images ? article.images.join("\n") : "",
-      videos: article.videos ? article.videos.join("\n") : "",
-      attachments: article.attachments || [],
+      images: Array.isArray(article.images) ? article.images.join("\n") : "",
+      videos: Array.isArray(article.videos) ? article.videos.join("\n") : "",
+      attachments: Array.isArray(article.attachments)
+        ? article.attachments
+        : [],
       slug: article.slug,
       published: article.published,
     });
@@ -158,54 +164,65 @@ const AdminSupport = () => {
             </tr>
           </thead>
           <tbody>
-            {articles.map((article) => (
-              <tr key={article._id}>
-                <td>
-                  {article.thumbnail ? (
-                    <img
-                      src={article.thumbnail}
-                      alt={article.title}
-                      className="thumbnail-preview"
-                    />
-                  ) : (
-                    <div className="no-thumbnail">📄</div>
-                  )}
-                </td>
-                <td className="article-title">{article.title}</td>
-                <td className="article-slug">{article.slug}</td>
-                <td>
-                  <span className="views">
-                    <FaEye /> {article.views}
-                  </span>
-                </td>
-                <td>
-                  <span
-                    className={`status ${
-                      article.published ? "published" : "draft"
-                    }`}
-                  >
-                    {article.published ? "Đã xuất bản" : "Bản nháp"}
-                  </span>
-                </td>
-                <td>
-                  {new Date(article.createdAt).toLocaleDateString("vi-VN")}
-                </td>
-                <td className="actions">
-                  <button
-                    className="btn-edit"
-                    onClick={() => handleEdit(article)}
-                  >
-                    <FaEdit />
-                  </button>
-                  <button
-                    className="btn-delete"
-                    onClick={() => handleDelete(article._id)}
-                  >
-                    <FaTrash />
-                  </button>
+            {Array.isArray(articles) && articles.length > 0 ? (
+              articles.map((article) => (
+                <tr key={article._id}>
+                  <td>
+                    {article.thumbnail ? (
+                      <img
+                        src={article.thumbnail}
+                        alt={article.title}
+                        className="thumbnail-preview"
+                      />
+                    ) : (
+                      <div className="no-thumbnail">📄</div>
+                    )}
+                  </td>
+                  <td className="article-title">{article.title}</td>
+                  <td className="article-slug">{article.slug}</td>
+                  <td>
+                    <span className="views">
+                      <FaEye /> {article.views}
+                    </span>
+                  </td>
+                  <td>
+                    <span
+                      className={`status ${
+                        article.published ? "published" : "draft"
+                      }`}
+                    >
+                      {article.published ? "Đã xuất bản" : "Bản nháp"}
+                    </span>
+                  </td>
+                  <td>
+                    {new Date(article.createdAt).toLocaleDateString("vi-VN")}
+                  </td>
+                  <td className="actions">
+                    <button
+                      className="btn-edit"
+                      onClick={() => handleEdit(article)}
+                    >
+                      <FaEdit />
+                    </button>
+                    <button
+                      className="btn-delete"
+                      onClick={() => handleDelete(article._id)}
+                    >
+                      <FaTrash />
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td
+                  colSpan="6"
+                  style={{ textAlign: "center", padding: "40px" }}
+                >
+                  Không có bài viết hỗ trợ nào
                 </td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>
@@ -314,23 +331,24 @@ const AdminSupport = () => {
                   <FaFile /> Thêm file
                 </button>
                 <div className="attachments-list">
-                  {formData.attachments.map((attachment, index) => (
-                    <div key={index} className="attachment-item">
-                      <span className="attachment-name">
-                        <FaFile /> {attachment.filename}
-                      </span>
-                      <span className="attachment-size">
-                        {(attachment.filesize / 1024).toFixed(2)} KB
-                      </span>
-                      <button
-                        type="button"
-                        className="btn-remove"
-                        onClick={() => handleRemoveAttachment(index)}
-                      >
-                        <FaTrash />
-                      </button>
-                    </div>
-                  ))}
+                  {Array.isArray(formData.attachments) &&
+                    formData.attachments.map((attachment, index) => (
+                      <div key={index} className="attachment-item">
+                        <span className="attachment-name">
+                          <FaFile /> {attachment.filename}
+                        </span>
+                        <span className="attachment-size">
+                          {(attachment.filesize / 1024).toFixed(2)} KB
+                        </span>
+                        <button
+                          type="button"
+                          className="btn-remove"
+                          onClick={() => handleRemoveAttachment(index)}
+                        >
+                          <FaTrash />
+                        </button>
+                      </div>
+                    ))}
                 </div>
               </div>
 
