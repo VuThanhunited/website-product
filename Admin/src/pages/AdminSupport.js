@@ -3,6 +3,12 @@ import { FaPlus, FaEdit, FaTrash, FaEye, FaFile } from "react-icons/fa";
 import axios from "axios";
 import "./AdminSupport.css";
 
+const API_URL =
+  process.env.REACT_APP_API_URL ||
+  (process.env.NODE_ENV === "production"
+    ? "https://website-product-1.onrender.com/api"
+    : "http://localhost:5000/api");
+
 const AdminSupport = () => {
   const [articles, setArticles] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -26,7 +32,7 @@ const AdminSupport = () => {
 
   const fetchArticles = async () => {
     try {
-      const response = await axios.get("/api/support/admin/all");
+      const response = await axios.get(`${API_URL}/support/admin/all`);
       const articlesData = Array.isArray(response.data)
         ? response.data
         : response.data.data || response.data.articles || [];
@@ -60,9 +66,12 @@ const AdminSupport = () => {
       };
 
       if (editingArticle) {
-        await axios.put(`/api/support/${editingArticle._id}`, articleData);
+        await axios.put(
+          `${API_URL}/support/${editingArticle._id}`,
+          articleData
+        );
       } else {
-        await axios.post("/api/support", articleData);
+        await axios.post(`${API_URL}/support`, articleData);
       }
 
       setShowModal(false);
@@ -104,10 +113,15 @@ const AdminSupport = () => {
   const handleDelete = async (id) => {
     if (window.confirm("Bạn có chắc muốn xóa bài viết này?")) {
       try {
-        await axios.delete(`/api/support/${id}`);
+        await axios.delete(`${API_URL}/support/${id}`);
         fetchArticles();
+        alert("✅ Xóa bài viết thành công!");
       } catch (error) {
         console.error("Error deleting article:", error);
+        alert(
+          "❌ Lỗi khi xóa bài viết: " +
+            (error.response?.data?.error || error.message)
+        );
       }
     }
   };
