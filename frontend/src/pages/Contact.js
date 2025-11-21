@@ -30,12 +30,18 @@ const Contact = () => {
     setStatus({ type: "", message: "" });
 
     // Validation
-    if (!formData.name || !formData.email || !formData.subject || !formData.message) {
+    if (
+      !formData.name ||
+      !formData.email ||
+      !formData.subject ||
+      !formData.message
+    ) {
       setStatus({
         type: "error",
-        message: language === "vi" 
-          ? "Vui lòng điền đầy đủ các trường bắt buộc" 
-          : "Please fill in all required fields",
+        message:
+          language === "vi"
+            ? "Vui lòng điền đầy đủ các trường bắt buộc"
+            : "Please fill in all required fields",
       });
       setLoading(false);
       return;
@@ -44,14 +50,15 @@ const Contact = () => {
     try {
       const response = await submitContactForm(formData);
       console.log("Contact form response:", response);
-      
+
       setStatus({
         type: "success",
-        message: language === "vi"
-          ? "✅ Đã gửi tin nhắn thành công! Chúng tôi sẽ phản hồi trong vòng 24 giờ. Vui lòng kiểm tra email để nhận xác nhận."
-          : "✅ Message sent successfully! We will respond within 24 hours. Please check your email for confirmation.",
+        message:
+          language === "vi"
+            ? "✅ Đã gửi tin nhắn thành công! Chúng tôi sẽ phản hồi trong vòng 24 giờ. Vui lòng kiểm tra email để nhận xác nhận."
+            : "✅ Message sent successfully! We will respond within 24 hours. Please check your email for confirmation.",
       });
-      
+
       // Reset form
       setFormData({
         name: "",
@@ -69,9 +76,10 @@ const Contact = () => {
       console.error("Contact form error:", error);
       setStatus({
         type: "error",
-        message: language === "vi"
-          ? "❌ Có lỗi xảy ra khi gửi tin nhắn. Vui lòng thử lại sau hoặc liên hệ trực tiếp qua hotline."
-          : "❌ An error occurred while sending the message. Please try again later or contact us directly via hotline.",
+        message:
+          language === "vi"
+            ? "❌ Có lỗi xảy ra khi gửi tin nhắn. Vui lòng thử lại sau hoặc liên hệ trực tiếp qua hotline."
+            : "❌ An error occurred while sending the message. Please try again later or contact us directly via hotline.",
       });
     } finally {
       setLoading(false);

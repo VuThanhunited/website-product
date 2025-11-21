@@ -278,33 +278,36 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 38px;
+  height: 38px;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s ease;
   font-size: 14px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .btn-edit {
-  background: #28a745;
+  background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
   color: white;
 }
 
 .btn-edit:hover {
-  background: #218838;
+  background: linear-gradient(135deg, #357abd 0%, #2868a8 100%);
   transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(74, 144, 226, 0.3);
 }
 
 .btn-delete {
-  background: #dc3545;
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
   color: white;
 }
 
 .btn-delete:hover {
-  background: #c82333;
+  background: linear-gradient(135deg, #ee5a6f 0%, #c0392b 100%);
   transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.4);
 }
 
 .loading,

@@ -129,32 +129,38 @@
 
 .btn-edit,
 .btn-delete {
-  padding: 8px 12px;
+  padding: 10px 14px;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all 0.3s ease;
   font-size: 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .btn-edit {
-  background: #4a90e2;
+  background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
   color: white;
 }
 
 .btn-edit:hover {
-  background: #357abd;
-  transform: scale(1.05);
+  background: linear-gradient(135deg, #357abd 0%, #2868a8 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(74, 144, 226, 0.3);
 }
 
 .btn-delete {
-  background: #e74c3c;
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
   color: white;
 }
 
 .btn-delete:hover {
-  background: #c0392b;
-  transform: scale(1.05);
+  background: linear-gradient(135deg, #ee5a6f 0%, #c0392b 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.4);
 }
 
 /* Modal */

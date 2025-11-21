@@ -168,7 +168,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  background: #dc3545;
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
   color: white;
   border: none;
   padding: 12px 24px;
@@ -177,11 +177,13 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .btn-delete:hover:not(:disabled) {
-  background: #c82333;
+  background: linear-gradient(135deg, #ee5a6f 0%, #c0392b 100%);
   transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.4);
 }
 
 .btn-delete:disabled {

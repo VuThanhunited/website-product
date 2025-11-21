@@ -19,6 +19,7 @@ const allowedOrigins = [
   "https://eft-company.vercel.app",
   "https://admin-eft.vercel.app",
   "https://website-product-ohic.vercel.app",
+  /\.vercel\.app$/,
   process.env.FRONTEND_URL,
 ].filter(Boolean);
 
@@ -28,7 +29,17 @@ app.use(
       // Allow requests with no origin (mobile apps, Postman, etc)
       if (!origin) return callback(null, true);
 
-      if (allowedOrigins.indexOf(origin) !== -1) {
+      // Check if origin matches any allowed origin
+      const isAllowed = allowedOrigins.some((allowed) => {
+        if (typeof allowed === "string") {
+          return allowed === origin;
+        } else if (allowed instanceof RegExp) {
+          return allowed.test(origin);
+        }
+        return false;
+      });
+
+      if (isAllowed) {
         callback(null, true);
       } else {
         console.log("⚠️  Blocked by CORS:", origin);

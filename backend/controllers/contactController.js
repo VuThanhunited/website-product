@@ -50,26 +50,41 @@ const generateContactEmailTemplate = (data) => {
                 <table width="100%" cellpadding="5" cellspacing="0">
                   <tr>
                     <td style="color: #666; font-weight: 600; width: 120px;">👤 Họ tên:</td>
-                    <td style="color: #333; font-weight: bold;">${data.name}</td>
+                    <td style="color: #333; font-weight: bold;">${
+                      data.name
+                    }</td>
                   </tr>
                   <tr>
                     <td style="color: #666; font-weight: 600;">📧 Email:</td>
-                    <td style="color: #333;"><a href="mailto:${data.email}" style="color: #667eea; text-decoration: none;">${data.email}</a></td>
+                    <td style="color: #333;"><a href="mailto:${
+                      data.email
+                    }" style="color: #667eea; text-decoration: none;">${
+    data.email
+  }</a></td>
                   </tr>
                   <tr>
                     <td style="color: #666; font-weight: 600;">📱 Điện thoại:</td>
-                    <td style="color: #333;"><a href="tel:${data.phone}" style="color: #667eea; text-decoration: none;">${data.phone || "Không có"}</a></td>
+                    <td style="color: #333;"><a href="tel:${
+                      data.phone
+                    }" style="color: #667eea; text-decoration: none;">${
+    data.phone || "Không có"
+  }</a></td>
                   </tr>
                   <tr>
                     <td style="color: #666; font-weight: 600;">📋 Tiêu đề:</td>
-                    <td style="color: #333; font-weight: bold;">${data.subject}</td>
+                    <td style="color: #333; font-weight: bold;">${
+                      data.subject
+                    }</td>
                   </tr>
                   <tr>
                     <td style="color: #666; font-weight: 600;">🕐 Thời gian:</td>
-                    <td style="color: #333;">${new Date().toLocaleString("vi-VN", {
-                      dateStyle: "full",
-                      timeStyle: "short",
-                    })}</td>
+                    <td style="color: #333;">${new Date().toLocaleString(
+                      "vi-VN",
+                      {
+                        dateStyle: "full",
+                        timeStyle: "short",
+                      }
+                    )}</td>
                   </tr>
                 </table>
               </div>
@@ -77,7 +92,9 @@ const generateContactEmailTemplate = (data) => {
               <div style="margin-bottom: 30px;">
                 <h3 style="margin: 0 0 15px 0; color: #333; font-size: 18px; border-bottom: 2px solid #667eea; padding-bottom: 10px;">💬 Nội dung tin nhắn:</h3>
                 <div style="background-color: #fafbfc; padding: 20px; border-radius: 8px; border: 1px solid #e1e4e8;">
-                  <p style="margin: 0; color: #333; line-height: 1.8; white-space: pre-wrap;">${data.message}</p>
+                  <p style="margin: 0; color: #333; line-height: 1.8; white-space: pre-wrap;">${
+                    data.message
+                  }</p>
                 </div>
               </div>
 
@@ -143,7 +160,9 @@ const generateAutoReplyTemplate = (data) => {
                 Xin chào <strong>${data.name}</strong>,
               </p>
               <p style="margin: 0 0 20px 0; font-size: 16px; line-height: 1.6; color: #333;">
-                Chúng tôi đã nhận được tin nhắn của bạn với tiêu đề: <strong>"${data.subject}"</strong>
+                Chúng tôi đã nhận được tin nhắn của bạn với tiêu đề: <strong>"${
+                  data.subject
+                }"</strong>
               </p>
               <p style="margin: 0 0 30px 0; font-size: 16px; line-height: 1.6; color: #333;">
                 Đội ngũ EFT Technology sẽ xem xét và phản hồi trong vòng <strong>24 giờ làm việc</strong>. 
@@ -152,10 +171,18 @@ const generateAutoReplyTemplate = (data) => {
 
               <div style="background-color: #f8f9fa; border-left: 4px solid #28a745; padding: 20px; margin-bottom: 25px; border-radius: 4px;">
                 <h3 style="margin: 0 0 10px 0; color: #28a745; font-size: 16px;">📋 Thông tin tin nhắn của bạn:</h3>
-                <p style="margin: 5px 0; color: #555;"><strong>Email:</strong> ${data.email}</p>
-                <p style="margin: 5px 0; color: #555;"><strong>Điện thoại:</strong> ${data.phone || "Không cung cấp"}</p>
-                <p style="margin: 5px 0; color: #555;"><strong>Tiêu đề:</strong> ${data.subject}</p>
-                <p style="margin: 5px 0; color: #555;"><strong>Thời gian:</strong> ${new Date().toLocaleString("vi-VN")}</p>
+                <p style="margin: 5px 0; color: #555;"><strong>Email:</strong> ${
+                  data.email
+                }</p>
+                <p style="margin: 5px 0; color: #555;"><strong>Điện thoại:</strong> ${
+                  data.phone || "Không cung cấp"
+                }</p>
+                <p style="margin: 5px 0; color: #555;"><strong>Tiêu đề:</strong> ${
+                  data.subject
+                }</p>
+                <p style="margin: 5px 0; color: #555;"><strong>Thời gian:</strong> ${new Date().toLocaleString(
+                  "vi-VN"
+                )}</p>
               </div>
 
               <div style="text-align: center; margin: 30px 0;">
@@ -210,9 +237,9 @@ exports.submitContact = async (req, res) => {
 
     // Validate required fields
     if (!name || !email || !subject || !message) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         success: false,
-        error: "Vui lòng điền đầy đủ thông tin bắt buộc" 
+        error: "Vui lòng điền đầy đủ thông tin bắt buộc",
       });
     }
 
@@ -233,7 +260,13 @@ exports.submitContact = async (req, res) => {
       to: process.env.EMAIL_TO || process.env.EMAIL_USER,
       replyTo: email,
       subject: `🔔 Tin nhắn liên hệ mới: ${subject}`,
-      html: generateContactEmailTemplate({ name, email, phone, subject, message }),
+      html: generateContactEmailTemplate({
+        name,
+        email,
+        phone,
+        subject,
+        message,
+      }),
     };
 
     // Send auto-reply email to customer
@@ -256,15 +289,15 @@ exports.submitContact = async (req, res) => {
       // Still return success since message was saved to DB
     }
 
-    res.status(201).json({ 
+    res.status(201).json({
       success: true,
-      message: "Đã gửi tin nhắn thành công! Chúng tôi sẽ phản hồi sớm nhất." 
+      message: "Đã gửi tin nhắn thành công! Chúng tôi sẽ phản hồi sớm nhất.",
     });
   } catch (error) {
     console.error("❌ Contact form error:", error);
-    res.status(500).json({ 
+    res.status(500).json({
       success: false,
-      error: "Có lỗi xảy ra. Vui lòng thử lại sau." 
+      error: "Có lỗi xảy ra. Vui lòng thử lại sau.",
     });
   }
 };
