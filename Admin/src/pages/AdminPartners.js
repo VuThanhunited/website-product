@@ -117,7 +117,9 @@ const AdminPartners = () => {
       logo: partner.logo,
       link: partner.link || "",
     });
-    setImagePreview(partner.logo);
+    // Sử dụng ảnh local nếu có, nếu không dùng URL từ database
+    const localLogo = partnerLogos[partner.name];
+    setImagePreview(localLogo || partner.logo);
     setIsAdding(true);
   };
 
@@ -266,10 +268,7 @@ const AdminPartners = () => {
               <div key={partner._id} className="partner-card">
                 <div className="partner-logo">
                   {partnerLogos[partner.name] ? (
-                    <img
-                      src={partnerLogos[partner.name]}
-                      alt={partner.name}
-                    />
+                    <img src={partnerLogos[partner.name]} alt={partner.name} />
                   ) : partner.logo ? (
                     <img
                       src={partner.logo}
