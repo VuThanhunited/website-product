@@ -87,27 +87,44 @@ const AdminMessages = () => {
                 className={`message-item ${
                   selectedMessage?._id === message._id ? "active" : ""
                 }`}
-                onClick={() => setSelectedMessage(message)}
               >
-                <div className="message-icon">
-                  {selectedMessage?._id === message._id ? (
-                    <FaEnvelopeOpen />
-                  ) : (
-                    <FaEnvelope />
-                  )}
-                </div>
-                <div className="message-preview">
-                  <div className="message-header">
-                    <h4>{message.name}</h4>
-                    <span className="message-date">
-                      {new Date(message.createdAt).toLocaleDateString("vi-VN")}
-                    </span>
+                <div
+                  className="message-content-wrapper"
+                  onClick={() => setSelectedMessage(message)}
+                >
+                  <div className="message-icon">
+                    {selectedMessage?._id === message._id ? (
+                      <FaEnvelopeOpen />
+                    ) : (
+                      <FaEnvelope />
+                    )}
                   </div>
-                  <div className="message-subject">{message.subject}</div>
-                  <div className="message-snippet">
-                    {message.message.substring(0, 60)}...
+                  <div className="message-preview">
+                    <div className="message-header">
+                      <h4>{message.name}</h4>
+                      <span className="message-date">
+                        {new Date(message.createdAt).toLocaleDateString(
+                          "vi-VN"
+                        )}
+                      </span>
+                    </div>
+                    <div className="message-subject">{message.subject}</div>
+                    <div className="message-snippet">
+                      {message.message.substring(0, 60)}...
+                    </div>
                   </div>
                 </div>
+                <button
+                  className="btn-delete-small"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDelete(message._id);
+                  }}
+                  disabled={loading}
+                  title="Xóa tin nhắn"
+                >
+                  <FaTrash />
+                </button>
               </div>
             ))
           )}
@@ -118,13 +135,6 @@ const AdminMessages = () => {
             <>
               <div className="detail-header">
                 <h2>{selectedMessage.subject}</h2>
-                <button
-                  className="btn-delete"
-                  onClick={() => handleDelete(selectedMessage._id)}
-                  disabled={loading}
-                >
-                  <FaTrash /> Xóa
-                </button>
               </div>
 
               <div className="detail-body">

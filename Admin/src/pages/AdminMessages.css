@@ -64,22 +64,33 @@
 
 .message-item {
   display: flex;
-  gap: 15px;
-  padding: 15px;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
   border-radius: 10px;
-  cursor: pointer;
   transition: all 0.3s ease;
   margin-bottom: 8px;
   border: 2px solid transparent;
+  position: relative;
 }
 
 .message-item:hover {
   background: #f8f9fa;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .message-item.active {
   background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
   border-color: #667eea;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+}
+
+.message-content-wrapper {
+  display: flex;
+  gap: 15px;
+  flex: 1;
+  cursor: pointer;
+  min-width: 0;
 }
 
 .message-icon {
@@ -140,6 +151,42 @@
   text-overflow: ellipsis;
 }
 
+/* Delete Button Small */
+.btn-delete-small {
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  border: none;
+  border-radius: 6px;
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  transform: scale(0.9);
+}
+
+.message-item:hover .btn-delete-small {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.btn-delete-small:hover:not(:disabled) {
+  background: linear-gradient(135deg, #ee5a6f 0%, #c0392b 100%);
+  transform: scale(1.05);
+  box-shadow: 0 3px 8px rgba(231, 76, 60, 0.35);
+}
+
+.btn-delete-small:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 /* Message Detail */
 .message-detail {
   background: white;
@@ -151,44 +198,16 @@
 }
 
 .detail-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 25px;
+  padding: 25px 30px;
   border-bottom: 2px solid #f0f0f0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 12px 12px 0 0;
 }
 
 .detail-header h2 {
   margin: 0;
-  color: #2c3e50;
-  font-size: 24px;
-}
-
-.btn-delete {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
   color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 6px;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.btn-delete:hover:not(:disabled) {
-  background: linear-gradient(135deg, #ee5a6f 0%, #c0392b 100%);
-  transform: translateY(-1px);
-  box-shadow: 0 3px 8px rgba(231, 76, 60, 0.35);
-}
-
-.btn-delete:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+  font-size: 24px;
 }
 
 .detail-body {
