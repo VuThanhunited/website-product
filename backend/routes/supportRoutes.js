@@ -4,6 +4,7 @@ const supportController = require("../controllers/supportController");
 
 // GET routes
 router.get("/", supportController.getAllArticles);
+router.get("/admin/all", supportController.getAllArticlesAdmin);
 router.get("/:slug", supportController.getArticleBySlug);
 
 // POST routes

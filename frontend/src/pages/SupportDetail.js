@@ -102,11 +102,22 @@ const SupportDetail = () => {
             <h3>🎥 {t.videoGuide}</h3>
             <div className="article-videos">
               {article.videos.map((video, index) => (
-                <div key={index} className="media-item">
-                  <video controls>
-                    <source src={video} type="video/mp4" />
-                    {t.browserNotSupport}
-                  </video>
+                <div key={index} className="video-wrapper">
+                  {video.includes("youtube.com") ||
+                  video.includes("youtu.be") ? (
+                    <iframe
+                      src={video}
+                      title={`Video ${index + 1}`}
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    ></iframe>
+                  ) : (
+                    <video controls>
+                      <source src={video} type="video/mp4" />
+                      {t.browserNotSupport}
+                    </video>
+                  )}
                 </div>
               ))}
             </div>

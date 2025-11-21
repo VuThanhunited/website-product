@@ -9,7 +9,9 @@ const AdminSupport = () => {
   const [editingArticle, setEditingArticle] = useState(null);
   const [formData, setFormData] = useState({
     title: "",
+    title_en: "",
     content: "",
+    content_en: "",
     thumbnail: "",
     images: "",
     videos: "",
@@ -24,7 +26,7 @@ const AdminSupport = () => {
 
   const fetchArticles = async () => {
     try {
-      const response = await axios.get("/api/support");
+      const response = await axios.get("/api/support/admin/all");
       const articlesData = Array.isArray(response.data)
         ? response.data
         : response.data.data || response.data.articles || [];
@@ -39,7 +41,13 @@ const AdminSupport = () => {
     e.preventDefault();
     try {
       const articleData = {
-        ...formData,
+        title: formData.title,
+        titleEn: formData.title_en,
+        content: formData.content,
+        contentEn: formData.content_en,
+        thumbnail: formData.thumbnail,
+        slug: formData.slug,
+        published: formData.published,
         images: formData.images
           .split("\n")
           .filter((url) => url.trim())
@@ -48,6 +56,7 @@ const AdminSupport = () => {
           .split("\n")
           .filter((url) => url.trim())
           .map((url) => url.trim()),
+        attachments: formData.attachments,
       };
 
       if (editingArticle) {
@@ -59,9 +68,17 @@ const AdminSupport = () => {
       setShowModal(false);
       resetForm();
       fetchArticles();
+      alert(
+        editingArticle
+          ? "✅ Cập nhật bài viết thành công!"
+          : "✅ Thêm bài viết mới thành công!"
+      );
     } catch (error) {
       console.error("Error saving article:", error);
-      alert("Lỗi khi lưu bài viết: " + error.message);
+      alert(
+        "❌ Lỗi khi lưu bài viết: " +
+          (error.response?.data?.error || error.message)
+      );
     }
   };
 
@@ -69,7 +86,9 @@ const AdminSupport = () => {
     setEditingArticle(article);
     setFormData({
       title: article.title,
+      title_en: article.title_en || article.titleEn || "",
       content: article.content,
+      content_en: article.content_en || article.contentEn || "",
       thumbnail: article.thumbnail || "",
       images: Array.isArray(article.images) ? article.images.join("\n") : "",
       videos: Array.isArray(article.videos) ? article.videos.join("\n") : "",
@@ -96,7 +115,9 @@ const AdminSupport = () => {
   const resetForm = () => {
     setFormData({
       title: "",
+      title_en: "",
       content: "",
+      content_en: "",
       thumbnail: "",
       images: "",
       videos: "",
@@ -138,7 +159,7 @@ const AdminSupport = () => {
   return (
     <div className="admin-support">
       <div className="page-header">
-        <h1>Quản lý bài viết hỗ trợ</h1>
+        <h1>Quản lý Trung Tâm Hỗ Trợ</h1>
         <button
           className="btn-primary"
           onClick={() => {
@@ -241,7 +262,7 @@ const AdminSupport = () => {
 
             <form onSubmit={handleSubmit}>
               <div className="form-group">
-                <label>Tiêu đề *</label>
+                <label>Tiêu đề (Tiếng Việt) *</label>
                 <input
                   type="text"
                   value={formData.title}
@@ -249,6 +270,19 @@ const AdminSupport = () => {
                     setFormData({ ...formData, title: e.target.value })
                   }
                   required
+                  placeholder="Nhập tiêu đề bằng tiếng Việt"
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Tiêu đề (Tiếng Anh)</label>
+                <input
+                  type="text"
+                  value={formData.title_en}
+                  onChange={(e) =>
+                    setFormData({ ...formData, title_en: e.target.value })
+                  }
+                  placeholder="Enter title in English"
                 />
               </div>
 
@@ -285,15 +319,27 @@ const AdminSupport = () => {
               </div>
 
               <div className="form-group">
-                <label>Nội dung *</label>
+                <label>Nội dung (Tiếng Việt) *</label>
                 <textarea
                   value={formData.content}
                   onChange={(e) =>
                     setFormData({ ...formData, content: e.target.value })
                   }
                   rows="10"
-                  placeholder="Nội dung bài viết (hỗ trợ HTML)"
+                  placeholder="Nội dung bài viết bằng tiếng Việt (hỗ trợ HTML)"
                   required
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Nội dung (Tiếng Anh)</label>
+                <textarea
+                  value={formData.content_en}
+                  onChange={(e) =>
+                    setFormData({ ...formData, content_en: e.target.value })
+                  }
+                  rows="10"
+                  placeholder="Content in English (HTML supported)"
                 />
               </div>
 

@@ -1,9 +1,21 @@
 const SupportArticle = require("../models/SupportArticle");
 
-// Get all support articles
+// Get all support articles (for public - only published)
 exports.getAllArticles = async (req, res) => {
   try {
     const articles = await SupportArticle.find({ published: true }).sort({
+      createdAt: -1,
+    });
+    res.json(articles);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Get all support articles for admin (including unpublished)
+exports.getAllArticlesAdmin = async (req, res) => {
+  try {
+    const articles = await SupportArticle.find().sort({
       createdAt: -1,
     });
     res.json(articles);
