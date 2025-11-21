@@ -51,12 +51,20 @@ const Contact = () => {
       const response = await submitContactForm(formData);
       console.log("Contact form response:", response);
 
+      // Show success message with email status
+      const emailSent = response.data?.emailSent !== false;
+      const successMessage =
+        language === "vi"
+          ? emailSent
+            ? "✅ Đã gửi tin nhắn thành công! Email xác nhận đã được gửi đến hộp thư của bạn. Vui lòng kiểm tra (kể cả thư mục spam)."
+            : "✅ Đã gửi tin nhắn thành công! Chúng tôi sẽ phản hồi sớm nhất."
+          : emailSent
+          ? "✅ Message sent successfully! A confirmation email has been sent to your inbox. Please check (including spam folder)."
+          : "✅ Message sent successfully! We will respond as soon as possible.";
+
       setStatus({
         type: "success",
-        message:
-          language === "vi"
-            ? "✅ Đã gửi tin nhắn thành công! Chúng tôi sẽ phản hồi trong vòng 24 giờ. Vui lòng kiểm tra email để nhận xác nhận."
-            : "✅ Message sent successfully! We will respond within 24 hours. Please check your email for confirmation.",
+        message: successMessage,
       });
 
       // Reset form

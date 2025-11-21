@@ -278,12 +278,14 @@ exports.submitContact = async (req, res) => {
     };
 
     // Send both emails
+    let emailSuccess = false;
     try {
       await Promise.all([
         transporter.sendMail(adminMailOptions),
         transporter.sendMail(customerMailOptions),
       ]);
       console.log("✅ Both emails sent successfully");
+      emailSuccess = true;
     } catch (emailError) {
       console.error("⚠️ Email sending error:", emailError);
       // Still return success since message was saved to DB
@@ -291,7 +293,10 @@ exports.submitContact = async (req, res) => {
 
     res.status(201).json({
       success: true,
-      message: "Đã gửi tin nhắn thành công! Chúng tôi sẽ phản hồi sớm nhất.",
+      emailSent: emailSuccess,
+      message: emailSuccess
+        ? "✅ Đã gửi tin nhắn thành công! Email xác nhận đã được gửi đến hộp thư của bạn."
+        : "✅ Đã lưu tin nhắn thành công! Chúng tôi sẽ phản hồi sớm nhất.",
     });
   } catch (error) {
     console.error("❌ Contact form error:", error);
