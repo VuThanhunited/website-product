@@ -9,6 +9,9 @@ import {
   FaImage,
   FaUpload,
 } from "react-icons/fa";
+import shopeeLogo from "../assets/shopee-logo.jpg";
+import lazadaLogo from "../assets/lazada-logo.png";
+import tikiLogo from "../assets/tiki-logo.jpg";
 import "./AdminPartners.css";
 
 const API_URL =
@@ -16,6 +19,13 @@ const API_URL =
   (process.env.NODE_ENV === "production"
     ? "https://website-product-1.onrender.com/api"
     : "http://localhost:5000/api");
+
+// Mapping logo local
+const partnerLogos = {
+  Shopee: shopeeLogo,
+  Lazada: lazadaLogo,
+  Tiki: tikiLogo,
+};
 
 const AdminPartners = () => {
   const [partners, setPartners] = useState([]);
@@ -255,7 +265,12 @@ const AdminPartners = () => {
             {partners.map((partner) => (
               <div key={partner._id} className="partner-card">
                 <div className="partner-logo">
-                  {partner.logo ? (
+                  {partnerLogos[partner.name] ? (
+                    <img
+                      src={partnerLogos[partner.name]}
+                      alt={partner.name}
+                    />
+                  ) : partner.logo ? (
                     <img
                       src={partner.logo}
                       alt={partner.name}
