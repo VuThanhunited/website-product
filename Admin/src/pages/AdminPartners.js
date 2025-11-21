@@ -255,7 +255,22 @@ const AdminPartners = () => {
             {partners.map((partner) => (
               <div key={partner._id} className="partner-card">
                 <div className="partner-logo">
-                  <img src={partner.logo} alt={partner.name} />
+                  {partner.logo ? (
+                    <img
+                      src={partner.logo}
+                      alt={partner.name}
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src =
+                          'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="200" height="200"%3E%3Crect fill="%23f0f0f0" width="200" height="200"/%3E%3Ctext fill="%23999" font-family="sans-serif" font-size="16" dy="105" font-weight="bold" x="50%25" y="50%25" text-anchor="middle"%3ENo Image%3C/text%3E%3C/svg%3E';
+                      }}
+                    />
+                  ) : (
+                    <div className="no-logo-placeholder">
+                      <FaImage />
+                      <span>No Logo</span>
+                    </div>
+                  )}
                 </div>
                 <div className="partner-info">
                   <h3>{partner.name}</h3>
