@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense, lazy } from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import {
   FaBoxOpen,
@@ -12,17 +12,35 @@ import {
   FaHandshake,
   FaChartLine,
 } from "react-icons/fa";
-import Dashboard from "./pages/Dashboard";
-import AdminProducts from "./pages/AdminProducts";
-import AdminCategories from "./pages/AdminCategories";
-import AdminMedia from "./pages/AdminMedia";
-import AdminMessages from "./pages/AdminMessages";
-import AdminSupport from "./pages/AdminSupport";
-import AdminCompany from "./pages/AdminCompany";
-import AdminSlogans from "./pages/AdminSlogans";
-import AdminOrders from "./pages/AdminOrders";
-import AdminPartners from "./pages/AdminPartners";
 import "./App.css";
+
+// Lazy load các component để tăng tốc độ load ban đầu
+const Dashboard = lazy(() => import("./pages/Dashboard"));
+const AdminProducts = lazy(() => import("./pages/AdminProducts"));
+const AdminCategories = lazy(() => import("./pages/AdminCategories"));
+const AdminMedia = lazy(() => import("./pages/AdminMedia"));
+const AdminMessages = lazy(() => import("./pages/AdminMessages"));
+const AdminSupport = lazy(() => import("./pages/AdminSupport"));
+const AdminCompany = lazy(() => import("./pages/AdminCompany"));
+const AdminSlogans = lazy(() => import("./pages/AdminSlogans"));
+const AdminOrders = lazy(() => import("./pages/AdminOrders"));
+const AdminPartners = lazy(() => import("./pages/AdminPartners"));
+
+// Loading component
+const LoadingSpinner = () => (
+  <div
+    style={{
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      height: "100vh",
+      fontSize: "24px",
+      color: "#667eea",
+    }}
+  >
+    <div>⏳ Đang tải...</div>
+  </div>
+);
 
 function App() {
   return (
@@ -67,18 +85,20 @@ function App() {
         </aside>
 
         <main className="admin-main">
-          <Routes>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/products" element={<AdminProducts />} />
-            <Route path="/categories" element={<AdminCategories />} />
-            <Route path="/orders" element={<AdminOrders />} />
-            <Route path="/media" element={<AdminMedia />} />
-            <Route path="/slogans" element={<AdminSlogans />} />
-            <Route path="/company" element={<AdminCompany />} />
-            <Route path="/partners" element={<AdminPartners />} />
-            <Route path="/support" element={<AdminSupport />} />
-            <Route path="/messages" element={<AdminMessages />} />
-          </Routes>
+          <Suspense fallback={<LoadingSpinner />}>
+            <Routes>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/products" element={<AdminProducts />} />
+              <Route path="/categories" element={<AdminCategories />} />
+              <Route path="/orders" element={<AdminOrders />} />
+              <Route path="/media" element={<AdminMedia />} />
+              <Route path="/slogans" element={<AdminSlogans />} />
+              <Route path="/company" element={<AdminCompany />} />
+              <Route path="/support" element={<AdminSupport />} />
+              <Route path="/messages" element={<AdminMessages />} />
+              <Route path="/partners" element={<AdminPartners />} />
+            </Routes>
+          </Suspense>
         </main>
       </div>
     </Router>

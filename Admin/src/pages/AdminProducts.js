@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import {
   getProducts,
   getCategories,
@@ -25,12 +25,7 @@ const AdminProducts = () => {
     featured: false,
   });
 
-  useEffect(() => {
-    fetchProducts();
-    fetchCategories();
-  }, []);
-
-  const fetchProducts = async () => {
+  const fetchProducts = useCallback(async () => {
     try {
       setLoading(true);
       const response = await getProducts();
@@ -41,29 +36,34 @@ const AdminProducts = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const fetchCategories = async () => {
+  const fetchCategories = useCallback(async () => {
     try {
       const response = await getCategories();
       setCategories(response.data);
     } catch (error) {
       console.error("Error fetching categories:", error);
     }
-  };
+  }, []);
 
-  const handleInputChange = (e) => {
+  useEffect(() => {
+    fetchProducts();
+    fetchCategories();
+  }, [fetchProducts, fetchCategories]);
+
+  const handleInputChange = useCallback((e) => {
     const { name, value, type, checked } = e.target;
-    setFormData({
-      ...formData,
+    setFormData((prev) => ({
+      ...prev,
       [name]: type === "checkbox" ? checked : value,
-    });
-  };
+    }));
+  }, []);
 
-  const handleImagesChange = (e) => {
+  const handleImagesChange = useCallback((e) => {
     const urls = e.target.value.split("\n").filter((url) => url.trim());
-    setFormData({ ...formData, images: urls });
-  };
+    setFormData((prev) => ({ ...prev, images: urls }));
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
