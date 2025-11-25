@@ -36,7 +36,12 @@ const AdminOrders = () => {
 
   const fetchOrders = async () => {
     try {
-      const response = await axios.get(`${API_URL}/orders`);
+      const token = localStorage.getItem("adminToken");
+      const response = await axios.get(`${API_URL}/orders`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       // Backend returns { success: true, data: orders }
       let ordersData = [];
 
@@ -93,7 +98,16 @@ const AdminOrders = () => {
 
   const updateOrderStatus = async (orderId, newStatus) => {
     try {
-      await axios.put(`${API_URL}/orders/${orderId}`, { status: newStatus });
+      const token = localStorage.getItem("adminToken");
+      await axios.put(
+        `${API_URL}/orders/${orderId}`,
+        { status: newStatus },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       setMessage("✅ Cập nhật trạng thái đơn hàng thành công!");
       fetchOrders();
       if (selectedOrder && selectedOrder._id === orderId) {
