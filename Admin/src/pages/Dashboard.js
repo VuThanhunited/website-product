@@ -57,8 +57,13 @@ const Dashboard = () => {
   const fetchDashboardData = async () => {
     try {
       setLoading(true);
+      const token = localStorage.getItem("adminToken");
       const [ordersRes, productsRes] = await Promise.all([
-        axios.get(`${API_URL}/orders`),
+        axios.get(`${API_URL}/orders`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }),
         axios.get(`${API_URL}/products`),
       ]);
 
