@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../contexts/CartContext";
+import { useAuth } from "../contexts/AuthContext";
 import { useLanguage } from "../contexts/LanguageContext";
 import { translations } from "../utils/translations";
 import api from "../services/api";
@@ -9,8 +10,16 @@ import "../styles/Checkout.css";
 const Checkout = () => {
   const navigate = useNavigate();
   const { cart, getCartTotal, clearCart } = useCart();
+  const { isAuthenticated } = useAuth();
   const { language } = useLanguage();
   const t = translations[language];
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      alert(t.loginRequired || "Vui lòng đăng nhập để thanh toán!");
+      navigate("/login");
+    }
+  }, [isAuthenticated, navigate, t.loginRequired]);
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -26,6 +35,10 @@ const Checkout = () => {
   const [paymentMethod, setPaymentMethod] = useState("cod");
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+
+  if (!isAuthenticated) {
+    return null;
+  }
 
   const handleChange = (e) => {
     const { name, value } = e.target;

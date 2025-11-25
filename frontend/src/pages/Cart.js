@@ -1,24 +1,42 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaTrash, FaMinus, FaPlus, FaShoppingCart } from "react-icons/fa";
 import { useCart } from "../contexts/CartContext";
+import { useAuth } from "../contexts/AuthContext";
 import { useLanguage } from "../contexts/LanguageContext";
 import { translations } from "../utils/translations";
 import "../styles/Cart.css";
 
 const Cart = () => {
   const { cartItems, removeFromCart, updateQuantity, getCartTotal } = useCart();
+  const { isAuthenticated } = useAuth();
   const { language } = useLanguage();
   const t = translations[language];
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (!isAuthenticated) {
+      alert(t.loginRequired || "Vui lòng đăng nhập để xem giỏ hàng!");
+      navigate("/login");
+    }
+  }, [isAuthenticated, navigate, t.loginRequired]);
+
   const handleCheckout = () => {
+    if (!isAuthenticated) {
+      alert(t.loginRequired || "Vui lòng đăng nhập để thanh toán!");
+      navigate("/login");
+      return;
+    }
     if (cartItems.length === 0) {
       alert(t.cartEmpty || "Giỏ hàng trống!");
       return;
     }
     navigate("/checkout");
   };
+
+  if (!isAuthenticated) {
+    return null;
+  }
 
   if (cartItems.length === 0) {
     return (

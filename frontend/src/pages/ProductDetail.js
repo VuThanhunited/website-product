@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { getProductBySlug, getProductById } from "../services/api";
 import { useLanguage } from "../contexts/LanguageContext";
 import { useCart } from "../contexts/CartContext";
+import { useAuth } from "../contexts/AuthContext";
 import { translations } from "../utils/translations";
 import LazyImage from "../components/LazyImage";
 import "../styles/ProductDetail.css";
@@ -17,14 +18,27 @@ const ProductDetail = () => {
   const [error, setError] = useState(null);
   const { language } = useLanguage();
   const { addToCart } = useCart();
+  const { isAuthenticated } = useAuth();
   const t = translations[language];
 
   const handleAddToCart = () => {
+    if (!isAuthenticated) {
+      alert(
+        t.loginRequired || "Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng!"
+      );
+      navigate("/login");
+      return;
+    }
     addToCart(product, quantity);
     alert(t.addedToCart || "Added to cart!");
   };
 
   const handleBuyNow = () => {
+    if (!isAuthenticated) {
+      alert(t.loginRequired || "Vui lòng đăng nhập để mua hàng!");
+      navigate("/login");
+      return;
+    }
     addToCart(product, quantity);
     navigate("/cart");
   };
