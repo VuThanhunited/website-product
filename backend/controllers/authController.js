@@ -193,3 +193,119 @@ exports.protect = async (req, res, next) => {
     res.status(401).json({ error: "Token không hợp lệ" });
   }
 };
+
+// Verify token (public endpoint)
+exports.verifyToken = async (req, res) => {
+  try {
+    const token = req.headers.authorization?.split(" ")[1] || req.cookies.token;
+
+    if (!token) {
+      return res.status(401).json({
+        success: false,
+        message: "Không tìm thấy token",
+      });
+    }
+
+    const decoded = jwt.verify(
+      token,
+      process.env.JWT_SECRET || "your-secret-key"
+    );
+    const user = await User.findById(decoded.id).select("-password");
+
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: "Tài khoản không tồn tại",
+      });
+    }
+
+    res.json({
+      success: true,
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+        role: user.role,
+        isActive: user.isActive,
+      },
+    });
+  } catch (error) {
+    res.status(401).json({
+      success: false,
+      message: "Token không hợp lệ",
+    });
+  }
+};
+
+// Admin login
+exports.adminLogin = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: "Vui lòng nhập email và mật khẩu",
+      });
+    }
+
+    const user = await User.findOne({ email }).select("+password");
+
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: "Email hoặc mật khẩu không đúng",
+      });
+    }
+
+    // Kiểm tra role admin
+    if (user.role !== "admin") {
+      return res.status(403).json({
+        success: false,
+        message: "Bạn không có quyền truy cập trang quản trị",
+      });
+    }
+
+    const isPasswordValid = await user.comparePassword(password);
+
+    if (!isPasswordValid) {
+      return res.status(401).json({
+        success: false,
+        message: "Email hoặc mật khẩu không đúng",
+      });
+    }
+
+    if (!user.isActive) {
+      return res.status(403).json({
+        success: false,
+        message: "Tài khoản đã bị khóa",
+      });
+    }
+
+    const token = generateToken(user._id);
+
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      sameSite: "strict",
+    });
+
+    res.json({
+      success: true,
+      message: "Đăng nhập thành công",
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+        role: user.role,
+      },
+      token,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};

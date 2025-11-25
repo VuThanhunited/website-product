@@ -25,6 +25,18 @@
   display: flex;
   align-items: center;
   gap: 10px;
+  margin-bottom: 10px;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  font-size: 14px;
+  margin-top: 10px;
 }
 
 .sidebar-nav {
@@ -47,6 +59,18 @@
 .nav-item:hover {
   background: rgba(255, 255, 255, 0.1);
   border-left-color: white;
+}
+
+.logout-btn {
+  width: 100%;
+  border: none;
+  cursor: pointer;
+  background: rgba(255, 59, 59, 0.2);
+  margin: 10px 0;
+}
+
+.logout-btn:hover {
+  background: rgba(255, 59, 59, 0.4);
 }
 
 .nav-item svg {
