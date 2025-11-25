@@ -460,3 +460,45 @@ exports.changePassword = async (req, res) => {
     });
   }
 };
+
+// Delete user (Admin only)
+exports.deleteUser = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    // Không cho phép admin xóa chính mình
+    if (userId === req.user.id) {
+      return res.status(400).json({
+        success: false,
+        message: "Không thể xóa tài khoản của chính mình",
+      });
+    }
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "Không tìm thấy người dùng",
+      });
+    }
+
+    // Lưu thông tin trước khi xóa
+    const deletedUserInfo = {
+      email: user.email,
+      username: user.username,
+    };
+
+    await User.findByIdAndDelete(userId);
+
+    res.json({
+      success: true,
+      message: `Đã xóa tài khoản ${deletedUserInfo.username} (${deletedUserInfo.email})`,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};

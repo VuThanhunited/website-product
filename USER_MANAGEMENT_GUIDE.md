@@ -11,6 +11,7 @@ Trang **Quản Lý Tài Khoản** cho phép admin xem danh sách tất cả user
 ### 1. Xem Danh Sách Tài Khoản
 
 **Thông tin hiển thị:**
+
 - ✅ STT
 - ✅ Username
 - ✅ Email
@@ -19,6 +20,7 @@ Trang **Quản Lý Tài Khoản** cho phép admin xem danh sách tất cả user
 - ✅ Ngày tạo
 
 **Thống kê:**
+
 - 📊 Tổng số tài khoản
 - 👮 Số lượng Admin
 - 👤 Số lượng User
@@ -27,7 +29,9 @@ Trang **Quản Lý Tài Khoản** cho phép admin xem danh sách tất cả user
 ### 2. Thay Đổi Quyền User
 
 **Admin có thể:**
+
 - ⬆️ **Thăng cấp User → Admin**
+
   - Nhấn nút "Lên Admin"
   - Xác nhận thay đổi
   - User sẽ có quyền truy cập admin panel
@@ -38,6 +42,7 @@ Trang **Quản Lý Tài Khoản** cho phép admin xem danh sách tất cả user
   - Tài khoản sẽ mất quyền admin
 
 **⚠️ Lưu ý:**
+
 - Thay đổi có hiệu lực ngay lập tức
 - User bị hạ cấp sẽ không thể đăng nhập admin panel nữa
 - Không thể hạ quyền chính mình xuống user
@@ -45,7 +50,9 @@ Trang **Quản Lý Tài Khoản** cho phép admin xem danh sách tất cả user
 ### 3. Khóa/Mở Khóa Tài Khoản
 
 **Admin có thể:**
+
 - 🔒 **Khóa tài khoản**
+
   - Nhấn nút "Khóa"
   - Tài khoản không thể đăng nhập
   - Status chuyển sang "Đã khóa"
@@ -58,6 +65,7 @@ Trang **Quản Lý Tài Khoản** cho phép admin xem danh sách tất cả user
 ### 4. Đổi Mật Khẩu (Của Chính Admin)
 
 **Cách thực hiện:**
+
 1. Nhấn nút **"Đổi Mật Khẩu"** ở góc trên bên phải
 2. Nhập thông tin:
    - Mật khẩu hiện tại
@@ -66,6 +74,7 @@ Trang **Quản Lý Tài Khoản** cho phép admin xem danh sách tất cả user
 3. Nhấn **"Đổi Mật Khẩu"**
 
 **Yêu cầu:**
+
 - ✅ Mật khẩu hiện tại phải đúng
 - ✅ Mật khẩu mới ≥ 6 ký tự
 - ✅ Mật khẩu xác nhận phải khớp
@@ -103,6 +112,7 @@ Trang **Quản Lý Tài Khoản** cho phép admin xem danh sách tất cả user
 ### Khóa/Mở Tài Khoản
 
 **Khóa tài khoản:**
+
 ```
 1. Nhấn nút "Khóa" (màu đỏ)
 2. Xác nhận
@@ -110,6 +120,7 @@ Trang **Quản Lý Tài Khoản** cho phép admin xem danh sách tất cả user
 ```
 
 **Mở khóa:**
+
 ```
 1. Nhấn nút "Mở" (màu xanh)
 2. Xác nhận
@@ -135,17 +146,20 @@ Trang **Quản Lý Tài Khoản** cho phép admin xem danh sách tất cả user
 ### Quyền Truy Cập
 
 **Chỉ Admin mới có thể:**
+
 - ✅ Xem danh sách tất cả users
 - ✅ Thay đổi quyền của users khác
 - ✅ Khóa/mở khóa tài khoản
 - ✅ Truy cập trang quản lý tài khoản
 
 **Mọi user (bao gồm admin) có thể:**
+
 - ✅ Đổi mật khẩu của chính mình
 
 ### Hạn Chế
 
 **Không thể:**
+
 - ❌ Xóa tài khoản (chỉ khóa)
 - ❌ Đổi mật khẩu của người khác
 - ❌ Thay đổi email/username sau khi tạo
@@ -158,20 +172,24 @@ Trang **Quản Lý Tài Khoản** cho phép admin xem danh sách tất cả user
 Trang hiển thị 4 thẻ thống kê:
 
 ### 1. Tổng Tài Khoản
+
 - Hiển thị tổng số users trong hệ thống
 - Icon: 👥
 
 ### 2. Admin
+
 - Số lượng tài khoản có quyền admin
 - Icon: 🛡️
 - Màu: Gradient hồng
 
 ### 3. User
+
 - Số lượng tài khoản user thường
 - Icon: 👤
 - Màu: Gradient xanh
 
 ### 4. Đang Hoạt Động
+
 - Số tài khoản isActive = true
 - Icon: ✅
 - Màu: Gradient xanh lá
@@ -183,12 +201,14 @@ Trang hiển thị 4 thẻ thống kê:
 ### Bảng Danh Sách
 
 **Màu sắc:**
+
 - 🟣 **Admin badge**: Gradient tím
 - 🔵 **User badge**: Gradient xanh dương
 - 🟢 **Active badge**: Gradient xanh lá
 - 🔴 **Inactive badge**: Đỏ
 
 **Nút thao tác:**
+
 - 🟣 **Lên Admin**: Gradient tím
 - 🟠 **Hạ User**: Gradient cam
 - 🔴 **Khóa**: Đỏ
@@ -197,6 +217,7 @@ Trang hiển thị 4 thẻ thống kê:
 ### Modal Đổi Mật Khẩu
 
 **Thiết kế:**
+
 - 🎨 Giao diện hiện đại với gradient
 - 📝 Form validation real-time
 - ⚠️ Hiển thị lỗi rõ ràng
@@ -259,22 +280,27 @@ Response: {
 ### Lỗi Thường Gặp
 
 **1. "Mật khẩu hiện tại không đúng"**
+
 - ❌ Nguyên nhân: Nhập sai mật khẩu cũ
 - ✅ Giải pháp: Kiểm tra lại mật khẩu
 
 **2. "Mật khẩu xác nhận không khớp"**
+
 - ❌ Nguyên nhân: Mật khẩu mới và xác nhận khác nhau
 - ✅ Giải pháp: Nhập lại cho khớp
 
 **3. "Mật khẩu mới phải có ít nhất 6 ký tự"**
+
 - ❌ Nguyên nhân: Mật khẩu quá ngắn
 - ✅ Giải pháp: Dùng mật khẩu dài hơn
 
 **4. "Không tìm thấy người dùng"**
+
 - ❌ Nguyên nhân: User đã bị xóa hoặc ID sai
 - ✅ Giải pháp: Refresh lại trang
 
 **5. "Quyền không hợp lệ"**
+
 - ❌ Nguyên nhân: Role không phải "user" hoặc "admin"
 - ✅ Giải pháp: Chỉ chọn 2 quyền có sẵn
 
@@ -303,11 +329,13 @@ Sau khi triển khai, kiểm tra:
 ### Best Practices
 
 1. **Quản lý quyền:**
+
    - Chỉ cấp quyền admin cho người tin cậy
    - Định kỳ review danh sách admin
    - Hạ quyền khi không còn cần thiết
 
 2. **Bảo mật:**
+
    - Đổi mật khẩu định kỳ (3-6 tháng)
    - Dùng mật khẩu mạnh (≥8 ký tự, chữ hoa, số, ký tự đặc biệt)
    - Không chia sẻ mật khẩu

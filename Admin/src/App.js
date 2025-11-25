@@ -1,5 +1,11 @@
 import React, { Suspense, lazy, useState, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route, Link, Navigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Link,
+  Navigate,
+} from "react-router-dom";
 import {
   FaBoxOpen,
   FaTags,
@@ -35,7 +41,16 @@ const AdminPartners = lazy(() => import("./pages/AdminPartners"));
 const AdminUsers = lazy(() => import("./pages/AdminUsers"));
 
 const LoadingSpinner = () => (
-  <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', fontSize: '24px', color: '#667eea' }}>
+  <div
+    style={{
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      height: "100vh",
+      fontSize: "24px",
+      color: "#667eea",
+    }}
+  >
     <div>⏳ Đang tải...</div>
   </div>
 );
@@ -64,52 +79,95 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/login" element={user ? <Navigate to="/" replace /> : <AdminLogin onLoginSuccess={handleLoginSuccess} />} />
-        
-        <Route path="/*" element={
-          <PrivateRoute>
-            <div className="admin-app">
-              <aside className="admin-sidebar">
-                <div className="sidebar-header">
-                  <h2>🛒 Admin Panel</h2>
-                  {user && <div className="user-info"><FaUser /> {user.username}</div>}
-                </div>
-                <nav className="sidebar-nav">
-                  <Link to="/" className="nav-item"><FaChartLine /> Dashboard</Link>
-                  <Link to="/products" className="nav-item"><FaBoxOpen /> Quản Lý Sản Phẩm</Link>
-                  <Link to="/categories" className="nav-item"><FaTags /> Quản Lý Danh Mục</Link>
-                  <Link to="/orders" className="nav-item"><FaShoppingCart /> Quản Lý Đơn Hàng</Link>
-                  <Link to="/users" className="nav-item"><FaUsersCog /> Quản Lý Tài Khoản</Link>
-                  <Link to="/media" className="nav-item"><FaImages /> Quản Lý Media</Link>
-                  <Link to="/slogans" className="nav-item"><FaCommentDots /> Quản Lý Slogan</Link>
-                  <Link to="/company" className="nav-item"><FaBuilding /> Thông Tin Công Ty</Link>
-                  <Link to="/partners" className="nav-item"><FaHandshake /> Quản Lý Đối Tác</Link>
-                  <Link to="/support" className="nav-item"><FaQuestionCircle /> Bài Viết Hỗ Trợ</Link>
-                  <Link to="/messages" className="nav-item"><FaEnvelope /> Tin Nhắn</Link>
-                  <button onClick={handleLogout} className="nav-item logout-btn"><FaSignOutAlt /> Đăng xuất</button>
-                </nav>
-              </aside>
+        <Route
+          path="/login"
+          element={
+            user ? (
+              <Navigate to="/" replace />
+            ) : (
+              <AdminLogin onLoginSuccess={handleLoginSuccess} />
+            )
+          }
+        />
 
-              <main className="admin-main">
-                <Suspense fallback={<LoadingSpinner />}>
-                  <Routes>
-                    <Route path="/" element={<Dashboard />} />
-                    <Route path="/products" element={<AdminProducts />} />
-                    <Route path="/categories" element={<AdminCategories />} />
-                    <Route path="/orders" element={<AdminOrders />} />
-                    <Route path="/users" element={<AdminUsers />} />
-                    <Route path="/media" element={<AdminMedia />} />
-                    <Route path="/slogans" element={<AdminSlogans />} />
-                    <Route path="/company" element={<AdminCompany />} />
-                    <Route path="/support" element={<AdminSupport />} />
-                    <Route path="/messages" element={<AdminMessages />} />
-                    <Route path="/partners" element={<AdminPartners />} />
-                  </Routes>
-                </Suspense>
-              </main>
-            </div>
-          </PrivateRoute>
-        } />
+        <Route
+          path="/*"
+          element={
+            <PrivateRoute>
+              <div className="admin-app">
+                <aside className="admin-sidebar">
+                  <div className="sidebar-header">
+                    <h2>🛒 Admin Panel</h2>
+                    {user && (
+                      <div className="user-info">
+                        <FaUser /> {user.username}
+                      </div>
+                    )}
+                  </div>
+                  <nav className="sidebar-nav">
+                    <Link to="/" className="nav-item">
+                      <FaChartLine /> Dashboard
+                    </Link>
+                    <Link to="/products" className="nav-item">
+                      <FaBoxOpen /> Quản Lý Sản Phẩm
+                    </Link>
+                    <Link to="/categories" className="nav-item">
+                      <FaTags /> Quản Lý Danh Mục
+                    </Link>
+                    <Link to="/orders" className="nav-item">
+                      <FaShoppingCart /> Quản Lý Đơn Hàng
+                    </Link>
+                    <Link to="/users" className="nav-item">
+                      <FaUsersCog /> Quản Lý Tài Khoản
+                    </Link>
+                    <Link to="/media" className="nav-item">
+                      <FaImages /> Quản Lý Media
+                    </Link>
+                    <Link to="/slogans" className="nav-item">
+                      <FaCommentDots /> Quản Lý Slogan
+                    </Link>
+                    <Link to="/company" className="nav-item">
+                      <FaBuilding /> Thông Tin Công Ty
+                    </Link>
+                    <Link to="/partners" className="nav-item">
+                      <FaHandshake /> Quản Lý Đối Tác
+                    </Link>
+                    <Link to="/support" className="nav-item">
+                      <FaQuestionCircle /> Bài Viết Hỗ Trợ
+                    </Link>
+                    <Link to="/messages" className="nav-item">
+                      <FaEnvelope /> Tin Nhắn
+                    </Link>
+                    <button
+                      onClick={handleLogout}
+                      className="nav-item logout-btn"
+                    >
+                      <FaSignOutAlt /> Đăng xuất
+                    </button>
+                  </nav>
+                </aside>
+
+                <main className="admin-main">
+                  <Suspense fallback={<LoadingSpinner />}>
+                    <Routes>
+                      <Route path="/" element={<Dashboard />} />
+                      <Route path="/products" element={<AdminProducts />} />
+                      <Route path="/categories" element={<AdminCategories />} />
+                      <Route path="/orders" element={<AdminOrders />} />
+                      <Route path="/users" element={<AdminUsers />} />
+                      <Route path="/media" element={<AdminMedia />} />
+                      <Route path="/slogans" element={<AdminSlogans />} />
+                      <Route path="/company" element={<AdminCompany />} />
+                      <Route path="/support" element={<AdminSupport />} />
+                      <Route path="/messages" element={<AdminMessages />} />
+                      <Route path="/partners" element={<AdminPartners />} />
+                    </Routes>
+                  </Suspense>
+                </main>
+              </div>
+            </PrivateRoute>
+          }
+        />
       </Routes>
     </Router>
   );

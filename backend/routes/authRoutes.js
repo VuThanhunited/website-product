@@ -12,6 +12,7 @@ const {
   updateUserRole,
   updateUserStatus,
   changePassword,
+  deleteUser,
 } = require("../controllers/authController");
 const { authorize } = require("../middleware/auth");
 
@@ -35,5 +36,6 @@ router.put(
   authorize("admin"),
   updateUserStatus
 );
+router.delete("/users/:userId", protect, authorize("admin"), deleteUser);
 
 module.exports = router;

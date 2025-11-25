@@ -94,6 +94,37 @@ function AdminUsers() {
     }
   };
 
+  const handleDeleteUser = async (userId, username, email) => {
+    if (
+      !window.confirm(
+        `⚠️ CẢNH BÁO: Bạn có chắc muốn XÓA VĨNH VIỄN tài khoản:\n\nUsername: ${username}\nEmail: ${email}\n\nHành động này KHÔNG THỂ HOÀN TÁC!`
+      )
+    ) {
+      return;
+    }
+
+    // Xác nhận lần 2
+    if (!window.confirm("Xác nhận lần cuối: BẠN THỰC SỰ MUỐN XÓA?")) {
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem("adminToken");
+      const response = await axios.delete(`${API_URL}/auth/users/${userId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (response.data.success) {
+        setSuccess(response.data.message);
+        fetchUsers();
+        setTimeout(() => setSuccess(""), 3000);
+      }
+    } catch (error) {
+      setError(error.response?.data?.message || "Lỗi khi xóa tài khoản");
+      setTimeout(() => setError(""), 3000);
+    }
+  };
+
   const handlePasswordChange = async (e) => {
     e.preventDefault();
     setError("");
@@ -273,6 +304,16 @@ function AdminUsers() {
                         }`}
                       ></i>
                       {user.isActive ? "Khóa" : "Mở"}
+                    </button>
+                    <button
+                      className="btn-delete"
+                      onClick={() =>
+                        handleDeleteUser(user._id, user.username, user.email)
+                      }
+                      title="Xóa tài khoản vĩnh viễn"
+                    >
+                      <i className="fas fa-trash-alt"></i>
+                      Xóa
                     </button>
                   </div>
                 </td>
