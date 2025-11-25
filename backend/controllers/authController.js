@@ -79,7 +79,7 @@ exports.login = async (req, res) => {
     const user = await User.findOne({ email }).select("+password");
 
     if (!user) {
-      return res.status(401).json({ error: "Email hoặc mật khẩu không đúng" });
+      return res.status(404).json({ error: "Tài khoản không tồn tại" });
     }
 
     // Check password
