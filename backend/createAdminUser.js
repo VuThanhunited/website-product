@@ -11,29 +11,40 @@ async function createAdminUser() {
     await mongoose.connect(MONGODB_URI);
     console.log("✅ Connected to MongoDB");
 
-    // Tạo admin user
-    const adminData = {
-      username: "admin",
-      email: "admin@eft-company.com",
-      password: "Admin@123456",
-      role: "admin",
-      isActive: true,
-    };
+    // Danh sách admin users
+    const admins = [
+      {
+        username: "admin",
+        email: "admin@eft-company.com",
+        password: "Admin@123456",
+        role: "admin",
+        isActive: true,
+      },
+      {
+        username: "hoangphamha",
+        email: "hoangphamha@gmail.com",
+        password: "Admin@123456",
+        role: "admin",
+        isActive: true,
+      },
+    ];
 
-    // Kiểm tra xem admin đã tồn tại chưa
-    const existingAdmin = await User.findOne({ email: adminData.email });
+    console.log("🔐 Tạo tài khoản admin...\n");
 
-    if (existingAdmin) {
-      console.log("⚠️  Admin user đã tồn tại!");
-      console.log("Email:", existingAdmin.email);
-      console.log("Role:", existingAdmin.role);
-    } else {
-      const admin = await User.create(adminData);
-      console.log("✅ Tạo admin user thành công!");
-      console.log("📧 Email:", admin.email);
-      console.log("🔑 Password: Admin@123456");
-      console.log("👤 Username:", admin.username);
-      console.log("🛡️  Role:", admin.role);
+    for (const adminData of admins) {
+      const existingAdmin = await User.findOne({ email: adminData.email });
+
+      if (existingAdmin) {
+        console.log("⚠️  Admin đã tồn tại:", adminData.email);
+      } else {
+        const admin = await User.create(adminData);
+        console.log("✅ Tạo admin thành công!");
+        console.log("   📧 Email:", admin.email);
+        console.log("   🔑 Password:", adminData.password);
+        console.log("   👤 Username:", admin.username);
+        console.log("   🛡️  Role:", admin.role);
+        console.log("");
+      }
     }
 
     // Tạo test user
@@ -60,14 +71,16 @@ async function createAdminUser() {
 
     console.log("\n🎉 Hoàn thành!");
     console.log("\n📝 Thông tin đăng nhập:");
-    console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-    console.log("ADMIN:");
-    console.log("  Email: admin@eft-company.com");
-    console.log("  Password: Admin@123456");
-    console.log("\nUSER:");
+    console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+    console.log("ADMIN ACCOUNTS:");
+    console.log("  1. Email: admin@eft-company.com");
+    console.log("     Password: Admin@123456");
+    console.log("\n  2. Email: hoangphamha@gmail.com");
+    console.log("     Password: Admin@123456");
+    console.log("\nUSER ACCOUNT:");
     console.log("  Email: user@test.com");
     console.log("  Password: User@123456");
-    console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+    console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
 
     await mongoose.disconnect();
     process.exit(0);

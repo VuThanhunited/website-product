@@ -309,3 +309,154 @@ exports.adminLogin = async (req, res) => {
     });
   }
 };
+
+// Get all users (Admin only)
+exports.getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find().select("-password").sort({ createdAt: -1 });
+
+    res.json({
+      success: true,
+      count: users.length,
+      users,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// Update user role (Admin only)
+exports.updateUserRole = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { role } = req.body;
+
+    if (!["user", "admin"].includes(role)) {
+      return res.status(400).json({
+        success: false,
+        message: "Quyền không hợp lệ. Chỉ được phép: user hoặc admin",
+      });
+    }
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "Không tìm thấy người dùng",
+      });
+    }
+
+    user.role = role;
+    await user.save();
+
+    res.json({
+      success: true,
+      message: `Đã cập nhật quyền thành ${role}`,
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+        role: user.role,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// Update user status (Admin only)
+exports.updateUserStatus = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { isActive } = req.body;
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "Không tìm thấy người dùng",
+      });
+    }
+
+    user.isActive = isActive;
+    await user.save();
+
+    res.json({
+      success: true,
+      message: `Đã ${isActive ? "kích hoạt" : "khóa"} tài khoản`,
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+        isActive: user.isActive,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// Change own password
+exports.changePassword = async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "Vui lòng nhập đầy đủ thông tin",
+      });
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({
+        success: false,
+        message: "Mật khẩu mới phải có ít nhất 6 ký tự",
+      });
+    }
+
+    const user = await User.findById(req.user.id);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "Không tìm thấy người dùng",
+      });
+    }
+
+    // Check current password
+    const isMatch = await user.comparePassword(currentPassword);
+
+    if (!isMatch) {
+      return res.status(400).json({
+        success: false,
+        message: "Mật khẩu hiện tại không đúng",
+      });
+    }
+
+    // Update password
+    user.password = newPassword;
+    await user.save();
+
+    res.json({
+      success: true,
+      message: "Đổi mật khẩu thành công",
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};

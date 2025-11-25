@@ -13,6 +13,7 @@ import {
   FaChartLine,
   FaSignOutAlt,
   FaUser,
+  FaUsersCog,
 } from "react-icons/fa";
 import "./App.css";
 
@@ -31,6 +32,7 @@ const AdminCompany = lazy(() => import("./pages/AdminCompany"));
 const AdminSlogans = lazy(() => import("./pages/AdminSlogans"));
 const AdminOrders = lazy(() => import("./pages/AdminOrders"));
 const AdminPartners = lazy(() => import("./pages/AdminPartners"));
+const AdminUsers = lazy(() => import("./pages/AdminUsers"));
 
 const LoadingSpinner = () => (
   <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', fontSize: '24px', color: '#667eea' }}>
@@ -77,6 +79,7 @@ function App() {
                   <Link to="/products" className="nav-item"><FaBoxOpen /> Quản Lý Sản Phẩm</Link>
                   <Link to="/categories" className="nav-item"><FaTags /> Quản Lý Danh Mục</Link>
                   <Link to="/orders" className="nav-item"><FaShoppingCart /> Quản Lý Đơn Hàng</Link>
+                  <Link to="/users" className="nav-item"><FaUsersCog /> Quản Lý Tài Khoản</Link>
                   <Link to="/media" className="nav-item"><FaImages /> Quản Lý Media</Link>
                   <Link to="/slogans" className="nav-item"><FaCommentDots /> Quản Lý Slogan</Link>
                   <Link to="/company" className="nav-item"><FaBuilding /> Thông Tin Công Ty</Link>
@@ -94,6 +97,7 @@ function App() {
                     <Route path="/products" element={<AdminProducts />} />
                     <Route path="/categories" element={<AdminCategories />} />
                     <Route path="/orders" element={<AdminOrders />} />
+                    <Route path="/users" element={<AdminUsers />} />
                     <Route path="/media" element={<AdminMedia />} />
                     <Route path="/slogans" element={<AdminSlogans />} />
                     <Route path="/company" element={<AdminCompany />} />
