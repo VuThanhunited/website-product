@@ -57,6 +57,8 @@ const LoadingSpinner = () => (
 
 function App() {
   const [user, setUser] = useState(null);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   useEffect(() => {
     const savedUser = localStorage.getItem("adminUser");
@@ -65,11 +67,53 @@ function App() {
     }
   }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem("adminToken");
-    localStorage.removeItem("adminUser");
-    setUser(null);
-    window.location.href = "/login";
+  const handleLogoutClick = () => {
+    setShowLogoutModal(true);
+  };
+
+  const handleLogout = async () => {
+    try {
+      setIsLoggingOut(true);
+
+      // Call logout API to clear backend cookie
+      const token = localStorage.getItem("adminToken");
+      if (token) {
+        await fetch(
+          `${
+            process.env.REACT_APP_API_URL || "http://localhost:5000/api"
+          }/auth/logout`,
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            credentials: "include",
+          }
+        ).catch((err) => console.error("Logout API error:", err));
+      }
+
+      // Clear local storage
+      localStorage.removeItem("adminToken");
+      localStorage.removeItem("adminUser");
+      setUser(null);
+      setShowLogoutModal(false);
+
+      // Redirect to login
+      window.location.href = "/login";
+    } catch (error) {
+      console.error("Logout error:", error);
+      // Still logout even if API fails
+      localStorage.removeItem("adminToken");
+      localStorage.removeItem("adminUser");
+      setUser(null);
+      window.location.href = "/login";
+    } finally {
+      setIsLoggingOut(false);
+    }
+  };
+
+  const handleCancelLogout = () => {
+    setShowLogoutModal(false);
   };
 
   const handleLoginSuccess = (userData) => {
@@ -139,7 +183,7 @@ function App() {
                       <FaEnvelope /> Tin Nhắn
                     </Link>
                     <button
-                      onClick={handleLogout}
+                      onClick={handleLogoutClick}
                       className="nav-item logout-btn"
                     >
                       <FaSignOutAlt /> Đăng xuất
@@ -164,6 +208,38 @@ function App() {
                     </Routes>
                   </Suspense>
                 </main>
+
+                {/* Logout Confirmation Modal */}
+                {showLogoutModal && (
+                  <div className="modal-overlay" onClick={handleCancelLogout}>
+                    <div
+                      className="logout-modal"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <div className="logout-modal-header">
+                        <FaSignOutAlt className="logout-icon" />
+                        <h2>Xác Nhận Đăng Xuất</h2>
+                      </div>
+                      <p>Bạn có chắc chắn muốn đăng xuất khỏi hệ thống?</p>
+                      <div className="logout-modal-actions">
+                        <button
+                          className="btn-cancel"
+                          onClick={handleCancelLogout}
+                          disabled={isLoggingOut}
+                        >
+                          Hủy
+                        </button>
+                        <button
+                          className="btn-logout"
+                          onClick={handleLogout}
+                          disabled={isLoggingOut}
+                        >
+                          {isLoggingOut ? "Đang đăng xuất..." : "Đăng Xuất"}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             </PrivateRoute>
           }
