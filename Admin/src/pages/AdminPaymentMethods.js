@@ -28,6 +28,11 @@ const AdminPaymentMethods = () => {
     icon: "💳",
     isActive: true,
     order: 0,
+    config: {
+      bankName: "",
+      accountNumber: "",
+      accountName: "",
+    },
   });
 
   useEffect(() => {
@@ -83,6 +88,11 @@ const AdminPaymentMethods = () => {
       icon: method.icon || "💳",
       isActive: method.isActive !== undefined ? method.isActive : true,
       order: method.order || 0,
+      config: {
+        bankName: method.config?.bankName || "",
+        accountNumber: method.config?.accountNumber || "",
+        accountName: method.config?.accountName || "",
+      },
     });
   };
 
@@ -125,6 +135,11 @@ const AdminPaymentMethods = () => {
       icon: "💳",
       isActive: true,
       order: 0,
+      config: {
+        bankName: "",
+        accountNumber: "",
+        accountName: "",
+      },
     });
     setIsEditing(false);
     setEditingId(null);
@@ -132,10 +147,23 @@ const AdminPaymentMethods = () => {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData({
-      ...formData,
-      [name]: type === "checkbox" ? checked : value,
-    });
+    
+    // Handle nested config fields
+    if (name.startsWith("config.")) {
+      const configField = name.split(".")[1];
+      setFormData({
+        ...formData,
+        config: {
+          ...formData.config,
+          [configField]: value,
+        },
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: type === "checkbox" ? checked : value,
+      });
+    }
   };
 
   if (loading) {
@@ -243,6 +271,45 @@ const AdminPaymentMethods = () => {
               />
             </div>
 
+            {/* Bank Transfer Configuration */}
+            {formData.code === "bank_transfer" && (
+              <div className="config-section">
+                <h4>🏦 Thông Tin Chuyển Khoản</h4>
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Tên ngân hàng</label>
+                    <input
+                      type="text"
+                      name="config.bankName"
+                      value={formData.config.bankName}
+                      onChange={handleChange}
+                      placeholder="VD: Vietcombank"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Số tài khoản</label>
+                    <input
+                      type="text"
+                      name="config.accountNumber"
+                      value={formData.config.accountNumber}
+                      onChange={handleChange}
+                      placeholder="VD: 1234567890"
+                    />
+                  </div>
+                </div>
+                <div className="form-group">
+                  <label>Tên chủ tài khoản</label>
+                  <input
+                    type="text"
+                    name="config.accountName"
+                    value={formData.config.accountName}
+                    onChange={handleChange}
+                    placeholder="VD: CONG TY TNHH ABC"
+                  />
+                </div>
+              </div>
+            )}
+
             <div className="form-group">
               <label className="checkbox-label">
                 <input
@@ -302,6 +369,29 @@ const AdminPaymentMethods = () => {
                   </td>
                   <td>
                     <small>{method.description}</small>
+                    {method.code === "bank_transfer" && method.config && (
+                      <div style={{ marginTop: "8px", fontSize: "12px" }}>
+                        <strong>🏦 Thông tin chuyển khoản:</strong>
+                        <br />
+                        {method.config.bankName && (
+                          <>
+                            Ngân hàng: <strong>{method.config.bankName}</strong>
+                            <br />
+                          </>
+                        )}
+                        {method.config.accountNumber && (
+                          <>
+                            STK: <strong>{method.config.accountNumber}</strong>
+                            <br />
+                          </>
+                        )}
+                        {method.config.accountName && (
+                          <>
+                            Chủ TK: <strong>{method.config.accountName}</strong>
+                          </>
+                        )}
+                      </div>
+                    )}
                   </td>
                   <td>
                     <button
