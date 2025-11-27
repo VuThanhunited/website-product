@@ -29,9 +29,16 @@ const AdminPaymentMethods = () => {
     isActive: true,
     order: 0,
     config: {
+      // Bank Transfer
       bankName: "",
       accountNumber: "",
       accountName: "",
+      // E-wallets & Payment Gateways
+      apiKey: "",
+      secretKey: "",
+      merchantId: "",
+      returnUrl: "",
+      notifyUrl: "",
     },
   });
 
@@ -92,6 +99,11 @@ const AdminPaymentMethods = () => {
         bankName: method.config?.bankName || "",
         accountNumber: method.config?.accountNumber || "",
         accountName: method.config?.accountName || "",
+        apiKey: method.config?.apiKey || "",
+        secretKey: method.config?.secretKey || "",
+        merchantId: method.config?.merchantId || "",
+        returnUrl: method.config?.returnUrl || "",
+        notifyUrl: method.config?.notifyUrl || "",
       },
     });
   };
@@ -139,6 +151,11 @@ const AdminPaymentMethods = () => {
         bankName: "",
         accountNumber: "",
         accountName: "",
+        apiKey: "",
+        secretKey: "",
+        merchantId: "",
+        returnUrl: "",
+        notifyUrl: "",
       },
     });
     setIsEditing(false);
@@ -306,6 +323,240 @@ const AdminPaymentMethods = () => {
                     onChange={handleChange}
                     placeholder="VD: CONG TY TNHH ABC"
                   />
+                </div>
+              </div>
+            )}
+
+            {/* MoMo Configuration */}
+            {formData.code === "momo" && (
+              <div className="config-section">
+                <h4>📱 Cấu Hình MoMo</h4>
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Partner Code</label>
+                    <input
+                      type="text"
+                      name="config.merchantId"
+                      value={formData.config.merchantId}
+                      onChange={handleChange}
+                      placeholder="Partner Code từ MoMo"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Access Key</label>
+                    <input
+                      type="text"
+                      name="config.apiKey"
+                      value={formData.config.apiKey}
+                      onChange={handleChange}
+                      placeholder="Access Key từ MoMo"
+                    />
+                  </div>
+                </div>
+                <div className="form-group">
+                  <label>Secret Key</label>
+                  <input
+                    type="password"
+                    name="config.secretKey"
+                    value={formData.config.secretKey}
+                    onChange={handleChange}
+                    placeholder="Secret Key từ MoMo"
+                  />
+                </div>
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Return URL</label>
+                    <input
+                      type="text"
+                      name="config.returnUrl"
+                      value={formData.config.returnUrl}
+                      onChange={handleChange}
+                      placeholder="URL trả về sau khi thanh toán"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Notify URL</label>
+                    <input
+                      type="text"
+                      name="config.notifyUrl"
+                      value={formData.config.notifyUrl}
+                      onChange={handleChange}
+                      placeholder="URL nhận thông báo IPN"
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* VNPay Configuration */}
+            {formData.code === "vnpay" && (
+              <div className="config-section">
+                <h4>💳 Cấu Hình VNPay</h4>
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>TMN Code</label>
+                    <input
+                      type="text"
+                      name="config.merchantId"
+                      value={formData.config.merchantId}
+                      onChange={handleChange}
+                      placeholder="Mã website từ VNPay"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Hash Secret</label>
+                    <input
+                      type="password"
+                      name="config.secretKey"
+                      value={formData.config.secretKey}
+                      onChange={handleChange}
+                      placeholder="Hash Secret từ VNPay"
+                    />
+                  </div>
+                </div>
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Return URL</label>
+                    <input
+                      type="text"
+                      name="config.returnUrl"
+                      value={formData.config.returnUrl}
+                      onChange={handleChange}
+                      placeholder="URL trả về sau khi thanh toán"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>API URL</label>
+                    <input
+                      type="text"
+                      name="config.apiKey"
+                      value={formData.config.apiKey}
+                      onChange={handleChange}
+                      placeholder="https://sandbox.vnpayment.vn/paymentv2/vpcpay.html"
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* ZaloPay Configuration */}
+            {formData.code === "zalopay" && (
+              <div className="config-section">
+                <h4>🔵 Cấu Hình ZaloPay</h4>
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>App ID</label>
+                    <input
+                      type="text"
+                      name="config.merchantId"
+                      value={formData.config.merchantId}
+                      onChange={handleChange}
+                      placeholder="App ID từ ZaloPay"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Key 1</label>
+                    <input
+                      type="password"
+                      name="config.apiKey"
+                      value={formData.config.apiKey}
+                      onChange={handleChange}
+                      placeholder="Key 1 từ ZaloPay"
+                    />
+                  </div>
+                </div>
+                <div className="form-group">
+                  <label>Key 2</label>
+                  <input
+                    type="password"
+                    name="config.secretKey"
+                    value={formData.config.secretKey}
+                    onChange={handleChange}
+                    placeholder="Key 2 từ ZaloPay"
+                  />
+                </div>
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Callback URL</label>
+                    <input
+                      type="text"
+                      name="config.notifyUrl"
+                      value={formData.config.notifyUrl}
+                      onChange={handleChange}
+                      placeholder="URL nhận callback"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Redirect URL</label>
+                    <input
+                      type="text"
+                      name="config.returnUrl"
+                      value={formData.config.returnUrl}
+                      onChange={handleChange}
+                      placeholder="URL redirect sau thanh toán"
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Credit Card & ATM Card Configuration */}
+            {(formData.code === "credit_card" || formData.code === "atm_card") && (
+              <div className="config-section">
+                <h4>💳 Cấu Hình Cổng Thanh Toán</h4>
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Merchant ID</label>
+                    <input
+                      type="text"
+                      name="config.merchantId"
+                      value={formData.config.merchantId}
+                      onChange={handleChange}
+                      placeholder="Mã merchant từ ngân hàng"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>API Key</label>
+                    <input
+                      type="text"
+                      name="config.apiKey"
+                      value={formData.config.apiKey}
+                      onChange={handleChange}
+                      placeholder="API Key"
+                    />
+                  </div>
+                </div>
+                <div className="form-group">
+                  <label>Secret Key</label>
+                  <input
+                    type="password"
+                    name="config.secretKey"
+                    value={formData.config.secretKey}
+                    onChange={handleChange}
+                    placeholder="Secret Key để mã hóa"
+                  />
+                </div>
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Return URL</label>
+                    <input
+                      type="text"
+                      name="config.returnUrl"
+                      value={formData.config.returnUrl}
+                      onChange={handleChange}
+                      placeholder="URL trả về"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Notify URL</label>
+                    <input
+                      type="text"
+                      name="config.notifyUrl"
+                      value={formData.config.notifyUrl}
+                      onChange={handleChange}
+                      placeholder="URL nhận thông báo"
+                    />
+                  </div>
                 </div>
               </div>
             )}
