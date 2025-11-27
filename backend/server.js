@@ -81,6 +81,7 @@ const contactRoutes = require("./routes/contactRoutes");
 const authRoutes = require("./routes/authRoutes");
 const orderRoutes = require("./routes/orderRoutes");
 const cartRoutes = require("./routes/cartRoutes");
+const shippingRoutes = require("./routes/shippingRoutes");
 
 // Use Routes
 app.use("/api/products", productRoutes);
@@ -92,6 +93,7 @@ app.use("/api/contact", contactRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/cart", cartRoutes);
+app.use("/api/shipping", shippingRoutes);
 
 // Health check endpoint
 app.get("/api/health", (req, res) => {

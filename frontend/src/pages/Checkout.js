@@ -5,7 +5,10 @@ import { useAuth } from "../contexts/AuthContext";
 import { useLanguage } from "../contexts/LanguageContext";
 import { translations } from "../utils/translations";
 import api from "../services/api";
+import axios from "axios";
 import "../styles/Checkout.css";
+
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000/api";
 
 const Checkout = () => {
   const navigate = useNavigate();
@@ -33,8 +36,120 @@ const Checkout = () => {
   });
 
   const [paymentMethod, setPaymentMethod] = useState("cod");
+  const [paymentInfo, setPaymentInfo] = useState({
+    bankName: "",
+    accountNumber: "",
+    accountName: "",
+    transactionId: "",
+  });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const [shippingFee, setShippingFee] = useState(30000);
+  const [estimatedDays, setEstimatedDays] = useState("2-3 ngày");
+  const [provinces, setProvinces] = useState([]);
+
+  // Vietnam provinces list
+  const vietnamProvinces = [
+    "Hà Nội",
+    "Hồ Chí Minh",
+    "Đà Nẵng",
+    "Hải Phòng",
+    "Cần Thơ",
+    "An Giang",
+    "Bà Rịa - Vũng Tàu",
+    "Bắc Giang",
+    "Bắc Kạn",
+    "Bạc Liêu",
+    "Bắc Ninh",
+    "Bến Tre",
+    "Bình Định",
+    "Bình Dương",
+    "Bình Phước",
+    "Bình Thuận",
+    "Cà Mau",
+    "Cao Bằng",
+    "Đắk Lắk",
+    "Đắk Nông",
+    "Điện Biên",
+    "Đồng Nai",
+    "Đồng Tháp",
+    "Gia Lai",
+    "Hà Giang",
+    "Hà Nam",
+    "Hà Tĩnh",
+    "Hải Dương",
+    "Hậu Giang",
+    "Hòa Bình",
+    "Hưng Yên",
+    "Khánh Hòa",
+    "Kiên Giang",
+    "Kon Tum",
+    "Lai Châu",
+    "Lâm Đồng",
+    "Lạng Sơn",
+    "Lào Cai",
+    "Long An",
+    "Nam Định",
+    "Nghệ An",
+    "Ninh Bình",
+    "Ninh Thuận",
+    "Phú Thọ",
+    "Phú Yên",
+    "Quảng Bình",
+    "Quảng Nam",
+    "Quảng Ngãi",
+    "Quảng Ninh",
+    "Quảng Trị",
+    "Sóc Trăng",
+    "Sơn La",
+    "Tây Ninh",
+    "Thái Bình",
+    "Thái Nguyên",
+    "Thanh Hóa",
+    "Thừa Thiên Huế",
+    "Tiền Giang",
+    "Trà Vinh",
+    "Tuyên Quang",
+    "Vĩnh Long",
+    "Vĩnh Phúc",
+    "Yên Bái",
+  ];
+
+  useEffect(() => {
+    fetchShippingRates();
+  }, []);
+
+  const fetchShippingRates = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/shipping`);
+      if (response.data.success) {
+        setProvinces(response.data.data);
+      }
+    } catch (error) {
+      console.error("Error fetching shipping rates:", error);
+    }
+  };
+
+  // Update shipping fee when city changes
+  useEffect(() => {
+    if (formData.city) {
+      calculateShippingFee(formData.city);
+    }
+  }, [formData.city]);
+
+  const calculateShippingFee = async (city) => {
+    try {
+      const response = await axios.get(`${API_URL}/shipping/${city}`);
+      if (response.data.success) {
+        setShippingFee(response.data.data.rate || 30000);
+        setEstimatedDays(response.data.data.estimatedDays || "2-3 ngày");
+      }
+    } catch (error) {
+      console.error("Error calculating shipping fee:", error);
+      setShippingFee(30000); // Default fee
+      setEstimatedDays("2-3 ngày");
+    }
+  };
 
   if (!isAuthenticated) {
     return null;
@@ -89,7 +204,6 @@ const Checkout = () => {
     setLoading(true);
 
     try {
-      const shippingFee = getCartTotal() >= 500000 ? 0 : 30000;
       const total = getCartTotal() + shippingFee;
 
       const orderData = {
@@ -105,6 +219,8 @@ const Checkout = () => {
         shippingFee,
         total,
         paymentMethod,
+        paymentInfo:
+          paymentMethod === "bank_transfer" ? paymentInfo : undefined,
         status: "pending",
         language: language,
       };
@@ -125,7 +241,6 @@ const Checkout = () => {
     }
   };
 
-  const shippingFee = getCartTotal() >= 500000 ? 0 : 30000;
   const total = getCartTotal() + shippingFee;
 
   if (cart.length === 0) {
@@ -216,14 +331,20 @@ const Checkout = () => {
 
               <div className="form-row">
                 <div className="form-group">
-                  <label>{t.city || "City"} *</label>
-                  <input
-                    type="text"
+                  <label>{t.city || "City/Province"} *</label>
+                  <select
                     name="city"
                     value={formData.city}
                     onChange={handleChange}
                     className={errors.city ? "error" : ""}
-                  />
+                  >
+                    <option value="">-- Chọn Tỉnh/Thành phố --</option>
+                    {vietnamProvinces.map((province) => (
+                      <option key={province} value={province}>
+                        {province}
+                      </option>
+                    ))}
+                  </select>
                   {errors.city && (
                     <span className="error-message">{errors.city}</span>
                   )}
@@ -236,6 +357,7 @@ const Checkout = () => {
                     name="district"
                     value={formData.district}
                     onChange={handleChange}
+                    placeholder="Nhập quận/huyện"
                   />
                 </div>
               </div>
@@ -247,6 +369,7 @@ const Checkout = () => {
                   name="ward"
                   value={formData.ward}
                   onChange={handleChange}
+                  placeholder="Nhập phường/xã"
                 />
               </div>
 
@@ -257,8 +380,30 @@ const Checkout = () => {
                   value={formData.notes}
                   onChange={handleChange}
                   rows="3"
+                  placeholder="Ghi chú về đơn hàng (tùy chọn)"
                 />
               </div>
+
+              {/* Shipping Fee Display */}
+              {formData.city && (
+                <div className="shipping-info">
+                  <h3>📦 Thông tin vận chuyển</h3>
+                  <div className="shipping-details">
+                    <div className="shipping-row">
+                      <span>Phí vận chuyển đến {formData.city}:</span>
+                      <strong className="shipping-fee">
+                        {shippingFee.toLocaleString("vi-VN")} ₫
+                      </strong>
+                    </div>
+                    <div className="shipping-row">
+                      <span>Thời gian giao hàng dự kiến:</span>
+                      <strong className="estimated-time">
+                        {estimatedDays}
+                      </strong>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               <h2>{t.paymentMethod || "Payment Method"}</h2>
 
@@ -271,18 +416,30 @@ const Checkout = () => {
                     checked={paymentMethod === "cod"}
                     onChange={(e) => setPaymentMethod(e.target.value)}
                   />
-                  <span>{t.cod || "Cash on Delivery (COD)"}</span>
+                  <div className="payment-content">
+                    <span className="payment-icon">💵</span>
+                    <div className="payment-info">
+                      <strong>Thanh toán khi nhận hàng (COD)</strong>
+                      <p>Thanh toán bằng tiền mặt khi nhận hàng</p>
+                    </div>
+                  </div>
                 </label>
 
                 <label className="payment-option">
                   <input
                     type="radio"
                     name="paymentMethod"
-                    value="bank"
-                    checked={paymentMethod === "bank"}
+                    value="bank_transfer"
+                    checked={paymentMethod === "bank_transfer"}
                     onChange={(e) => setPaymentMethod(e.target.value)}
                   />
-                  <span>{t.bankTransfer || "Bank Transfer"}</span>
+                  <div className="payment-content">
+                    <span className="payment-icon">🏦</span>
+                    <div className="payment-info">
+                      <strong>Chuyển khoản ngân hàng</strong>
+                      <p>Chuyển khoản qua tài khoản ngân hàng</p>
+                    </div>
+                  </div>
                 </label>
 
                 <label className="payment-option">
@@ -293,9 +450,85 @@ const Checkout = () => {
                     checked={paymentMethod === "momo"}
                     onChange={(e) => setPaymentMethod(e.target.value)}
                   />
-                  <span>{t.momo || "MoMo Wallet"}</span>
+                  <div className="payment-content">
+                    <span className="payment-icon">📱</span>
+                    <div className="payment-info">
+                      <strong>Ví MoMo</strong>
+                      <p>Thanh toán qua ví điện tử MoMo</p>
+                    </div>
+                  </div>
+                </label>
+
+                <label className="payment-option">
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    value="vnpay"
+                    checked={paymentMethod === "vnpay"}
+                    onChange={(e) => setPaymentMethod(e.target.value)}
+                  />
+                  <div className="payment-content">
+                    <span className="payment-icon">💳</span>
+                    <div className="payment-info">
+                      <strong>VNPay</strong>
+                      <p>Thanh toán qua cổng VNPay</p>
+                    </div>
+                  </div>
+                </label>
+
+                <label className="payment-option">
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    value="zalopay"
+                    checked={paymentMethod === "zalopay"}
+                    onChange={(e) => setPaymentMethod(e.target.value)}
+                  />
+                  <div className="payment-content">
+                    <span className="payment-icon">🔵</span>
+                    <div className="payment-info">
+                      <strong>ZaloPay</strong>
+                      <p>Thanh toán qua ví ZaloPay</p>
+                    </div>
+                  </div>
                 </label>
               </div>
+
+              {/* Bank Transfer Info */}
+              {paymentMethod === "bank_transfer" && (
+                <div className="bank-info-section">
+                  <h3>Thông tin chuyển khoản</h3>
+                  <div className="bank-details">
+                    <p>
+                      <strong>Ngân hàng:</strong> Vietcombank
+                    </p>
+                    <p>
+                      <strong>Số tài khoản:</strong> 1234567890
+                    </p>
+                    <p>
+                      <strong>Chủ tài khoản:</strong> CÔNG TY EFT TECHNOLOGY
+                    </p>
+                    <p>
+                      <strong>Nội dung:</strong> Thanh toán đơn hàng [Tên của
+                      bạn]
+                    </p>
+                  </div>
+                  <div className="form-group">
+                    <label>Mã giao dịch (sau khi chuyển khoản)</label>
+                    <input
+                      type="text"
+                      value={paymentInfo.transactionId}
+                      onChange={(e) =>
+                        setPaymentInfo({
+                          ...paymentInfo,
+                          transactionId: e.target.value,
+                        })
+                      }
+                      placeholder="Nhập mã giao dịch"
+                    />
+                  </div>
+                </div>
+              )}
 
               <button type="submit" className="btn-submit" disabled={loading}>
                 {loading
@@ -332,12 +565,17 @@ const Checkout = () => {
                 </div>
                 <div className="summary-row">
                   <span>{t.shipping || "Shipping"}:</span>
-                  <span>
-                    {shippingFee === 0
-                      ? t.free || "Free"
-                      : `${shippingFee.toLocaleString("vi-VN")} ₫`}
+                  <span className="shipping-fee-value">
+                    {shippingFee.toLocaleString("vi-VN")} ₫
                   </span>
                 </div>
+                {formData.city && (
+                  <div className="summary-note">
+                    <small>
+                      🚚 Giao hàng đến {formData.city} ({estimatedDays})
+                    </small>
+                  </div>
+                )}
                 <div className="summary-row total">
                   <span>{t.total || "Total"}:</span>
                   <span>{total.toLocaleString("vi-VN")} ₫</span>

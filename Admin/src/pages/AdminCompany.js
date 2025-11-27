@@ -24,6 +24,8 @@ const AdminCompany = () => {
       instagram: "",
       whatsapp: "",
     },
+    headerBgColor: "#ffffff",
+    companyPageBgColor: "#f8f9fa",
   });
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
@@ -48,6 +50,8 @@ const AdminCompany = () => {
           instagram: "",
           whatsapp: "",
         },
+        headerBgColor: response.data.headerBgColor || "#ffffff",
+        companyPageBgColor: response.data.companyPageBgColor || "#f8f9fa",
       });
       setLoading(false);
     } catch (error) {
@@ -136,6 +140,30 @@ const AdminCompany = () => {
           </div>
 
           <div className="info-card">
+            <h2>Tùy Chỉnh Màu Sắc</h2>
+            <div className="info-row">
+              <label>Màu Nền Header:</label>
+              <span>
+                <span
+                  className="color-preview"
+                  style={{ backgroundColor: companyInfo?.headerBgColor }}
+                ></span>
+                {companyInfo?.headerBgColor || "#ffffff"}
+              </span>
+            </div>
+            <div className="info-row">
+              <label>Màu Nền Trang Công Ty:</label>
+              <span>
+                <span
+                  className="color-preview"
+                  style={{ backgroundColor: companyInfo?.companyPageBgColor }}
+                ></span>
+                {companyInfo?.companyPageBgColor || "#f8f9fa"}
+              </span>
+            </div>
+          </div>
+
+          <div className="info-card">
             <h2>Mạng Xã Hội</h2>
             <div className="info-row">
               <label>Facebook:</label>
@@ -214,6 +242,52 @@ const AdminCompany = () => {
                 onChange={handleChange}
                 required
               />
+            </div>
+          </div>
+
+          <div className="form-section">
+            <h2>Tùy Chỉnh Màu Sắc</h2>
+
+            <div className="form-group">
+              <label>Màu Nền Header</label>
+              <div className="color-input-group">
+                <input
+                  type="color"
+                  name="headerBgColor"
+                  value={formData.headerBgColor}
+                  onChange={handleChange}
+                />
+                <input
+                  type="text"
+                  name="headerBgColor"
+                  value={formData.headerBgColor}
+                  onChange={handleChange}
+                  placeholder="#ffffff"
+                  pattern="^#[0-9A-Fa-f]{6}$"
+                />
+                <small>Màu nền cho header (navigation bar)</small>
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label>Màu Nền Trang Công Ty</label>
+              <div className="color-input-group">
+                <input
+                  type="color"
+                  name="companyPageBgColor"
+                  value={formData.companyPageBgColor}
+                  onChange={handleChange}
+                />
+                <input
+                  type="text"
+                  name="companyPageBgColor"
+                  value={formData.companyPageBgColor}
+                  onChange={handleChange}
+                  placeholder="#f8f9fa"
+                  pattern="^#[0-9A-Fa-f]{6}$"
+                />
+                <small>Màu nền cho trang giới thiệu công ty</small>
+              </div>
             </div>
           </div>
 

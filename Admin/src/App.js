@@ -20,6 +20,7 @@ import {
   FaSignOutAlt,
   FaUser,
   FaUsersCog,
+  FaTruck,
 } from "react-icons/fa";
 import "./App.css";
 
@@ -39,6 +40,7 @@ const AdminSlogans = lazy(() => import("./pages/AdminSlogans"));
 const AdminOrders = lazy(() => import("./pages/AdminOrders"));
 const AdminPartners = lazy(() => import("./pages/AdminPartners"));
 const AdminUsers = lazy(() => import("./pages/AdminUsers"));
+const AdminShipping = lazy(() => import("./pages/AdminShipping"));
 
 const LoadingSpinner = () => (
   <div
@@ -161,6 +163,9 @@ function App() {
                     <Link to="/orders" className="nav-item">
                       <FaShoppingCart /> Quản Lý Đơn Hàng
                     </Link>
+                    <Link to="/shipping" className="nav-item">
+                      <FaTruck /> Phí Vận Chuyển
+                    </Link>
                     <Link to="/users" className="nav-item">
                       <FaUsersCog /> Quản Lý Tài Khoản
                     </Link>
@@ -198,6 +203,7 @@ function App() {
                       <Route path="/products" element={<AdminProducts />} />
                       <Route path="/categories" element={<AdminCategories />} />
                       <Route path="/orders" element={<AdminOrders />} />
+                      <Route path="/shipping" element={<AdminShipping />} />
                       <Route path="/users" element={<AdminUsers />} />
                       <Route path="/media" element={<AdminMedia />} />
                       <Route path="/slogans" element={<AdminSlogans />} />

@@ -57,6 +57,14 @@ const companyInfoSchema = new mongoose.Schema(
       type: String,
       default: "#ffffff",
     },
+    headerBgColor: {
+      type: String,
+      default: "#ffffff",
+    },
+    companyPageBgColor: {
+      type: String,
+      default: "#f8f9fa",
+    },
   },
   {
     timestamps: true,

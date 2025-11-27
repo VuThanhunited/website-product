@@ -71,7 +71,12 @@ const Header = () => {
   const menuLinks = ["/", "/company", "/products", "/support", "/contact"];
 
   return (
-    <header className="header">
+    <header
+      className="header"
+      style={{
+        backgroundColor: companyInfo?.headerBgColor || "#ffffff",
+      }}
+    >
       <div className="top-section">
         <div className="container">
           <div className="top-content">

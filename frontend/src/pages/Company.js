@@ -28,7 +28,12 @@ const Company = () => {
   }
 
   return (
-    <div className="company-page">
+    <div
+      className="company-page"
+      style={{
+        backgroundColor: companyInfo?.companyPageBgColor || "#f8f9fa",
+      }}
+    >
       {/* Hero Section */}
       <div className="company-hero">
         <div className="hero-overlay">
