@@ -147,7 +147,7 @@ const AdminPaymentMethods = () => {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    
+
     // Handle nested config fields
     if (name.startsWith("config.")) {
       const configField = name.split(".")[1];
