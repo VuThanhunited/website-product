@@ -82,6 +82,7 @@ const authRoutes = require("./routes/authRoutes");
 const orderRoutes = require("./routes/orderRoutes");
 const cartRoutes = require("./routes/cartRoutes");
 const shippingRoutes = require("./routes/shippingRoutes");
+const paymentMethodRoutes = require("./routes/paymentMethodRoutes");
 
 // Use Routes
 app.use("/api/products", productRoutes);
@@ -94,6 +95,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/shipping", shippingRoutes);
+app.use("/api/payment-methods", paymentMethodRoutes);
 
 // Health check endpoint
 app.get("/api/health", (req, res) => {
