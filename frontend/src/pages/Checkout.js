@@ -12,17 +12,21 @@ const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000/api";
 
 const Checkout = () => {
   const navigate = useNavigate();
-  const { cart, getCartTotal, clearCart } = useCart();
-  const { isAuthenticated } = useAuth();
+  const { cart, getCartTotal, clearCart, isLoading: cartLoading } = useCart();
+  const { isAuthenticated, loading: authLoading } = useAuth();
   const { language } = useLanguage();
   const t = translations[language];
+  const [hasChecked, setHasChecked] = useState(false);
 
   useEffect(() => {
-    if (!isAuthenticated) {
-      alert(t.loginRequired || "Vui lòng đăng nhập để thanh toán!");
-      navigate("/login");
+    if (!authLoading && !hasChecked) {
+      setHasChecked(true);
+      if (!isAuthenticated) {
+        alert(t.loginRequired || "Vui lòng đăng nhập để thanh toán!");
+        navigate("/login");
+      }
     }
-  }, [isAuthenticated, navigate, t.loginRequired]);
+  }, [isAuthenticated, authLoading, navigate, t.loginRequired, hasChecked]);
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -242,6 +246,22 @@ const Checkout = () => {
   };
 
   const total = getCartTotal() + shippingFee;
+
+  if (authLoading || cartLoading) {
+    return (
+      <div className="checkout-page">
+        <div className="container">
+          <div className="empty-cart">
+            <h2>Đang tải...</h2>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return null;
+  }
 
   if (cart.length === 0) {
     return (

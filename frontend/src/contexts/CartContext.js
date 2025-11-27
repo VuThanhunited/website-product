@@ -12,30 +12,64 @@ export const useCart = () => {
 };
 
 export const CartProvider = ({ children }) => {
-  const [cartItems, setCartItems] = useState(() => {
-    // Load cart from localStorage (for non-logged users)
-    const savedCart = localStorage.getItem("cart");
-    return savedCart ? JSON.parse(savedCart) : [];
-  });
+  const [cartItems, setCartItems] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Check login status
+  // Initialize cart on mount
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    setIsLoggedIn(!!token);
+    initializeCart();
   }, []);
 
-  // Save to localStorage for non-logged users OR sync to backend for logged users
+  const initializeCart = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      
+      if (token) {
+        // User is logged in, load from backend
+        setIsLoggedIn(true);
+        await loadCartFromBackend();
+      } else {
+        // User not logged in, load from localStorage
+        setIsLoggedIn(false);
+        const savedCart = localStorage.getItem("cart");
+        if (savedCart) {
+          setCartItems(JSON.parse(savedCart));
+        }
+      }
+    } catch (error) {
+      console.error("Error initializing cart:", error);
+      // Fallback to localStorage
+      const savedCart = localStorage.getItem("cart");
+      if (savedCart) {
+        setCartItems(JSON.parse(savedCart));
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Save to localStorage for non-logged users
   useEffect(() => {
-    if (!isLoggedIn) {
+    if (!isLoggedIn && !isLoading) {
       localStorage.setItem("cart", JSON.stringify(cartItems));
     }
-  }, [cartItems, isLoggedIn]);
+  }, [cartItems, isLoggedIn, isLoading]);
 
   // Load cart from backend when user logs in
   const loadCartFromBackend = async () => {
     try {
-      const response = await api.get("/cart");
+      const token = localStorage.getItem("token");
+      if (!token) {
+        return;
+      }
+
+      const response = await api.get("/cart", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      
       if (response.data && response.data.items) {
         const formattedItems = response.data.items.map((item) => ({
           _id: item.productId._id || item.productId,
@@ -55,8 +89,12 @@ export const CartProvider = ({ children }) => {
   // Sync local cart to backend when user logs in
   const syncCartToBackend = async () => {
     try {
-      if (cartItems.length > 0) {
-        await api.post("/cart/sync", { items: cartItems });
+      const localCart = localStorage.getItem("cart");
+      if (localCart) {
+        const items = JSON.parse(localCart);
+        if (items.length > 0) {
+          await api.post("/cart/sync", { items });
+        }
       }
       await loadCartFromBackend();
       localStorage.removeItem("cart"); // Clear local cart after sync
@@ -198,6 +236,8 @@ export const CartProvider = ({ children }) => {
     syncCartToBackend,
     loadCartFromBackend,
     setIsLoggedIn,
+    isLoading,
+    initializeCart,
   };
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

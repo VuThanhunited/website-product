@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaTrash, FaMinus, FaPlus, FaShoppingCart } from "react-icons/fa";
 import { useCart } from "../contexts/CartContext";
@@ -8,18 +8,22 @@ import { translations } from "../utils/translations";
 import "../styles/Cart.css";
 
 const Cart = () => {
-  const { cartItems, removeFromCart, updateQuantity, getCartTotal } = useCart();
-  const { isAuthenticated } = useAuth();
+  const { cartItems, removeFromCart, updateQuantity, getCartTotal, isLoading } = useCart();
+  const { isAuthenticated, loading: authLoading } = useAuth();
   const { language } = useLanguage();
   const t = translations[language];
   const navigate = useNavigate();
+  const [hasChecked, setHasChecked] = useState(false);
 
   useEffect(() => {
-    if (!isAuthenticated) {
-      alert(t.loginRequired || "Vui lòng đăng nhập để xem giỏ hàng!");
-      navigate("/login");
+    if (!authLoading && !hasChecked) {
+      setHasChecked(true);
+      if (!isAuthenticated) {
+        alert(t.loginRequired || "Vui lòng đăng nhập để xem giỏ hàng!");
+        navigate("/login");
+      }
     }
-  }, [isAuthenticated, navigate, t.loginRequired]);
+  }, [isAuthenticated, authLoading, navigate, t.loginRequired, hasChecked]);
 
   const handleCheckout = () => {
     if (!isAuthenticated) {
@@ -34,8 +38,20 @@ const Cart = () => {
     navigate("/checkout");
   };
 
-  if (!isAuthenticated) {
+  if (!isAuthenticated && !authLoading) {
     return null;
+  }
+
+  if (isLoading || authLoading) {
+    return (
+      <div className="cart-page">
+        <div className="container">
+          <div className="empty-cart">
+            <h2>Đang tải giỏ hàng...</h2>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   if (cartItems.length === 0) {

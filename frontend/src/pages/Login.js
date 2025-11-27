@@ -51,13 +51,11 @@ const Login = () => {
       const result = await login(formData.email, formData.password);
 
       if (result.success) {
-        // Update cart context login status
+        // Update cart context login status and sync
         setIsLoggedIn(true);
-
-        // Sync local cart to backend
         await syncCartToBackend();
 
-        alert(result.message);
+        // Show success message briefly then navigate
         const from = location.state?.from?.pathname || "/";
         navigate(from, { replace: true });
       } else {
