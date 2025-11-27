@@ -7,7 +7,7 @@
 }
 
 .top-section {
-  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  /* Background được set từ inline style trong component */
   background-size: cover;
   background-position: center;
   border-bottom: 2px solid transparent;

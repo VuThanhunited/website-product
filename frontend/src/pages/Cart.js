@@ -8,7 +8,8 @@ import { translations } from "../utils/translations";
 import "../styles/Cart.css";
 
 const Cart = () => {
-  const { cartItems, removeFromCart, updateQuantity, getCartTotal, isLoading } = useCart();
+  const { cartItems, removeFromCart, updateQuantity, getCartTotal, isLoading } =
+    useCart();
   const { isAuthenticated, loading: authLoading } = useAuth();
   const { language } = useLanguage();
   const t = translations[language];

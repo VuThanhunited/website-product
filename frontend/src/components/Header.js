@@ -71,13 +71,15 @@ const Header = () => {
   const menuLinks = ["/", "/company", "/products", "/support", "/contact"];
 
   return (
-    <header
-      className="header"
-      style={{
-        backgroundColor: companyInfo?.headerBgColor || "#ffffff",
-      }}
-    >
-      <div className="top-section">
+    <header className="header">
+      <div
+        className="top-section"
+        style={{
+          background: companyInfo?.headerBgColor
+            ? companyInfo.headerBgColor
+            : "linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%)",
+        }}
+      >
         <div className="container">
           <div className="top-content">
             {/* Bên trái - Logo, địa chỉ, số điện thoại */}

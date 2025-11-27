@@ -265,12 +265,14 @@ const AdminCompany = () => {
                   placeholder="#ffffff"
                   pattern="^#[0-9A-Fa-f]{6}$"
                 />
-                <small>Màu nền cho header (navigation bar)</small>
+                <small>
+                  Màu nền cho phần header trên cùng (logo, thông tin công ty)
+                </small>
               </div>
             </div>
 
             <div className="form-group">
-              <label>Màu Nền Trang Công Ty</label>
+              <label>Màu Nền Hero Section Trang Công Ty</label>
               <div className="color-input-group">
                 <input
                   type="color"
@@ -283,10 +285,12 @@ const AdminCompany = () => {
                   name="companyPageBgColor"
                   value={formData.companyPageBgColor}
                   onChange={handleChange}
-                  placeholder="#f8f9fa"
-                  pattern="^#[0-9A-Fa-f]{6}$"
+                  placeholder="#667eea hoặc linear-gradient(...)"
                 />
-                <small>Màu nền cho trang giới thiệu công ty</small>
+                <small>
+                  Màu nền cho phần hero "Về chúng tôi - Công ty TNHH..." (hỗ trợ
+                  mã màu hoặc gradient)
+                </small>
               </div>
             </div>
           </div>

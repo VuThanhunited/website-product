@@ -6,7 +6,7 @@
 .company-hero {
   position: relative;
   height: 400px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  /* Background được set từ inline style trong component */
   display: flex;
   align-items: center;
   justify-content: center;

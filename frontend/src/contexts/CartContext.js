@@ -24,7 +24,7 @@ export const CartProvider = ({ children }) => {
   const initializeCart = async () => {
     try {
       const token = localStorage.getItem("token");
-      
+
       if (token) {
         // User is logged in, load from backend
         setIsLoggedIn(true);
@@ -69,7 +69,7 @@ export const CartProvider = ({ children }) => {
           Authorization: `Bearer ${token}`,
         },
       });
-      
+
       if (response.data && response.data.items) {
         const formattedItems = response.data.items.map((item) => ({
           _id: item.productId._id || item.productId,
