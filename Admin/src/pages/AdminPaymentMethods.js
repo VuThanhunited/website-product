@@ -501,7 +501,8 @@ const AdminPaymentMethods = () => {
             )}
 
             {/* Credit Card & ATM Card Configuration */}
-            {(formData.code === "credit_card" || formData.code === "atm_card") && (
+            {(formData.code === "credit_card" ||
+              formData.code === "atm_card") && (
               <div className="config-section">
                 <h4>💳 Cấu Hình Cổng Thanh Toán</h4>
                 <div className="form-row">

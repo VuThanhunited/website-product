@@ -22,6 +22,7 @@ const Register = lazy(() => import("./pages/Register"));
 const Profile = lazy(() => import("./pages/Profile"));
 const Cart = lazy(() => import("./pages/Cart"));
 const Checkout = lazy(() => import("./pages/Checkout"));
+const Payment = lazy(() => import("./pages/Payment"));
 const OrderSuccess = lazy(() => import("./pages/OrderSuccess"));
 
 function App() {
@@ -54,6 +55,7 @@ function App() {
                     />
                     <Route path="/cart" element={<Cart />} />
                     <Route path="/checkout" element={<Checkout />} />
+                    <Route path="/payment" element={<Payment />} />
                     <Route
                       path="/order-success/:orderId"
                       element={<OrderSuccess />}

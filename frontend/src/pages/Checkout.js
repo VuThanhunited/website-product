@@ -28,6 +28,33 @@ const Checkout = () => {
     }
   }, [isAuthenticated, authLoading, navigate, t.loginRequired, hasChecked]);
 
+  // Fetch payment methods
+  useEffect(() => {
+    const fetchPaymentMethods = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/payment-methods`);
+        const methods = response.data.data || [];
+        setPaymentMethods(methods);
+        if (methods.length > 0) {
+          setSelectedPaymentMethod(methods[0]);
+        }
+      } catch (error) {
+        console.error("Error fetching payment methods:", error);
+        // Fallback to COD if API fails
+        setPaymentMethods([
+          {
+            code: "cod",
+            name: "Thanh toán khi nhận hàng",
+            nameEn: "Cash on Delivery",
+            icon: "💵",
+            description: "Thanh toán bằng tiền mặt khi nhận hàng",
+          },
+        ]);
+      }
+    };
+    fetchPaymentMethods();
+  }, []);
+
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -39,7 +66,8 @@ const Checkout = () => {
     notes: "",
   });
 
-  const [paymentMethod, setPaymentMethod] = useState("cod");
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
+  const [paymentMethods, setPaymentMethods] = useState([]);
   const [paymentInfo, setPaymentInfo] = useState({
     bankName: "",
     accountNumber: "",
@@ -205,44 +233,40 @@ const Checkout = () => {
       return;
     }
 
-    setLoading(true);
-
-    try {
-      const total = getCartTotal() + shippingFee;
-
-      const orderData = {
-        customerInfo: formData,
-        items: cart.map((item) => ({
-          productId: item._id,
-          productName:
-            language === "en" && item.nameEn ? item.nameEn : item.name,
-          quantity: item.quantity,
-          price: item.price,
-        })),
-        subtotal: getCartTotal(),
-        shippingFee,
-        total,
-        paymentMethod,
-        paymentInfo:
-          paymentMethod === "bank_transfer" ? paymentInfo : undefined,
-        status: "pending",
-        language: language,
-      };
-
-      console.log("📦 Sending order data:", orderData);
-
-      const response = await api.post("/orders", orderData);
-
-      console.log("✅ Order response:", response.data);
-
-      clearCart();
-      navigate(`/order-success/${response.data._id}`);
-    } catch (error) {
-      console.error("Order submission error:", error);
-      alert(t.orderError || "Failed to place order. Please try again.");
-    } finally {
-      setLoading(false);
+    if (!selectedPaymentMethod) {
+      alert("Vui lòng chọn phương thức thanh toán!");
+      return;
     }
+
+    const total = getCartTotal() + shippingFee;
+
+    const orderData = {
+      customerInfo: formData,
+      items: cart.map((item) => ({
+        productId: item._id,
+        productName: language === "en" && item.nameEn ? item.nameEn : item.name,
+        quantity: item.quantity,
+        price: item.price,
+      })),
+      subtotal: getCartTotal(),
+      shippingFee,
+      total,
+      paymentMethod: selectedPaymentMethod.code,
+      paymentInfo:
+        selectedPaymentMethod.code === "bank_transfer"
+          ? paymentInfo
+          : undefined,
+      status: "pending",
+      language: language,
+    };
+
+    // Navigate to payment page with order data and selected payment method
+    navigate("/payment", {
+      state: {
+        paymentMethod: selectedPaymentMethod,
+        orderData: orderData,
+      },
+    });
   };
 
   const total = getCartTotal() + shippingFee;
@@ -428,132 +452,61 @@ const Checkout = () => {
               <h2>{t.paymentMethod || "Payment Method"}</h2>
 
               <div className="payment-methods">
-                <label className="payment-option">
-                  <input
-                    type="radio"
-                    name="paymentMethod"
-                    value="cod"
-                    checked={paymentMethod === "cod"}
-                    onChange={(e) => setPaymentMethod(e.target.value)}
-                  />
-                  <div className="payment-content">
-                    <span className="payment-icon">💵</span>
-                    <div className="payment-info">
-                      <strong>Thanh toán khi nhận hàng (COD)</strong>
-                      <p>Thanh toán bằng tiền mặt khi nhận hàng</p>
+                {paymentMethods.map((method) => (
+                  <label
+                    key={method._id || method.code}
+                    className="payment-option"
+                  >
+                    <input
+                      type="radio"
+                      name="paymentMethod"
+                      value={method.code}
+                      checked={selectedPaymentMethod?._id === method._id}
+                      onChange={() => setSelectedPaymentMethod(method)}
+                    />
+                    <div className="payment-content">
+                      <span className="payment-icon">{method.icon}</span>
+                      <div className="payment-info">
+                        <strong>
+                          {language === "en" && method.nameEn
+                            ? method.nameEn
+                            : method.name}
+                        </strong>
+                        <p>
+                          {language === "en" && method.descriptionEn
+                            ? method.descriptionEn
+                            : method.description}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                </label>
-
-                <label className="payment-option">
-                  <input
-                    type="radio"
-                    name="paymentMethod"
-                    value="bank_transfer"
-                    checked={paymentMethod === "bank_transfer"}
-                    onChange={(e) => setPaymentMethod(e.target.value)}
-                  />
-                  <div className="payment-content">
-                    <span className="payment-icon">🏦</span>
-                    <div className="payment-info">
-                      <strong>Chuyển khoản ngân hàng</strong>
-                      <p>Chuyển khoản qua tài khoản ngân hàng</p>
-                    </div>
-                  </div>
-                </label>
-
-                <label className="payment-option">
-                  <input
-                    type="radio"
-                    name="paymentMethod"
-                    value="momo"
-                    checked={paymentMethod === "momo"}
-                    onChange={(e) => setPaymentMethod(e.target.value)}
-                  />
-                  <div className="payment-content">
-                    <span className="payment-icon">📱</span>
-                    <div className="payment-info">
-                      <strong>Ví MoMo</strong>
-                      <p>Thanh toán qua ví điện tử MoMo</p>
-                    </div>
-                  </div>
-                </label>
-
-                <label className="payment-option">
-                  <input
-                    type="radio"
-                    name="paymentMethod"
-                    value="vnpay"
-                    checked={paymentMethod === "vnpay"}
-                    onChange={(e) => setPaymentMethod(e.target.value)}
-                  />
-                  <div className="payment-content">
-                    <span className="payment-icon">💳</span>
-                    <div className="payment-info">
-                      <strong>VNPay</strong>
-                      <p>Thanh toán qua cổng VNPay</p>
-                    </div>
-                  </div>
-                </label>
-
-                <label className="payment-option">
-                  <input
-                    type="radio"
-                    name="paymentMethod"
-                    value="zalopay"
-                    checked={paymentMethod === "zalopay"}
-                    onChange={(e) => setPaymentMethod(e.target.value)}
-                  />
-                  <div className="payment-content">
-                    <span className="payment-icon">🔵</span>
-                    <div className="payment-info">
-                      <strong>ZaloPay</strong>
-                      <p>Thanh toán qua ví ZaloPay</p>
-                    </div>
-                  </div>
-                </label>
+                  </label>
+                ))}
               </div>
 
-              {/* Bank Transfer Info */}
-              {paymentMethod === "bank_transfer" && (
-                <div className="bank-info-section">
-                  <h3>Thông tin chuyển khoản</h3>
-                  <div className="bank-details">
-                    <p>
-                      <strong>Ngân hàng:</strong> Vietcombank
-                    </p>
-                    <p>
-                      <strong>Số tài khoản:</strong> 1234567890
-                    </p>
-                    <p>
-                      <strong>Chủ tài khoản:</strong> CÔNG TY EFT TECHNOLOGY
-                    </p>
-                    <p>
-                      <strong>Nội dung:</strong> Thanh toán đơn hàng [Tên của
-                      bạn]
-                    </p>
+              {/* Bank Transfer Info Preview */}
+              {selectedPaymentMethod?.code === "bank_transfer" &&
+                selectedPaymentMethod?.config && (
+                  <div className="bank-info-section">
+                    <h3>Thông tin chuyển khoản</h3>
+                    <div className="bank-details">
+                      <p>
+                        <strong>Ngân hàng:</strong> {selectedPaymentMethod.config.bankName}
+                      </p>
+                      <p>
+                        <strong>Số tài khoản:</strong> {selectedPaymentMethod.config.accountNumber}
+                      </p>
+                      <p>
+                        <strong>Chủ tài khoản:</strong> {selectedPaymentMethod.config.accountName}
+                      </p>
+                      <p className="note">
+                        * Chi tiết thanh toán sẽ hiển thị ở bước tiếp theo
+                      </p>
+                    </div>
                   </div>
-                  <div className="form-group">
-                    <label>Mã giao dịch (sau khi chuyển khoản)</label>
-                    <input
-                      type="text"
-                      value={paymentInfo.transactionId}
-                      onChange={(e) =>
-                        setPaymentInfo({
-                          ...paymentInfo,
-                          transactionId: e.target.value,
-                        })
-                      }
-                      placeholder="Nhập mã giao dịch"
-                    />
-                  </div>
-                </div>
-              )}
+                )}
 
               <button type="submit" className="btn-submit" disabled={loading}>
-                {loading
-                  ? t.processing || "Processing..."
-                  : t.placeOrder || "Place Order"}
+                {loading ? "Đang xử lý..." : "Tiếp Tục Thanh Toán"}
               </button>
             </form>
           </div>
