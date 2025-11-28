@@ -15,15 +15,7 @@ const paymentMethodSchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
-      enum: [
-        "cod",
-        "bank_transfer",
-        "momo",
-        "vnpay",
-        "zalopay",
-        "credit_card",
-        "atm_card",
-      ],
+      enum: ["cod", "bank_transfer"],
     },
     description: {
       type: String,
