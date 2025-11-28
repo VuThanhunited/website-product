@@ -14,8 +14,8 @@
   border-bottom: 2px solid transparent;
   border-image: linear-gradient(90deg, #1e3c72, #2a5298, #1e3c72) 1;
   transition: all 0.3s ease;
-  padding: 40px 0;
-  min-height: 25vh;
+  padding: 20px 0;
+  min-height: 140px;
   position: relative;
 }
 
@@ -27,7 +27,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.75);
   z-index: 0;
 }
 
@@ -62,9 +62,9 @@
 }
 
 .logo {
-  height: 100px;
+  height: 80px;
   width: auto;
-  max-width: 250px;
+  max-width: 220px;
   object-fit: contain;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   filter: drop-shadow(3px 3px 8px rgba(30, 60, 114, 0.2));
@@ -88,13 +88,13 @@
 .company-details {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
 }
 
 .company-details p {
   margin: 0;
   color: #555;
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 500;
 }
 
