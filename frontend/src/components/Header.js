@@ -75,9 +75,12 @@ const Header = () => {
       <div
         className="top-section"
         style={{
-          background: companyInfo?.headerBgColor
-            ? companyInfo.headerBgColor
+          backgroundImage: companyInfo?.headerBgImage
+            ? `url(${companyInfo.headerBgImage})`
+            : companyInfo?.headerBgColor
+            ? `linear-gradient(135deg, ${companyInfo.headerBgColor} 0%, ${companyInfo.headerBgColor}dd 100%)`
             : "linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%)",
+          backgroundColor: companyInfo?.headerBgColor || "#f8f9fa",
         }}
       >
         <div className="container">

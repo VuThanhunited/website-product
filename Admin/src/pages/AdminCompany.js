@@ -25,7 +25,9 @@ const AdminCompany = () => {
       whatsapp: "",
     },
     headerBgColor: "#ffffff",
+    headerBgImage: "",
     companyPageBgColor: "#f8f9fa",
+    companyPageBgImage: "",
   });
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
@@ -51,7 +53,9 @@ const AdminCompany = () => {
           whatsapp: "",
         },
         headerBgColor: response.data.headerBgColor || "#ffffff",
+        headerBgImage: response.data.headerBgImage || "",
         companyPageBgColor: response.data.companyPageBgColor || "#f8f9fa",
+        companyPageBgImage: response.data.companyPageBgImage || "",
       });
       setLoading(false);
     } catch (error) {
@@ -246,10 +250,10 @@ const AdminCompany = () => {
           </div>
 
           <div className="form-section">
-            <h2>Tùy Chỉnh Màu Sắc</h2>
+            <h2>Tùy Chỉnh Màu Sắc & Hình Nền</h2>
 
             <div className="form-group">
-              <label>Màu Nền Header</label>
+              <label>Màu Nền Header (hoặc màu dự phòng nếu có ảnh nền)</label>
               <div className="color-input-group">
                 <input
                   type="color"
@@ -265,10 +269,21 @@ const AdminCompany = () => {
                   placeholder="#ffffff"
                   pattern="^#[0-9A-Fa-f]{6}$"
                 />
-                <small>
-                  Màu nền cho phần header trên cùng (logo, thông tin công ty)
-                </small>
               </div>
+            </div>
+
+            <div className="form-group">
+              <label>URL Ảnh Nền Header (khuyến nghị 1920x400px)</label>
+              <input
+                type="url"
+                name="headerBgImage"
+                value={formData.headerBgImage}
+                onChange={handleChange}
+                placeholder="https://example.com/header-bg.jpg"
+              />
+              <small>
+                Nhập URL ảnh nền cho header (để trống nếu chỉ dùng màu)
+              </small>
             </div>
 
             <div className="form-group">
@@ -285,13 +300,26 @@ const AdminCompany = () => {
                   name="companyPageBgColor"
                   value={formData.companyPageBgColor}
                   onChange={handleChange}
-                  placeholder="#667eea hoặc linear-gradient(...)"
+                  placeholder="#667eea"
                 />
-                <small>
-                  Màu nền cho phần hero "Về chúng tôi - Công ty TNHH..." (hỗ trợ
-                  mã màu hoặc gradient)
-                </small>
               </div>
+            </div>
+
+            <div className="form-group">
+              <label>
+                URL Ảnh Nền Hero Section Trang Công Ty (khuyến nghị 1920x600px)
+              </label>
+              <input
+                type="url"
+                name="companyPageBgImage"
+                value={formData.companyPageBgImage}
+                onChange={handleChange}
+                placeholder="https://example.com/company-hero-bg.jpg"
+              />
+              <small>
+                Nhập URL ảnh nền cho hero section trang công ty (để trống nếu
+                chỉ dùng màu)
+              </small>
             </div>
           </div>
 

@@ -10,10 +10,30 @@
   /* Background được set từ inline style trong component */
   background-size: cover;
   background-position: center;
+  background-repeat: no-repeat;
   border-bottom: 2px solid transparent;
   border-image: linear-gradient(90deg, #1e3c72, #2a5298, #1e3c72) 1;
   transition: all 0.3s ease;
-  padding: 15px 0;
+  padding: 40px 0;
+  min-height: 25vh;
+  position: relative;
+}
+
+/* Overlay cho background image để text dễ đọc hơn */
+.top-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.85);
+  z-index: 0;
+}
+
+.top-section .container {
+  position: relative;
+  z-index: 1;
 }
 
 .top-content {
@@ -42,9 +62,9 @@
 }
 
 .logo {
-  height: 70px;
+  height: 100px;
   width: auto;
-  max-width: 200px;
+  max-width: 250px;
   object-fit: contain;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   filter: drop-shadow(3px 3px 8px rgba(30, 60, 114, 0.2));
@@ -68,13 +88,13 @@
 .company-details {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 8px;
 }
 
 .company-details p {
   margin: 0;
   color: #555;
-  font-size: 0.9rem;
+  font-size: 1rem;
   font-weight: 500;
 }
 

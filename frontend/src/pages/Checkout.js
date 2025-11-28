@@ -490,13 +490,16 @@ const Checkout = () => {
                     <h3>Thông tin chuyển khoản</h3>
                     <div className="bank-details">
                       <p>
-                        <strong>Ngân hàng:</strong> {selectedPaymentMethod.config.bankName}
+                        <strong>Ngân hàng:</strong>{" "}
+                        {selectedPaymentMethod.config.bankName}
                       </p>
                       <p>
-                        <strong>Số tài khoản:</strong> {selectedPaymentMethod.config.accountNumber}
+                        <strong>Số tài khoản:</strong>{" "}
+                        {selectedPaymentMethod.config.accountNumber}
                       </p>
                       <p>
-                        <strong>Chủ tài khoản:</strong> {selectedPaymentMethod.config.accountName}
+                        <strong>Chủ tài khoản:</strong>{" "}
+                        {selectedPaymentMethod.config.accountName}
                       </p>
                       <p className="note">
                         * Chi tiết thanh toán sẽ hiển thị ở bước tiếp theo

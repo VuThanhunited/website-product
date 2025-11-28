@@ -33,9 +33,15 @@ const Company = () => {
       <div
         className="company-hero"
         style={{
-          background: companyInfo?.companyPageBgColor
-            ? companyInfo.companyPageBgColor
+          backgroundImage: companyInfo?.companyPageBgImage
+            ? `url(${companyInfo.companyPageBgImage})`
+            : companyInfo?.companyPageBgColor
+            ? `linear-gradient(135deg, ${companyInfo.companyPageBgColor} 0%, ${companyInfo.companyPageBgColor}dd 100%)`
             : "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+          backgroundColor: companyInfo?.companyPageBgColor || "#667eea",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
         }}
       >
         <div className="hero-overlay">
