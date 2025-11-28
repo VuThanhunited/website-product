@@ -12,9 +12,21 @@ const transporter = nodemailer.createTransport({
   tls: {
     rejectUnauthorized: false,
   },
-  connectionTimeout: 10000, // 10 seconds
-  greetingTimeout: 10000,
-  socketTimeout: 10000,
+  connectionTimeout: 15000, // 15 seconds
+  greetingTimeout: 15000,
+  socketTimeout: 15000,
+  pool: true, // Use pooled connections
+  maxConnections: 5,
+  maxMessages: 100,
+});
+
+// Verify transporter on startup
+transporter.verify((error, success) => {
+  if (error) {
+    console.error("❌ Email transporter verification failed:", error.message);
+  } else {
+    console.log("✅ Email service is ready to send messages");
+  }
 });
 
 // Template email xác nhận đơn hàng
@@ -226,20 +238,21 @@ const generateOrderEmailTemplate = (order, language = "vi") => {
 // Gửi email xác nhận đơn hàng
 const sendOrderConfirmationEmail = async (order, language = "vi") => {
   try {
-    // Verify connection first
-    await transporter.verify();
-    console.log("📧 Email service ready");
+    console.log("📧 Preparing to send order confirmation email...");
+    console.log("   Order ID:", order._id);
+    console.log("   Customer email:", order.customerInfo.email);
+    console.log("   Language:", language);
+
+    // Validate email configuration
+    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+      throw new Error("Email configuration missing (EMAIL_USER or EMAIL_PASS)");
+    }
 
     const isVietnamese = language === "vi";
+    const orderNumber = order._id.toString().slice(-8).toUpperCase();
     const subject = isVietnamese
-      ? `Xác nhận đơn hàng #${order._id
-          .toString()
-          .slice(-8)
-          .toUpperCase()} - EFT Technology`
-      : `Order Confirmation #${order._id
-          .toString()
-          .slice(-8)
-          .toUpperCase()} - EFT Technology`;
+      ? `Xác nhận đơn hàng #${orderNumber} - EFT Technology`
+      : `Order Confirmation #${orderNumber} - EFT Technology`;
 
     const mailOptions = {
       from: {
@@ -252,17 +265,24 @@ const sendOrderConfirmationEmail = async (order, language = "vi") => {
       replyTo: process.env.EMAIL_USER,
     };
 
+    console.log("   Sending email from:", process.env.EMAIL_USER);
+    console.log("   Sending email to:", order.customerInfo.email);
+    console.log("   Subject:", subject);
+
     const info = await transporter.sendMail(mailOptions);
-    console.log("✅ Order confirmation email sent:", info.messageId);
-    console.log("📬 Sent to:", order.customerInfo.email);
+
+    console.log("✅ Order confirmation email sent successfully!");
+    console.log("   Message ID:", info.messageId);
+    console.log("   Response:", info.response);
+
     return { success: true, messageId: info.messageId };
   } catch (error) {
-    console.error("❌ Error sending order confirmation email:", error);
-    console.error("Error details:", {
-      code: error.code,
-      command: error.command,
-      response: error.response,
-    });
+    console.error("❌ Error sending order confirmation email:");
+    console.error("   Error message:", error.message);
+    console.error("   Error code:", error.code);
+    console.error("   Error command:", error.command);
+    console.error("   Error response:", error.response);
+    console.error("   Full error:", error);
     return { success: false, error: error.message };
   }
 };
@@ -270,17 +290,24 @@ const sendOrderConfirmationEmail = async (order, language = "vi") => {
 // Gửi email thông báo cho admin
 const sendAdminNotificationEmail = async (order, language = "vi") => {
   try {
+    console.log("📧 Preparing to send admin notification email...");
+    console.log("   Order ID:", order._id);
+
     const isVietnamese = language === "vi";
+    const orderNumber = order._id.toString().slice(-8).toUpperCase();
     const subject = isVietnamese
-      ? `Đơn hàng mới #${order._id.toString().slice(-8).toUpperCase()}`
-      : `New Order #${order._id.toString().slice(-8).toUpperCase()}`;
+      ? `Đơn hàng mới #${orderNumber}`
+      : `New Order #${orderNumber}`;
+
+    const adminEmail = process.env.EMAIL_TO || process.env.EMAIL_USER;
+    console.log("   Sending admin notification to:", adminEmail);
 
     const mailOptions = {
       from: {
         name: "EFT Technology",
         address: process.env.EMAIL_USER,
       },
-      to: process.env.EMAIL_TO || process.env.EMAIL_USER,
+      to: adminEmail,
       subject: subject,
       html: `
         <h2>${isVietnamese ? "Đơn hàng mới từ" : "New order from"}: ${
@@ -306,10 +333,17 @@ const sendAdminNotificationEmail = async (order, language = "vi") => {
     };
 
     const info = await transporter.sendMail(mailOptions);
-    console.log("✅ Admin notification email sent:", info.messageId);
+
+    console.log("✅ Admin notification email sent successfully!");
+    console.log("   Message ID:", info.messageId);
+    console.log("   Response:", info.response);
+
     return { success: true, messageId: info.messageId };
   } catch (error) {
-    console.error("❌ Error sending admin notification email:", error);
+    console.error("❌ Error sending admin notification email:");
+    console.error("   Error message:", error.message);
+    console.error("   Error code:", error.code);
+    console.error("   Full error:", error);
     return { success: false, error: error.message };
   }
 };

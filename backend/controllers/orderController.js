@@ -123,28 +123,39 @@ exports.createOrder = async (req, res) => {
     });
 
     await order.save();
+    console.log("✅ Order saved to database:", order._id);
 
     // Gửi email xác nhận cho khách hàng (không chặn response)
+    console.log("📧 Initiating customer email...");
     sendOrderConfirmationEmail(order, language || "vi")
       .then((result) => {
         if (result.success) {
           console.log("✅ Customer email sent successfully");
+          console.log("   Message ID:", result.messageId);
         } else {
           console.log("⚠️ Failed to send customer email:", result.error);
         }
       })
-      .catch((err) => console.error("❌ Email error:", err));
+      .catch((err) => {
+        console.error("❌ Email error:", err.message || err);
+      });
 
     // Gửi email thông báo cho admin (không chặn response)
+    console.log("📧 Initiating admin notification...");
     sendAdminNotificationEmail(order, language || "vi")
       .then((result) => {
         if (result.success) {
           console.log("✅ Admin notification sent successfully");
+          console.log("   Message ID:", result.messageId);
         } else {
           console.log("⚠️ Failed to send admin notification:", result.error);
         }
       })
-      .catch((err) => console.error("❌ Email error:", err));
+      .catch((err) => {
+        console.error("❌ Admin email error:", err.message || err);
+      });
+
+    console.log("📦 Sending response to client...");
 
     res.status(201).json({
       success: true,
