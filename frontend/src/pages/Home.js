@@ -10,6 +10,7 @@ import "../styles/Home.css";
 const Home = () => {
   const [slides, setSlides] = useState([]);
   const [slogans, setSlogans] = useState([]);
+  const [homeContent, setHomeContent] = useState(null);
   const [loading, setLoading] = useState(true);
   const { language } = useLanguage();
   const t = translations[language];
@@ -20,10 +21,16 @@ const Home = () => {
 
   const fetchHomeData = async () => {
     try {
-      const [productsResponse, slogansResponse] = await Promise.all([
-        getProducts(),
-        getSlogans(),
-      ]);
+      const [productsResponse, slogansResponse, contentResponse] =
+        await Promise.all([
+          getProducts(),
+          getSlogans(),
+          fetch(
+            `${
+              process.env.REACT_APP_API_URL || "http://localhost:5000/api"
+            }/home-content`
+          ).then((res) => res.json()),
+        ]);
       // Lấy 6 sản phẩm featured hoặc 6 sản phẩm đầu tiên có hình ảnh
       const productsWithImages = productsResponse.data.filter(
         (product) => product.images && product.images.length > 0
@@ -38,6 +45,7 @@ const Home = () => {
 
       setSlides(selectedProducts);
       setSlogans(slogansResponse.data);
+      setHomeContent(contentResponse);
     } catch (error) {
       console.error("Error fetching home data:", error);
     } finally {
@@ -137,26 +145,55 @@ const Home = () => {
       <section className="features-section">
         <div className="container">
           <div className="features-grid">
-            <div className="feature-card">
-              <div className="feature-icon">🚚</div>
-              <h3>{t.freeShipping}</h3>
-              <p>{t.freeShippingDesc}</p>
-            </div>
-            <div className="feature-card">
-              <div className="feature-icon">✅</div>
-              <h3>{t.authentic}</h3>
-              <p>{t.authenticDesc}</p>
-            </div>
-            <div className="feature-card">
-              <div className="feature-icon">💳</div>
-              <h3>{t.flexiblePayment}</h3>
-              <p>{t.flexiblePaymentDesc}</p>
-            </div>
-            <div className="feature-card">
-              <div className="feature-icon">🎁</div>
-              <h3>{t.attractiveOffers}</h3>
-              <p>{t.attractiveOffersDesc}</p>
-            </div>
+            {homeContent &&
+            homeContent.features &&
+            homeContent.features.length > 0
+              ? homeContent.features
+                  .sort((a, b) => a.order - b.order)
+                  .map((feature, index) => (
+                    <div key={index} className="feature-card">
+                      <div className="feature-icon">{feature.icon}</div>
+                      <h3>
+                        {language === "en" && feature.titleEn
+                          ? feature.titleEn
+                          : feature.title}
+                      </h3>
+                      <p>
+                        {language === "en" && feature.descriptionEn
+                          ? feature.descriptionEn
+                          : feature.description}
+                      </p>
+                    </div>
+                  ))
+              : // Fallback to translations
+                [
+                  {
+                    icon: "🚚",
+                    title: t.freeShipping,
+                    desc: t.freeShippingDesc,
+                  },
+                  {
+                    icon: "✅",
+                    title: t.authentic,
+                    desc: t.authenticDesc,
+                  },
+                  {
+                    icon: "💳",
+                    title: t.flexiblePayment,
+                    desc: t.flexiblePaymentDesc,
+                  },
+                  {
+                    icon: "🎁",
+                    title: t.attractiveOffers,
+                    desc: t.attractiveOffersDesc,
+                  },
+                ].map((feature, index) => (
+                  <div key={index} className="feature-card">
+                    <div className="feature-icon">{feature.icon}</div>
+                    <h3>{feature.title}</h3>
+                    <p>{feature.desc}</p>
+                  </div>
+                ))}
           </div>
         </div>
       </section>
@@ -164,44 +201,68 @@ const Home = () => {
       {/* Why Choose Us Section */}
       <section className="why-choose-section">
         <div className="container">
-          <h2 className="section-title">{t.whyChooseUs}</h2>
+          <h2 className="section-title">
+            {homeContent && homeContent.whyChooseUs
+              ? language === "en" && homeContent.whyChooseUs.titleEn
+                ? homeContent.whyChooseUs.titleEn
+                : homeContent.whyChooseUs.title
+              : t.whyChooseUs}
+          </h2>
           <div className="why-choose-grid">
-            <div className="why-item">
-              <div className="why-image">
-                <div className="why-icon-bg">🏆</div>
-              </div>
-              <div className="why-content">
-                <h3>{t.topReputation}</h3>
-                <p>{t.topReputationDesc}</p>
-              </div>
-            </div>
-            <div className="why-item">
-              <div className="why-image">
-                <div className="why-icon-bg">🔬</div>
-              </div>
-              <div className="why-content">
-                <h3>{t.guaranteedQuality}</h3>
-                <p>{t.guaranteedQualityDesc}</p>
-              </div>
-            </div>
-            <div className="why-item">
-              <div className="why-image">
-                <div className="why-icon-bg">💬</div>
-              </div>
-              <div className="why-content">
-                <h3>{t.support247}</h3>
-                <p>{t.support247Desc}</p>
-              </div>
-            </div>
-            <div className="why-item">
-              <div className="why-image">
-                <div className="why-icon-bg">⚡</div>
-              </div>
-              <div className="why-content">
-                <h3>{t.fastDelivery}</h3>
-                <p>{t.fastDeliveryDesc}</p>
-              </div>
-            </div>
+            {homeContent &&
+            homeContent.whyChooseUs &&
+            homeContent.whyChooseUs.items &&
+            homeContent.whyChooseUs.items.length > 0
+              ? homeContent.whyChooseUs.items
+                  .sort((a, b) => a.order - b.order)
+                  .map((item, index) => (
+                    <div key={index} className="why-item">
+                      <div className="why-image">
+                        <div className="why-icon-bg">{item.icon}</div>
+                      </div>
+                      <div className="why-content">
+                        <h3>
+                          {language === "en" && item.titleEn
+                            ? item.titleEn
+                            : item.title}
+                        </h3>
+                        <p>
+                          {language === "en" && item.descriptionEn
+                            ? item.descriptionEn
+                            : item.description}
+                        </p>
+                      </div>
+                    </div>
+                  ))
+              : // Fallback to translations
+                [
+                  {
+                    icon: "🏆",
+                    title: t.topReputation,
+                    desc: t.topReputationDesc,
+                  },
+                  {
+                    icon: "🔬",
+                    title: t.guaranteedQuality,
+                    desc: t.guaranteedQualityDesc,
+                  },
+                  { icon: "💬", title: t.support247, desc: t.support247Desc },
+                  {
+                    icon: "⚡",
+                    title: t.fastDelivery,
+                    desc: t.fastDeliveryDesc,
+                  },
+                ].map((item, index) => (
+                  <div key={index} className="why-item">
+                    <div className="why-image">
+                      <div className="why-icon-bg">{item.icon}</div>
+                    </div>
+                    <div className="why-content">
+                      <h3>{item.title}</h3>
+                      <p>{item.desc}</p>
+                    </div>
+                  </div>
+                ))}
           </div>
         </div>
       </section>
@@ -210,11 +271,48 @@ const Home = () => {
       <section className="home-cta-section">
         <div className="container">
           <div className="cta-content">
-            <h2>{t.discoverProducts}</h2>
-            <p>{t.discoverProductsDesc}</p>
-            <Link to="/products" className="cta-button">
-              {t.viewAllProducts}
-            </Link>
+            <h2>
+              {homeContent && homeContent.cta
+                ? language === "en" && homeContent.cta.titleEn
+                  ? homeContent.cta.titleEn
+                  : homeContent.cta.title
+                : t.discoverProducts}
+            </h2>
+            <p>
+              {homeContent && homeContent.cta
+                ? language === "en" && homeContent.cta.descriptionEn
+                  ? homeContent.cta.descriptionEn
+                  : homeContent.cta.description
+                : t.discoverProductsDesc}
+            </p>
+            <div className="cta-buttons">
+              <Link
+                to={
+                  homeContent && homeContent.cta
+                    ? homeContent.cta.primaryButtonLink
+                    : "/products"
+                }
+                className="cta-button primary"
+              >
+                {homeContent && homeContent.cta
+                  ? language === "en" && homeContent.cta.primaryButtonTextEn
+                    ? homeContent.cta.primaryButtonTextEn
+                    : homeContent.cta.primaryButtonText
+                  : t.viewAllProducts}
+              </Link>
+              {homeContent &&
+                homeContent.cta &&
+                homeContent.cta.secondaryButtonText && (
+                  <Link
+                    to={homeContent.cta.secondaryButtonLink}
+                    className="cta-button secondary"
+                  >
+                    {language === "en" && homeContent.cta.secondaryButtonTextEn
+                      ? homeContent.cta.secondaryButtonTextEn
+                      : homeContent.cta.secondaryButtonText}
+                  </Link>
+                )}
+            </div>
           </div>
         </div>
       </section>

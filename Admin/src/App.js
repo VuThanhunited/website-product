@@ -43,6 +43,8 @@ const AdminPartners = lazy(() => import("./pages/AdminPartners"));
 const AdminUsers = lazy(() => import("./pages/AdminUsers"));
 const AdminShipping = lazy(() => import("./pages/AdminShipping"));
 const AdminPaymentMethods = lazy(() => import("./pages/AdminPaymentMethods"));
+const AdminHomeContent = lazy(() => import("./pages/AdminHomeContent"));
+const AdminCompanyContent = lazy(() => import("./pages/AdminCompanyContent"));
 
 const LoadingSpinner = () => (
   <div
@@ -183,6 +185,12 @@ function App() {
                     <Link to="/company" className="nav-item">
                       <FaBuilding /> Thông Tin Công Ty
                     </Link>
+                    <Link to="/home-content" className="nav-item">
+                      <FaImages /> Nội Dung Trang Chủ
+                    </Link>
+                    <Link to="/company-content" className="nav-item">
+                      <FaBuilding /> Nội Dung Trang Công Ty
+                    </Link>
                     <Link to="/partners" className="nav-item">
                       <FaHandshake /> Quản Lý Đối Tác
                     </Link>
@@ -217,6 +225,14 @@ function App() {
                       <Route path="/media" element={<AdminMedia />} />
                       <Route path="/slogans" element={<AdminSlogans />} />
                       <Route path="/company" element={<AdminCompany />} />
+                      <Route
+                        path="/home-content"
+                        element={<AdminHomeContent />}
+                      />
+                      <Route
+                        path="/company-content"
+                        element={<AdminCompanyContent />}
+                      />
                       <Route path="/support" element={<AdminSupport />} />
                       <Route path="/messages" element={<AdminMessages />} />
                       <Route path="/partners" element={<AdminPartners />} />
