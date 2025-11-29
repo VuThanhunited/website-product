@@ -7,6 +7,8 @@ console.log("🔴 PaymentQR Routes Loading...");
 console.log("🔴 Controller loaded:", paymentQRController);
 console.log("🔴 getAllPaymentQRs type:", typeof paymentQRController.getAllPaymentQRs);
 console.log("🔴 Available functions:", Object.keys(paymentQRController));
+console.log("🔴 verifyToken type:", typeof verifyToken);
+console.log("🔴 verifyAdmin type:", typeof verifyAdmin);
 
 // Public routes (for frontend checkout)
 router.get("/active", paymentQRController.getActivePaymentQRs);
