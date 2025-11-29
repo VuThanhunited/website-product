@@ -39,7 +39,9 @@ exports.getPaymentQRById = async (req, res) => {
   try {
     const paymentQR = await PaymentQR.findById(req.params.id);
     if (!paymentQR) {
-      return res.status(404).json({ message: "Không tìm thấy thông tin QR thanh toán" });
+      return res
+        .status(404)
+        .json({ message: "Không tìm thấy thông tin QR thanh toán" });
     }
     res.json(paymentQR);
   } catch (error) {
@@ -113,7 +115,9 @@ exports.updatePaymentQR = async (req, res) => {
     );
 
     if (!updatedPaymentQR) {
-      return res.status(404).json({ message: "Không tìm thấy thông tin QR thanh toán" });
+      return res
+        .status(404)
+        .json({ message: "Không tìm thấy thông tin QR thanh toán" });
     }
 
     res.json(updatedPaymentQR);
@@ -132,7 +136,9 @@ exports.deletePaymentQR = async (req, res) => {
     const deletedPaymentQR = await PaymentQR.findByIdAndDelete(req.params.id);
 
     if (!deletedPaymentQR) {
-      return res.status(404).json({ message: "Không tìm thấy thông tin QR thanh toán" });
+      return res
+        .status(404)
+        .json({ message: "Không tìm thấy thông tin QR thanh toán" });
     }
 
     res.json({ message: "Xóa QR thanh toán thành công" });
@@ -151,7 +157,9 @@ exports.toggleActiveStatus = async (req, res) => {
     const paymentQR = await PaymentQR.findById(req.params.id);
 
     if (!paymentQR) {
-      return res.status(404).json({ message: "Không tìm thấy thông tin QR thanh toán" });
+      return res
+        .status(404)
+        .json({ message: "Không tìm thấy thông tin QR thanh toán" });
     }
 
     paymentQR.isActive = !paymentQR.isActive;
