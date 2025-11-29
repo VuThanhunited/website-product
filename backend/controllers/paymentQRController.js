@@ -10,12 +10,10 @@ exports.getAllPaymentQRs = async (req, res) => {
     res.json(paymentQRs);
   } catch (error) {
     console.error("Error fetching payment QRs:", error);
-    res
-      .status(500)
-      .json({
-        message: "Lỗi khi lấy thông tin QR thanh toán",
-        error: error.message,
-      });
+    res.status(500).json({
+      message: "Lỗi khi lấy thông tin QR thanh toán",
+      error: error.message,
+    });
   }
 };
 
@@ -29,12 +27,10 @@ exports.getActivePaymentQRs = async (req, res) => {
     res.json(paymentQRs);
   } catch (error) {
     console.error("Error fetching active payment QRs:", error);
-    res
-      .status(500)
-      .json({
-        message: "Lỗi khi lấy thông tin QR thanh toán",
-        error: error.message,
-      });
+    res.status(500).json({
+      message: "Lỗi khi lấy thông tin QR thanh toán",
+      error: error.message,
+    });
   }
 };
 
@@ -43,19 +39,15 @@ exports.getPaymentQRById = async (req, res) => {
   try {
     const paymentQR = await PaymentQR.findById(req.params.id);
     if (!paymentQR) {
-      return res
-        .status(404)
-        .json({ message: "Không tìm thấy thông tin QR thanh toán" });
+      return res.status(404).json({ message: "Không tìm thấy thông tin QR thanh toán" });
     }
     res.json(paymentQR);
   } catch (error) {
     console.error("Error fetching payment QR:", error);
-    res
-      .status(500)
-      .json({
-        message: "Lỗi khi lấy thông tin QR thanh toán",
-        error: error.message,
-      });
+    res.status(500).json({
+      message: "Lỗi khi lấy thông tin QR thanh toán",
+      error: error.message,
+    });
   }
 };
 
@@ -86,9 +78,10 @@ exports.createPaymentQR = async (req, res) => {
     res.status(201).json(savedPaymentQR);
   } catch (error) {
     console.error("Error creating payment QR:", error);
-    res
-      .status(500)
-      .json({ message: "Lỗi khi tạo QR thanh toán", error: error.message });
+    res.status(500).json({ 
+      message: "Lỗi khi tạo QR thanh toán", 
+      error: error.message 
+    });
   }
 };
 
@@ -120,20 +113,16 @@ exports.updatePaymentQR = async (req, res) => {
     );
 
     if (!updatedPaymentQR) {
-      return res
-        .status(404)
-        .json({ message: "Không tìm thấy thông tin QR thanh toán" });
+      return res.status(404).json({ message: "Không tìm thấy thông tin QR thanh toán" });
     }
 
     res.json(updatedPaymentQR);
   } catch (error) {
     console.error("Error updating payment QR:", error);
-    res
-      .status(500)
-      .json({
-        message: "Lỗi khi cập nhật QR thanh toán",
-        error: error.message,
-      });
+    res.status(500).json({
+      message: "Lỗi khi cập nhật QR thanh toán",
+      error: error.message,
+    });
   }
 };
 
@@ -143,17 +132,16 @@ exports.deletePaymentQR = async (req, res) => {
     const deletedPaymentQR = await PaymentQR.findByIdAndDelete(req.params.id);
 
     if (!deletedPaymentQR) {
-      return res
-        .status(404)
-        .json({ message: "Không tìm thấy thông tin QR thanh toán" });
+      return res.status(404).json({ message: "Không tìm thấy thông tin QR thanh toán" });
     }
 
     res.json({ message: "Xóa QR thanh toán thành công" });
   } catch (error) {
     console.error("Error deleting payment QR:", error);
-    res
-      .status(500)
-      .json({ message: "Lỗi khi xóa QR thanh toán", error: error.message });
+    res.status(500).json({ 
+      message: "Lỗi khi xóa QR thanh toán", 
+      error: error.message 
+    });
   }
 };
 
@@ -163,9 +151,7 @@ exports.toggleActiveStatus = async (req, res) => {
     const paymentQR = await PaymentQR.findById(req.params.id);
 
     if (!paymentQR) {
-      return res
-        .status(404)
-        .json({ message: "Không tìm thấy thông tin QR thanh toán" });
+      return res.status(404).json({ message: "Không tìm thấy thông tin QR thanh toán" });
     }
 
     paymentQR.isActive = !paymentQR.isActive;
@@ -174,8 +160,9 @@ exports.toggleActiveStatus = async (req, res) => {
     res.json(paymentQR);
   } catch (error) {
     console.error("Error toggling active status:", error);
-    res
-      .status(500)
-      .json({ message: "Lỗi khi thay đổi trạng thái", error: error.message });
+    res.status(500).json({ 
+      message: "Lỗi khi thay đổi trạng thái", 
+      error: error.message 
+    });
   }
 };
