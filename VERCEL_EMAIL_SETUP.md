@@ -1,20 +1,24 @@
 # QUAN TRỌNG: CẤU HÌNH EMAIL TRÊN VERCEL
 
 ## Vấn đề hiện tại
+
 ❌ Không nhận được email xác nhận đơn hàng
 
 ## Nguyên nhân
+
 Backend trên Vercel **CHƯA CÓ** environment variables cho email service!
 
 ## Giải pháp - THỰC HIỆN NGAY:
 
 ### Bước 1: Truy cập Vercel Dashboard
+
 1. Đi tới: https://vercel.com/vuthanhuniteds-projects
 2. Chọn project: **website-product-1** (backend)
 
 ### Bước 2: Thêm Environment Variables
+
 1. Click vào **Settings** tab
-2. Click vào **Environment Variables** 
+2. Click vào **Environment Variables**
 3. Thêm 3 biến sau:
 
 ```
@@ -24,10 +28,12 @@ EMAIL_TO = vtu21102000@gmail.com
 ```
 
 **Lưu ý quan trọng:**
+
 - Chọn **All Environments** (Production, Preview, Development)
 - Click **Save** sau mỗi biến
 
 ### Bước 3: Redeploy Backend
+
 **BẮT BUỘC phải redeploy để áp dụng env vars!**
 
 1. Vào tab **Deployments**
@@ -37,6 +43,7 @@ EMAIL_TO = vtu21102000@gmail.com
 5. Đợi 2-3 phút để deploy xong
 
 ### Bước 4: Kiểm tra Email Service
+
 Sau khi redeploy xong:
 
 1. Vào **Deployments** > Latest deployment
@@ -46,6 +53,7 @@ Sau khi redeploy xong:
 5. Tìm dòng log: "✅ Email service is ready to send messages"
 
 ### Bước 5: Test Đặt Hàng
+
 1. Vào https://eft-company.vercel.app
 2. Thêm sản phẩm vào giỏ
 3. Checkout và điền thông tin
@@ -73,7 +81,7 @@ SendGrid free tier: 100 emails/day
 ## Checklist
 
 - [ ] Đã thêm EMAIL_USER trên Vercel
-- [ ] Đã thêm EMAIL_PASS trên Vercel  
+- [ ] Đã thêm EMAIL_PASS trên Vercel
 - [ ] Đã thêm EMAIL_TO trên Vercel
 - [ ] Đã Redeploy backend
 - [ ] Đã kiểm tra logs "Email service is ready"
@@ -89,6 +97,7 @@ SendGrid free tier: 100 emails/day
 ## Hỗ trợ thêm
 
 Nếu cần hỗ trợ:
+
 1. Share screenshot của Environment Variables trên Vercel
 2. Share Runtime Logs của function `/api/orders`
 3. Share error message nếu có

@@ -1,9 +1,11 @@
 const Order = require("../models/Order");
 const Product = require("../models/Product");
+
+// Use SendGrid for email service (SMTP blocked on Render)
 const {
   sendOrderConfirmationEmail,
   sendAdminNotificationEmail,
-} = require("../services/emailService");
+} = require("../services/emailServiceSendGrid");
 
 // Create a new order
 exports.createOrder = async (req, res) => {

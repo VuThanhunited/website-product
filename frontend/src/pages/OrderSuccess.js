@@ -101,7 +101,8 @@ const OrderSuccess = () => {
               <span className="info-value">
                 {order.paymentMethod === "cod"
                   ? t.cod || "Thanh toán khi nhận hàng (COD)"
-                  : order.paymentMethod === "bank" || order.paymentMethod === "bank_transfer"
+                  : order.paymentMethod === "bank" ||
+                    order.paymentMethod === "bank_transfer"
                   ? t.bankTransfer || "Chuyển khoản ngân hàng"
                   : order.paymentMethod}
               </span>
