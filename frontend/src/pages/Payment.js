@@ -15,6 +15,7 @@ const Payment = () => {
   const [loading, setLoading] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState(null);
   const [orderData, setOrderData] = useState(null);
+  const [paymentQRs, setPaymentQRs] = useState([]);
 
   useEffect(() => {
     // Get data from checkout page
@@ -26,7 +27,21 @@ const Payment = () => {
     const { paymentMethod: method, orderData: data } = location.state;
     setPaymentMethod(method);
     setOrderData(data);
+
+    // Fetch QR codes if bank transfer
+    if (method && method.code === "bank_transfer") {
+      fetchPaymentQRs();
+    }
   }, [location, navigate]);
+
+  const fetchPaymentQRs = async () => {
+    try {
+      const response = await api.get("/payment-qr/active");
+      setPaymentQRs(response.data || []);
+    } catch (error) {
+      console.error("Error fetching payment QRs:", error);
+    }
+  };
 
   const handleCODPayment = async () => {
     setLoading(true);
@@ -128,6 +143,47 @@ const Payment = () => {
 
               <div className="bank-info-card">
                 <h3>🏦 Thông Tin Chuyển Khoản</h3>
+
+                {/* Display QR Codes */}
+                {paymentQRs.length > 0 && (
+                  <div className="qr-codes-section">
+                    {paymentQRs.map((qr) => (
+                      <div key={qr._id} className="qr-code-item">
+                        <img
+                          src={qr.qrCodeImage}
+                          alt={`QR ${qr.bankName}`}
+                          className="qr-code-image"
+                        />
+                        <div className="qr-info">
+                          <p>
+                            <strong>Ngân hàng:</strong>{" "}
+                            {language === "en" && qr.translations?.en?.bankName
+                              ? qr.translations.en.bankName
+                              : qr.translations?.vi?.bankName || qr.bankName}
+                          </p>
+                          <p>
+                            <strong>STK:</strong> {qr.accountNumber}
+                          </p>
+                          <p>
+                            <strong>Chủ TK:</strong>{" "}
+                            {language === "en" &&
+                            qr.translations?.en?.accountName
+                              ? qr.translations.en.accountName
+                              : qr.translations?.vi?.accountName ||
+                                qr.accountName}
+                          </p>
+                          {qr.translations &&
+                            qr.translations[language]?.instructions && (
+                              <p className="instructions">
+                                {qr.translations[language].instructions}
+                              </p>
+                            )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
                 <div className="bank-detail">
                   <span className="label">Ngân hàng:</span>
                   <strong>{paymentMethod.config.bankName}</strong>

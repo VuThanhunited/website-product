@@ -22,6 +22,7 @@ import {
   FaUsersCog,
   FaTruck,
   FaMoneyBillWave,
+  FaQrcode,
 } from "react-icons/fa";
 import "./App.css";
 
@@ -43,6 +44,7 @@ const AdminPartners = lazy(() => import("./pages/AdminPartners"));
 const AdminUsers = lazy(() => import("./pages/AdminUsers"));
 const AdminShipping = lazy(() => import("./pages/AdminShipping"));
 const AdminPaymentMethods = lazy(() => import("./pages/AdminPaymentMethods"));
+const AdminPaymentQR = lazy(() => import("./pages/AdminPaymentQR"));
 const AdminHomeContent = lazy(() => import("./pages/AdminHomeContent"));
 const AdminCompanyContent = lazy(() => import("./pages/AdminCompanyContent"));
 
@@ -173,6 +175,9 @@ function App() {
                     <Link to="/payment-methods" className="nav-item">
                       <FaMoneyBillWave /> Phương Thức Thanh Toán
                     </Link>
+                    <Link to="/payment-qr" className="nav-item">
+                      <FaQrcode /> Mã QR Thanh Toán
+                    </Link>
                     <Link to="/users" className="nav-item">
                       <FaUsersCog /> Quản Lý Tài Khoản
                     </Link>
@@ -221,6 +226,7 @@ function App() {
                         path="/payment-methods"
                         element={<AdminPaymentMethods />}
                       />
+                      <Route path="/payment-qr" element={<AdminPaymentQR />} />
                       <Route path="/users" element={<AdminUsers />} />
                       <Route path="/media" element={<AdminMedia />} />
                       <Route path="/slogans" element={<AdminSlogans />} />

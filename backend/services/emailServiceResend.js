@@ -12,21 +12,31 @@ if (process.env.RESEND_API_KEY) {
 // Generate order email HTML (same template)
 const generateOrderEmailHTML = (order, language = "vi") => {
   const isVietnamese = language === "vi";
-  
+
   const paymentMethodText = {
     cod: isVietnamese ? "Thanh toán khi nhận hàng (COD)" : "Cash on Delivery",
     bank: isVietnamese ? "Chuyển khoản ngân hàng" : "Bank Transfer",
     bank_transfer: isVietnamese ? "Chuyển khoản ngân hàng" : "Bank Transfer",
   };
 
-  const itemsHTML = order.items.map(item => `
+  const itemsHTML = order.items
+    .map(
+      (item) => `
     <tr>
-      <td style="padding: 12px; border-bottom: 1px solid #eee;">${item.productName}</td>
-      <td style="padding: 12px; border-bottom: 1px solid #eee; text-align: center;">${item.quantity}</td>
+      <td style="padding: 12px; border-bottom: 1px solid #eee;">${
+        item.productName
+      }</td>
+      <td style="padding: 12px; border-bottom: 1px solid #eee; text-align: center;">${
+        item.quantity
+      }</td>
       <td style="padding: 12px; border-bottom: 1px solid #eee; text-align: right;">${item.price.toLocaleString()}₫</td>
-      <td style="padding: 12px; border-bottom: 1px solid #eee; text-align: right; font-weight: bold;">${(item.quantity * item.price).toLocaleString()}₫</td>
+      <td style="padding: 12px; border-bottom: 1px solid #eee; text-align: right; font-weight: bold;">${(
+        item.quantity * item.price
+      ).toLocaleString()}₫</td>
     </tr>
-  `).join("");
+  `
+    )
+    .join("");
 
   return `
     <!DOCTYPE html>
@@ -36,22 +46,46 @@ const generateOrderEmailHTML = (order, language = "vi") => {
       <div style="max-width: 600px; margin: 0 auto; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
         <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; text-align: center;">
           <h1 style="margin: 0; color: white; font-size: 28px;">EFT Technology</h1>
-          <p style="margin: 10px 0 0 0; color: white; font-size: 16px;">${isVietnamese ? "Xác Nhận Đơn Hàng" : "Order Confirmation"}</p>
+          <p style="margin: 10px 0 0 0; color: white; font-size: 16px;">${
+            isVietnamese ? "Xác Nhận Đơn Hàng" : "Order Confirmation"
+          }</p>
         </div>
         
         <div style="padding: 40px;">
-          <p style="margin: 0 0 20px 0; font-size: 16px; color: #333;">${isVietnamese ? `Xin chào ${order.customerInfo.fullName},` : `Hello ${order.customerInfo.fullName},`}</p>
-          <p style="margin: 0 0 30px 0; font-size: 16px; color: #333;">${isVietnamese ? "Cảm ơn bạn đã đặt hàng tại EFT Technology!" : "Thank you for your order at EFT Technology!"}</p>
+          <p style="margin: 0 0 20px 0; font-size: 16px; color: #333;">${
+            isVietnamese
+              ? `Xin chào ${order.customerInfo.fullName},`
+              : `Hello ${order.customerInfo.fullName},`
+          }</p>
+          <p style="margin: 0 0 30px 0; font-size: 16px; color: #333;">${
+            isVietnamese
+              ? "Cảm ơn bạn đã đặt hàng tại EFT Technology!"
+              : "Thank you for your order at EFT Technology!"
+          }</p>
           
           <div style="background: #f8f9fa; border-left: 4px solid #667eea; padding: 20px; margin-bottom: 30px;">
-            <h2 style="margin: 0 0 15px 0; color: #667eea; font-size: 18px;">${isVietnamese ? "Thông tin đơn hàng:" : "Order Information:"}</h2>
-            <p style="margin: 5px 0; color: #555;"><strong>${isVietnamese ? "Mã đơn hàng" : "Order Number"}:</strong> #${order._id.toString().slice(-8).toUpperCase()}</p>
-            <p style="margin: 5px 0; color: #555;"><strong>${isVietnamese ? "Ngày đặt" : "Order Date"}:</strong> ${new Date(order.createdAt).toLocaleString(isVietnamese ? "vi-VN" : "en-US")}</p>
-            <p style="margin: 5px 0; color: #555;"><strong>${isVietnamese ? "Phương thức thanh toán" : "Payment Method"}:</strong> ${paymentMethodText[order.paymentMethod] || order.paymentMethod}</p>
+            <h2 style="margin: 0 0 15px 0; color: #667eea; font-size: 18px;">${
+              isVietnamese ? "Thông tin đơn hàng:" : "Order Information:"
+            }</h2>
+            <p style="margin: 5px 0; color: #555;"><strong>${
+              isVietnamese ? "Mã đơn hàng" : "Order Number"
+            }:</strong> #${order._id.toString().slice(-8).toUpperCase()}</p>
+            <p style="margin: 5px 0; color: #555;"><strong>${
+              isVietnamese ? "Ngày đặt" : "Order Date"
+            }:</strong> ${new Date(order.createdAt).toLocaleString(
+    isVietnamese ? "vi-VN" : "en-US"
+  )}</p>
+            <p style="margin: 5px 0; color: #555;"><strong>${
+              isVietnamese ? "Phương thức thanh toán" : "Payment Method"
+            }:</strong> ${
+    paymentMethodText[order.paymentMethod] || order.paymentMethod
+  }</p>
           </div>
           
           <div style="margin-bottom: 30px;">
-            <h3 style="margin: 0 0 15px 0; color: #333; font-size: 16px;">${isVietnamese ? "Địa chỉ giao hàng:" : "Shipping Address:"}</h3>
+            <h3 style="margin: 0 0 15px 0; color: #333; font-size: 16px;">${
+              isVietnamese ? "Địa chỉ giao hàng:" : "Shipping Address:"
+            }</h3>
             <p style="margin: 5px 0; color: #555; line-height: 1.6;">
               ${order.customerInfo.fullName}<br>
               ${order.customerInfo.phone}<br>
@@ -60,14 +94,24 @@ const generateOrderEmailHTML = (order, language = "vi") => {
             </p>
           </div>
           
-          <h3 style="margin: 0 0 15px 0; color: #333;">${isVietnamese ? "Sản phẩm:" : "Products:"}</h3>
+          <h3 style="margin: 0 0 15px 0; color: #333;">${
+            isVietnamese ? "Sản phẩm:" : "Products:"
+          }</h3>
           <table style="width: 100%; border: 1px solid #eee; border-radius: 4px; margin-bottom: 20px;">
             <thead>
               <tr style="background: #f8f9fa;">
-                <th style="padding: 12px; text-align: left;">${isVietnamese ? "Sản phẩm" : "Product"}</th>
-                <th style="padding: 12px; text-align: center;">${isVietnamese ? "SL" : "Qty"}</th>
-                <th style="padding: 12px; text-align: right;">${isVietnamese ? "Đơn giá" : "Price"}</th>
-                <th style="padding: 12px; text-align: right;">${isVietnamese ? "Tổng" : "Total"}</th>
+                <th style="padding: 12px; text-align: left;">${
+                  isVietnamese ? "Sản phẩm" : "Product"
+                }</th>
+                <th style="padding: 12px; text-align: center;">${
+                  isVietnamese ? "SL" : "Qty"
+                }</th>
+                <th style="padding: 12px; text-align: right;">${
+                  isVietnamese ? "Đơn giá" : "Price"
+                }</th>
+                <th style="padding: 12px; text-align: right;">${
+                  isVietnamese ? "Tổng" : "Total"
+                }</th>
               </tr>
             </thead>
             <tbody>${itemsHTML}</tbody>
@@ -83,17 +127,23 @@ const generateOrderEmailHTML = (order, language = "vi") => {
               <strong>${order.shippingFee.toLocaleString()}₫</strong>
             </div>
             <div style="display: flex; justify-content: space-between; padding-top: 10px; border-top: 2px solid #667eea;">
-              <span style="font-size: 18px; font-weight: bold; color: #667eea;">${isVietnamese ? "Tổng cộng:" : "Total:"}</span>
+              <span style="font-size: 18px; font-weight: bold; color: #667eea;">${
+                isVietnamese ? "Tổng cộng:" : "Total:"
+              }</span>
               <strong style="font-size: 18px; color: #667eea;">${order.total.toLocaleString()}₫</strong>
             </div>
           </div>
           
-          <p style="margin: 30px 0 0 0; color: #333;">${isVietnamese ? "Trân trọng," : "Best regards,"}</p>
+          <p style="margin: 30px 0 0 0; color: #333;">${
+            isVietnamese ? "Trân trọng," : "Best regards,"
+          }</p>
           <p style="margin: 5px 0; font-weight: 600; color: #667eea;">EFT Technology</p>
         </div>
         
         <div style="background: #f8f9fa; padding: 20px; text-align: center; border-top: 1px solid #eee;">
-          <p style="margin: 0; font-size: 12px; color: #999;">© 2025 EFT Technology. ${isVietnamese ? "Bản quyền thuộc về" : "All rights reserved"}.</p>
+          <p style="margin: 0; font-size: 12px; color: #999;">© 2025 EFT Technology. ${
+            isVietnamese ? "Bản quyền thuộc về" : "All rights reserved"
+          }.</p>
         </div>
       </div>
     </body>
@@ -114,11 +164,11 @@ const sendOrderConfirmationEmail = async (order, language = "vi") => {
 
     const isVietnamese = language === "vi";
     const orderNumber = order._id.toString().slice(-8).toUpperCase();
-    
+
     const { data, error } = await resend.emails.send({
       from: "EFT Technology <onboarding@resend.dev>", // Resend test domain
       to: [order.customerInfo.email],
-      subject: isVietnamese 
+      subject: isVietnamese
         ? `Xác nhận đơn hàng #${orderNumber} - EFT Technology`
         : `Order Confirmation #${orderNumber} - EFT Technology`,
       html: generateOrderEmailHTML(order, language),
@@ -131,7 +181,6 @@ const sendOrderConfirmationEmail = async (order, language = "vi") => {
     console.log("✅ Order confirmation email sent successfully!");
     console.log("   Email ID:", data.id);
     return { success: true, messageId: data.id };
-    
   } catch (error) {
     console.error("❌ Error sending order confirmation email:");
     console.error("   Error:", error.message);
@@ -147,7 +196,7 @@ const sendAdminNotificationEmail = async (order, language = "vi") => {
     }
 
     console.log("📧 Sending admin notification via Resend...");
-    
+
     const isVietnamese = language === "vi";
     const orderNumber = order._id.toString().slice(-8).toUpperCase();
     const adminEmail = process.env.EMAIL_TO || "vtu21102000@gmail.com";
@@ -155,14 +204,26 @@ const sendAdminNotificationEmail = async (order, language = "vi") => {
     const { data, error } = await resend.emails.send({
       from: "EFT Technology <onboarding@resend.dev>",
       to: [adminEmail],
-      subject: isVietnamese ? `Đơn hàng mới #${orderNumber}` : `New Order #${orderNumber}`,
+      subject: isVietnamese
+        ? `Đơn hàng mới #${orderNumber}`
+        : `New Order #${orderNumber}`,
       html: `
-        <h2>${isVietnamese ? "Đơn hàng mới từ" : "New order from"}: ${order.customerInfo.fullName}</h2>
-        <p><strong>${isVietnamese ? "Mã đơn" : "Order ID"}:</strong> ${order._id}</p>
+        <h2>${isVietnamese ? "Đơn hàng mới từ" : "New order from"}: ${
+        order.customerInfo.fullName
+      }</h2>
+        <p><strong>${isVietnamese ? "Mã đơn" : "Order ID"}:</strong> ${
+        order._id
+      }</p>
         <p><strong>Email:</strong> ${order.customerInfo.email}</p>
-        <p><strong>${isVietnamese ? "Điện thoại" : "Phone"}:</strong> ${order.customerInfo.phone}</p>
-        <p><strong>${isVietnamese ? "Tổng tiền" : "Total"}:</strong> ${order.total.toLocaleString()}₫</p>
-        <p><strong>${isVietnamese ? "Phương thức thanh toán" : "Payment method"}:</strong> ${order.paymentMethod}</p>
+        <p><strong>${isVietnamese ? "Điện thoại" : "Phone"}:</strong> ${
+        order.customerInfo.phone
+      }</p>
+        <p><strong>${
+          isVietnamese ? "Tổng tiền" : "Total"
+        }:</strong> ${order.total.toLocaleString()}₫</p>
+        <p><strong>${
+          isVietnamese ? "Phương thức thanh toán" : "Payment method"
+        }:</strong> ${order.paymentMethod}</p>
       `,
     });
 
@@ -173,7 +234,6 @@ const sendAdminNotificationEmail = async (order, language = "vi") => {
     console.log("✅ Admin notification sent successfully!");
     console.log("   Email ID:", data.id);
     return { success: true, messageId: data.id };
-    
   } catch (error) {
     console.error("❌ Error sending admin notification:");
     console.error("   Error:", error.message);

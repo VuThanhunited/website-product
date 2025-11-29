@@ -85,6 +85,7 @@ const shippingRoutes = require("./routes/shippingRoutes");
 const paymentMethodRoutes = require("./routes/paymentMethodRoutes");
 const homePageContentRoutes = require("./routes/homePageContentRoutes");
 const companyPageContentRoutes = require("./routes/companyPageContentRoutes");
+const paymentQRRoutes = require("./routes/paymentQRRoutes");
 
 // Use Routes
 app.use("/api/products", productRoutes);
@@ -100,6 +101,7 @@ app.use("/api/shipping", shippingRoutes);
 app.use("/api/payment-methods", paymentMethodRoutes);
 app.use("/api/home-content", homePageContentRoutes);
 app.use("/api/company-content", companyPageContentRoutes);
+app.use("/api/payment-qr", paymentQRRoutes);
 
 // Health check endpoint
 app.get("/api/health", (req, res) => {

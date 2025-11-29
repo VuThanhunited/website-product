@@ -61,6 +61,54 @@
   text-align: left;
 }
 
+.qr-codes-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.qr-code-item {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  border: 2px solid #e0e0e0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.qr-code-image {
+  width: 200px;
+  height: 200px;
+  object-fit: contain;
+  margin-bottom: 15px;
+  border: 2px solid #667eea;
+  border-radius: 8px;
+  padding: 10px;
+  background: white;
+}
+
+.qr-info {
+  width: 100%;
+}
+
+.qr-info p {
+  margin: 8px 0;
+  font-size: 14px;
+  color: #333;
+}
+
+.qr-info .instructions {
+  margin-top: 10px;
+  padding: 10px;
+  background: #e8f4f8;
+  border-radius: 6px;
+  font-size: 13px;
+  color: #0066cc;
+}
+
 .order-summary h3,
 .bank-info-card h3 {
   color: #333;
