@@ -15,4 +15,3 @@ router.delete('/:id', verifyToken, verifyAdmin, paymentQRController.deletePaymen
 router.patch('/:id/toggle-active', verifyToken, verifyAdmin, paymentQRController.toggleActiveStatus);
 
 module.exports = router;
-
