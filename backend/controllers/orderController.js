@@ -1,10 +1,13 @@
 const Order = require("../models/Order");
 const Product = require("../models/Product");
 
-// Try SendGrid first, fallback to nodemailer if not configured
+// Use Resend as primary, fallback to others
 let emailService;
 try {
-  if (process.env.SENDGRID_API_KEY) {
+  if (process.env.RESEND_API_KEY) {
+    emailService = require("../services/emailServiceResend");
+    console.log("✅ Using Resend for email service");
+  } else if (process.env.SENDGRID_API_KEY) {
     emailService = require("../services/emailServiceSendGrid");
     console.log("Using SendGrid for email service");
   } else {
@@ -16,10 +19,7 @@ try {
   console.log("Fallback to Nodemailer for email service");
 }
 
-const {
-  sendOrderConfirmationEmail,
-  sendAdminNotificationEmail,
-} = emailService;
+const { sendOrderConfirmationEmail, sendAdminNotificationEmail } = emailService;
 
 // Create a new order
 exports.createOrder = async (req, res) => {
