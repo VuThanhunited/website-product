@@ -1,7 +1,4 @@
-const PaymentQR = require('../models/PaymentQR');
-
-console.log('🔵 PaymentQR Controller Loading...');
-console.log('🔵 PaymentQR Model:', PaymentQR);
+const PaymentQR = require("../models/PaymentQR");
 
 const getAllPaymentQRs = async (req, res) => {
   try {
@@ -109,6 +106,3 @@ module.exports.createPaymentQR = createPaymentQR;
 module.exports.updatePaymentQR = updatePaymentQR;
 module.exports.deletePaymentQR = deletePaymentQR;
 module.exports.toggleActiveStatus = toggleActiveStatus;
-
-console.log('🟢 PaymentQR Controller Loaded Successfully');
-console.log('🟢 Exported functions:', Object.keys(module.exports));
