@@ -78,9 +78,9 @@ exports.createPaymentQR = async (req, res) => {
     res.status(201).json(savedPaymentQR);
   } catch (error) {
     console.error("Error creating payment QR:", error);
-    res.status(500).json({ 
-      message: "Lỗi khi tạo QR thanh toán", 
-      error: error.message 
+    res.status(500).json({
+      message: "Lỗi khi tạo QR thanh toán",
+      error: error.message,
     });
   }
 };
@@ -138,9 +138,9 @@ exports.deletePaymentQR = async (req, res) => {
     res.json({ message: "Xóa QR thanh toán thành công" });
   } catch (error) {
     console.error("Error deleting payment QR:", error);
-    res.status(500).json({ 
-      message: "Lỗi khi xóa QR thanh toán", 
-      error: error.message 
+    res.status(500).json({
+      message: "Lỗi khi xóa QR thanh toán",
+      error: error.message,
     });
   }
 };
@@ -160,9 +160,9 @@ exports.toggleActiveStatus = async (req, res) => {
     res.json(paymentQR);
   } catch (error) {
     console.error("Error toggling active status:", error);
-    res.status(500).json({ 
-      message: "Lỗi khi thay đổi trạng thái", 
-      error: error.message 
+    res.status(500).json({
+      message: "Lỗi khi thay đổi trạng thái",
+      error: error.message,
     });
   }
 };
