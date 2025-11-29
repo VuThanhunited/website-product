@@ -216,7 +216,9 @@ const generateOrderEmailTemplate = (order, language = "vi") => {
 // Gửi email xác nhận đơn hàng bằng SendGrid
 const sendOrderConfirmationEmail = async (order, language = "vi") => {
   try {
-    console.log("📧 Preparing to send order confirmation email via SendGrid...");
+    console.log(
+      "📧 Preparing to send order confirmation email via SendGrid..."
+    );
     console.log("   Order ID:", order._id);
     console.log("   Customer email:", order.customerInfo.email);
     console.log("   Language:", language);
@@ -270,7 +272,9 @@ const sendOrderConfirmationEmail = async (order, language = "vi") => {
 // Gửi email thông báo cho admin
 const sendAdminNotificationEmail = async (order, language = "vi") => {
   try {
-    console.log("📧 Preparing to send admin notification email via SendGrid...");
+    console.log(
+      "📧 Preparing to send admin notification email via SendGrid..."
+    );
     console.log("   Order ID:", order._id);
 
     if (!process.env.SENDGRID_API_KEY) {

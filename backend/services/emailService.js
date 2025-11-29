@@ -2,9 +2,7 @@ const nodemailer = require("nodemailer");
 
 // Tạo transporter để gửi email - với config tối ưu cho Gmail
 const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 587,
-  secure: false, // true for 465, false for other ports
+  service: "gmail", // Use Gmail service for better reliability
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
@@ -12,12 +10,14 @@ const transporter = nodemailer.createTransport({
   tls: {
     rejectUnauthorized: false,
   },
-  connectionTimeout: 15000, // 15 seconds
-  greetingTimeout: 15000,
-  socketTimeout: 15000,
+  connectionTimeout: 30000, // 30 seconds
+  greetingTimeout: 30000,
+  socketTimeout: 30000,
   pool: true, // Use pooled connections
-  maxConnections: 5,
-  maxMessages: 100,
+  maxConnections: 1,
+  maxMessages: 3,
+  rateDelta: 1000,
+  rateLimit: 1,
 });
 
 // Verify transporter on startup

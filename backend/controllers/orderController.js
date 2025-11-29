@@ -1,11 +1,25 @@
 const Order = require("../models/Order");
 const Product = require("../models/Product");
 
-// Use SendGrid for email service (SMTP blocked on Render)
+// Try SendGrid first, fallback to nodemailer if not configured
+let emailService;
+try {
+  if (process.env.SENDGRID_API_KEY) {
+    emailService = require("../services/emailServiceSendGrid");
+    console.log("Using SendGrid for email service");
+  } else {
+    emailService = require("../services/emailService");
+    console.log("Using Nodemailer for email service");
+  }
+} catch (error) {
+  emailService = require("../services/emailService");
+  console.log("Fallback to Nodemailer for email service");
+}
+
 const {
   sendOrderConfirmationEmail,
   sendAdminNotificationEmail,
-} = require("../services/emailServiceSendGrid");
+} = emailService;
 
 // Create a new order
 exports.createOrder = async (req, res) => {
