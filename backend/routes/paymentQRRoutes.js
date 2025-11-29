@@ -3,6 +3,11 @@ const router = express.Router();
 const paymentQRController = require('../controllers/paymentQRController');
 const { verifyToken, verifyAdmin } = require('../middleware/auth');
 
+console.log('🔴 PaymentQR Routes Loading...');
+console.log('🔴 Controller loaded:', paymentQRController);
+console.log('🔴 getAllPaymentQRs type:', typeof paymentQRController.getAllPaymentQRs);
+console.log('🔴 Available functions:', Object.keys(paymentQRController));
+
 // Public routes (for frontend checkout)
 router.get('/active', paymentQRController.getActivePaymentQRs);
 

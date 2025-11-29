@@ -1,5 +1,8 @@
 const PaymentQR = require('../models/PaymentQR');
 
+console.log('🔵 PaymentQR Controller Loading...');
+console.log('🔵 PaymentQR Model:', PaymentQR);
+
 const getAllPaymentQRs = async (req, res) => {
   try {
     const paymentQRs = await PaymentQR.find().sort({ displayOrder: 1, createdAt: -1 });
@@ -106,3 +109,6 @@ module.exports.createPaymentQR = createPaymentQR;
 module.exports.updatePaymentQR = updatePaymentQR;
 module.exports.deletePaymentQR = deletePaymentQR;
 module.exports.toggleActiveStatus = toggleActiveStatus;
+
+console.log('🟢 PaymentQR Controller Loaded Successfully');
+console.log('🟢 Exported functions:', Object.keys(module.exports));
