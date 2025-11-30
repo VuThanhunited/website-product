@@ -363,8 +363,13 @@
 }
 
 @media (max-width: 968px) {
+  .checkout-page {
+    padding: clamp(1.5rem, 4vw, 2rem) 0;
+  }
+
   .checkout-content {
     grid-template-columns: 1fr;
+    gap: var(--spacing-md);
   }
 
   .order-summary-section {
@@ -373,28 +378,60 @@
 
   .form-row {
     grid-template-columns: 1fr;
+    gap: var(--spacing-md);
   }
 }
 
 @media (max-width: 576px) {
   .checkout-page {
-    padding: 20px 10px;
+    padding: var(--spacing-md) var(--spacing-sm);
   }
 
   .checkout-page h1 {
-    font-size: 1.5rem;
+    font-size: clamp(1.4rem, 5vw, 1.6rem);
+    margin-bottom: var(--spacing-md);
   }
 
   .checkout-form-section {
-    padding: 20px 15px;
+    padding: var(--spacing-md) var(--spacing-sm);
+    border-radius: var(--radius-md);
+  }
+
+  .checkout-form h2 {
+    font-size: clamp(1.2rem, 4vw, 1.4rem);
+    margin-bottom: var(--spacing-md);
+  }
+
+  .form-group label {
+    font-size: clamp(0.9rem, 2.5vw, 0.95rem);
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    padding: clamp(0.75rem, 2vw, 0.875rem);
+    font-size: clamp(0.95rem, 2.5vw, 1rem);
+    min-height: 44px;
   }
 
   .order-summary {
-    padding: 20px 15px;
+    padding: var(--spacing-md) var(--spacing-sm);
+    border-radius: var(--radius-md);
   }
 
-  .checkout-form h2,
   .order-summary h2 {
-    font-size: 1.2rem;
+    font-size: clamp(1.2rem, 4vw, 1.4rem);
+    margin-bottom: var(--spacing-md);
+  }
+
+  .order-summary .btn-primary {
+    width: 100%;
+    min-height: 48px;
+    font-size: clamp(1rem, 3vw, 1.1rem);
+  }
+
+  .summary-item {
+    padding: var(--spacing-sm) 0;
+    font-size: clamp(0.9rem, 2.5vw, 0.95rem);
   }
 }

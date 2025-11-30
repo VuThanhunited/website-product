@@ -89,11 +89,78 @@
 }
 
 @media (max-width: 768px) {
+  .contact-page {
+    padding: clamp(2rem, 5vw, 2.5rem) 0;
+  }
+
   .contact-page h1 {
-    font-size: 2rem;
+    font-size: clamp(1.8rem, 6vw, 2.2rem);
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .subtitle {
+    font-size: clamp(1rem, 3vw, 1.05rem);
+    margin-bottom: clamp(1.5rem, 4vw, 2rem);
+    padding: 0 var(--spacing-md);
+  }
+
+  .contact-content {
+    max-width: 100%;
+    padding: 0 var(--spacing-md);
   }
 
   .contact-form {
-    padding: 25px;
+    padding: clamp(1.5rem, 4vw, 2rem);
+    border-radius: var(--radius-md);
+  }
+
+  .form-group {
+    margin-bottom: clamp(1rem, 3vw, 1.25rem);
+  }
+
+  .form-group label {
+    font-size: clamp(0.9rem, 2.5vw, 1rem);
+    margin-bottom: var(--spacing-xs);
+  }
+
+  .form-group input,
+  .form-group textarea {
+    padding: clamp(0.75rem, 2vw, 0.875rem) var(--spacing-sm);
+    font-size: clamp(0.95rem, 2.5vw, 1rem);
+    border-radius: var(--radius-sm);
+    min-height: 44px;
+  }
+
+  .form-group textarea {
+    min-height: clamp(120px, 25vw, 150px);
+  }
+
+  .alert {
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--spacing-md);
+    font-size: clamp(0.9rem, 2.5vw, 0.95rem);
+  }
+
+  .contact-form .btn-primary {
+    width: 100%;
+    padding: clamp(0.875rem, 2.5vw, 1rem);
+    font-size: clamp(1rem, 3vw, 1.1rem);
+    margin-top: var(--spacing-sm);
+    min-height: 48px;
+  }
+}
+
+@media (max-width: 480px) {
+  .contact-page {
+    padding: var(--spacing-md) 0;
+  }
+
+  .contact-content {
+    padding: 0 var(--spacing-sm);
+  }
+
+  .contact-form {
+    padding: var(--spacing-md) var(--spacing-sm);
   }
 }

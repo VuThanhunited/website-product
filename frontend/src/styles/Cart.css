@@ -318,8 +318,13 @@
 }
 
 @media (max-width: 968px) {
+  .cart-page {
+    padding: clamp(1.5rem, 4vw, 2rem) 0;
+  }
+
   .cart-content {
     grid-template-columns: 1fr;
+    gap: var(--spacing-md);
   }
 
   .order-summary {
@@ -327,8 +332,9 @@
   }
 
   .cart-item {
-    grid-template-columns: 80px 1fr;
-    gap: 10px;
+    grid-template-columns: clamp(70px, 15vw, 80px) 1fr;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md);
   }
 
   .cart-item-quantity,
@@ -339,33 +345,64 @@
 
 @media (max-width: 576px) {
   .cart-page {
-    padding: 20px 10px;
+    padding: var(--spacing-md) var(--spacing-sm);
   }
 
   .cart-page h1 {
-    font-size: 1.5rem;
+    font-size: clamp(1.4rem, 5vw, 1.6rem);
+    margin-bottom: var(--spacing-md);
   }
 
   .cart-item {
     grid-template-columns: 60px 1fr;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm);
   }
 
   .cart-item-image {
     width: 60px;
     height: 60px;
+    border-radius: var(--radius-sm);
   }
 
   .cart-item-info h3 {
-    font-size: 0.9rem;
+    font-size: clamp(0.875rem, 2.5vw, 0.95rem);
+  }
+
+  .cart-item-info p {
+    font-size: clamp(0.8rem, 2vw, 0.85rem);
   }
 
   .quantity-btn {
-    width: 25px;
-    height: 25px;
-    font-size: 1rem;
+    width: clamp(32px, 8vw, 36px);
+    height: clamp(32px, 8vw, 36px);
+    font-size: clamp(1rem, 2.5vw, 1.1rem);
+    min-width: 44px;
+    min-height: 44px;
   }
 
   .quantity-input {
-    width: 40px;
+    width: clamp(50px, 12vw, 60px);
+    font-size: clamp(0.95rem, 2.5vw, 1rem);
+    min-height: 44px;
+  }
+
+  .remove-btn {
+    padding: clamp(0.625rem, 2vw, 0.75rem) clamp(1rem, 3vw, 1.25rem);
+    font-size: clamp(0.85rem, 2vw, 0.9rem);
+    min-height: 44px;
+  }
+
+  .order-summary {
+    padding: var(--spacing-md);
+  }
+
+  .order-summary h2 {
+    font-size: clamp(1.2rem, 4vw, 1.4rem);
+  }
+
+  .order-summary .btn-primary {
+    width: 100%;
+    min-height: 48px;
   }
 }

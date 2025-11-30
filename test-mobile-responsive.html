@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mobile Responsive Test - Website Bán Hàng</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+      }
+
+      h1 {
+        color: #2c3e50;
+        margin-bottom: 10px;
+        font-size: clamp(1.5rem, 5vw, 2rem);
+      }
+
+      .subtitle {
+        color: #6c757d;
+        margin-bottom: 30px;
+        font-size: clamp(0.9rem, 2.5vw, 1rem);
+      }
+
+      .test-section {
+        margin-bottom: 30px;
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 10px;
+      }
+
+      .test-section h2 {
+        color: #667eea;
+        margin-bottom: 15px;
+        font-size: clamp(1.2rem, 4vw, 1.5rem);
+      }
+
+      .test-list {
+        list-style: none;
+      }
+
+      .test-list li {
+        padding: 12px;
+        margin-bottom: 8px;
+        background: white;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+      }
+
+      .test-list li:hover {
+        transform: translateX(5px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      .test-list li::before {
+        content: "📱";
+        font-size: 1.5rem;
+      }
+
+      .btn {
+        display: inline-block;
+        padding: 12px 30px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        text-decoration: none;
+        border-radius: 25px;
+        margin: 10px 10px 10px 0;
+        transition: all 0.3s ease;
+        font-weight: 600;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+      }
+
+      .btn:active {
+        transform: scale(0.98);
+      }
+
+      .info-box {
+        background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+        padding: 20px;
+        border-radius: 10px;
+        border-left: 4px solid #667eea;
+        margin-bottom: 20px;
+      }
+
+      .info-box strong {
+        color: #667eea;
+        display: block;
+        margin-bottom: 8px;
+      }
+
+      .checklist {
+        list-style: none;
+      }
+
+      .checklist li {
+        padding: 8px 0;
+        padding-left: 25px;
+        position: relative;
+      }
+
+      .checklist li::before {
+        content: "✓";
+        position: absolute;
+        left: 0;
+        color: #28a745;
+        font-weight: bold;
+      }
+
+      @media (max-width: 768px) {
+        body {
+          padding: 10px;
+        }
+
+        .container {
+          padding: 20px;
+          border-radius: 15px;
+        }
+
+        .btn {
+          display: block;
+          text-align: center;
+          margin: 10px 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🎉 Mobile Responsive Testing</h1>
+      <p class="subtitle">
+        Test các tính năng responsive của website trên thiết bị di động
+      </p>
+
+      <div class="info-box">
+        <strong>📋 Hướng dẫn test:</strong>
+        Mở website bằng điện thoại hoặc sử dụng DevTools (F12) → Toggle device
+        toolbar (Ctrl+Shift+M) và test các trang sau:
+      </div>
+
+      <div class="test-section">
+        <h2>🏠 Các Trang Chính</h2>
+        <ul class="test-list">
+          <li onclick="window.open('/', '_blank')">Trang Chủ (Home)</li>
+          <li onclick="window.open('/company', '_blank')">
+            Giới Thiệu Công Ty
+          </li>
+          <li onclick="window.open('/products', '_blank')">Sản Phẩm</li>
+          <li onclick="window.open('/support', '_blank')">Hỗ Trợ</li>
+          <li onclick="window.open('/contact', '_blank')">Liên Hệ</li>
+        </ul>
+      </div>
+
+      <div class="test-section">
+        <h2>🛒 Tính Năng Mua Hàng</h2>
+        <ul class="test-list">
+          <li onclick="window.open('/cart', '_blank')">Giỏ Hàng</li>
+          <li onclick="window.open('/checkout', '_blank')">Thanh Toán</li>
+        </ul>
+      </div>
+
+      <div class="test-section">
+        <h2>👤 Tài Khoản</h2>
+        <ul class="test-list">
+          <li onclick="window.open('/login', '_blank')">Đăng Nhập</li>
+          <li onclick="window.open('/register', '_blank')">Đăng Ký</li>
+          <li onclick="window.open('/profile', '_blank')">Thông Tin Cá Nhân</li>
+        </ul>
+      </div>
+
+      <div class="test-section">
+        <h2>✅ Checklist Kiểm Tra</h2>
+        <ul class="checklist">
+          <li>Navigation menu hiển thị đúng (hamburger menu)</li>
+          <li>Tất cả text dễ đọc, không bị nhỏ quá</li>
+          <li>Buttons đủ lớn để tap (min 44px)</li>
+          <li>Form inputs dễ điền trên mobile</li>
+          <li>Images load nhanh và responsive</li>
+          <li>Search bar hoạt động tốt</li>
+          <li>Cart functionality hoạt động mượt</li>
+          <li>Smooth scroll và animations</li>
+          <li>Không có horizontal scroll không mong muốn</li>
+          <li>Footer hiển thị đẹp và rõ ràng</li>
+        </ul>
+      </div>
+
+      <div class="info-box">
+        <strong>📱 Recommended Test Devices:</strong>
+        <ul style="margin-top: 10px; margin-left: 20px">
+          <li>iPhone SE (375px)</li>
+          <li>iPhone 12/13/14 (390px)</li>
+          <li>Samsung Galaxy S21 (360px)</li>
+          <li>iPad Mini (768px)</li>
+        </ul>
+      </div>
+
+      <div style="text-align: center; margin-top: 30px">
+        <a href="/" class="btn">🏠 Về Trang Chủ</a>
+        <a href="/products" class="btn">🛍️ Xem Sản Phẩm</a>
+      </div>
+
+      <div
+        style="
+          margin-top: 30px;
+          padding-top: 20px;
+          border-top: 1px solid #e0e0e0;
+          text-align: center;
+          color: #6c757d;
+          font-size: 0.9rem;
+        "
+      >
+        <p>Mobile Responsive Design v1.0</p>
+        <p style="margin-top: 5px">Powered by GitHub Copilot 🤖</p>
+      </div>
+    </div>
+
+    <script>
+      // Add touch feedback
+      document.querySelectorAll(".test-list li").forEach((item) => {
+        item.addEventListener("touchstart", function () {
+          this.style.transform = "scale(0.98)";
+        });
+        item.addEventListener("touchend", function () {
+          this.style.transform = "";
+        });
+      });
+
+      // Show device info
+      console.log("🔍 Device Info:");
+      console.log("Screen Width:", window.innerWidth);
+      console.log("Screen Height:", window.innerHeight);
+      console.log("Device Pixel Ratio:", window.devicePixelRatio);
+      console.log("User Agent:", navigator.userAgent);
+    </script>
+  </body>
+</html>
