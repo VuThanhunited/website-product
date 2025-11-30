@@ -1,4 +1,4 @@
-const PaymentQR = require("../models/PaymentQR");
+const PaymentQR = require('../models/PaymentQR');
 
 const getAllPaymentQRs = async (req, res) => {
   try {
