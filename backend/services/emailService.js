@@ -34,21 +34,15 @@ const generateOrderEmailTemplate = (order, language = "vi") => {
   const isVietnamese = language === "vi";
 
   const title = isVietnamese ? "Xác Nhận Đơn Hàng" : "Order Confirmation";
-  const greeting = isVietnamese
-    ? `Xin chào ${order.customerInfo.fullName},`
-    : `Hello ${order.customerInfo.fullName},`;
+  const greeting = isVietnamese ? `Xin chào ${order.customerInfo.fullName},` : `Hello ${order.customerInfo.fullName},`;
   const thankYou = isVietnamese
     ? "Cảm ơn bạn đã đặt hàng tại EFT Technology!"
     : "Thank you for your order at EFT Technology!";
   const orderInfo = isVietnamese ? "Thông tin đơn hàng:" : "Order information:";
   const orderNumber = isVietnamese ? "Mã đơn hàng" : "Order number";
   const orderDate = isVietnamese ? "Ngày đặt" : "Order date";
-  const paymentMethod = isVietnamese
-    ? "Phương thức thanh toán"
-    : "Payment method";
-  const shippingAddress = isVietnamese
-    ? "Địa chỉ giao hàng"
-    : "Shipping address";
+  const paymentMethod = isVietnamese ? "Phương thức thanh toán" : "Payment method";
+  const shippingAddress = isVietnamese ? "Địa chỉ giao hàng" : "Shipping address";
   const productsTitle = isVietnamese ? "Sản phẩm" : "Products";
   const quantity = isVietnamese ? "Số lượng" : "Quantity";
   const price = isVietnamese ? "Đơn giá" : "Price";
@@ -58,15 +52,11 @@ const generateOrderEmailTemplate = (order, language = "vi") => {
   const note = isVietnamese
     ? "Chúng tôi sẽ liên hệ với bạn trong thời gian sớm nhất để xác nhận đơn hàng."
     : "We will contact you as soon as possible to confirm your order.";
-  const contactInfo = isVietnamese
-    ? "Thông tin liên hệ:"
-    : "Contact information:";
+  const contactInfo = isVietnamese ? "Thông tin liên hệ:" : "Contact information:";
   const regards = isVietnamese ? "Trân trọng," : "Best regards,";
 
   const paymentMethodText = {
-    cod: isVietnamese
-      ? "Thanh toán khi nhận hàng (COD)"
-      : "Cash on delivery (COD)",
+    cod: isVietnamese ? "Thanh toán khi nhận hàng (COD)" : "Cash on delivery (COD)",
     bank: isVietnamese ? "Chuyển khoản ngân hàng" : "Bank transfer",
     card: isVietnamese ? "Thẻ tín dụng/Ghi nợ" : "Credit/Debit card",
     ewallet: isVietnamese ? "Ví điện tử" : "E-wallet",
@@ -76,12 +66,8 @@ const generateOrderEmailTemplate = (order, language = "vi") => {
     .map(
       (item) => `
     <tr>
-      <td style="padding: 12px; border-bottom: 1px solid #eee;">${
-        item.productName
-      }</td>
-      <td style="padding: 12px; border-bottom: 1px solid #eee; text-align: center;">${
-        item.quantity
-      }</td>
+      <td style="padding: 12px; border-bottom: 1px solid #eee;">${item.productName}</td>
+      <td style="padding: 12px; border-bottom: 1px solid #eee; text-align: center;">${item.quantity}</td>
       <td style="padding: 12px; border-bottom: 1px solid #eee; text-align: right;">${item.price.toLocaleString()}đ</td>
       <td style="padding: 12px; border-bottom: 1px solid #eee; text-align: right; font-weight: bold;">${(
         item.quantity * item.price
@@ -139,9 +125,9 @@ const generateOrderEmailTemplate = (order, language = "vi") => {
                   ${order.customerInfo.fullName}<br>
                   ${order.customerInfo.phone}<br>
                   ${order.customerInfo.email}<br>
-                  ${order.customerInfo.address}${
-    order.customerInfo.ward ? ", " + order.customerInfo.ward : ""
-  }${order.customerInfo.district ? ", " + order.customerInfo.district : ""}<br>
+                  ${order.customerInfo.address}${order.customerInfo.ward ? ", " + order.customerInfo.ward : ""}${
+    order.customerInfo.district ? ", " + order.customerInfo.district : ""
+  }<br>
                   ${order.customerInfo.city}
                 </p>
               </div>
@@ -182,9 +168,9 @@ const generateOrderEmailTemplate = (order, language = "vi") => {
                 order.customerInfo.notes
                   ? `
               <div style="margin-top: 20px; padding: 15px; background-color: #fff3cd; border-left: 4px solid #ffc107; border-radius: 4px;">
-                <p style="margin: 0; color: #856404;"><strong>${
-                  isVietnamese ? "Ghi chú:" : "Note:"
-                }</strong> ${order.customerInfo.notes}</p>
+                <p style="margin: 0; color: #856404;"><strong>${isVietnamese ? "Ghi chú:" : "Note:"}</strong> ${
+                      order.customerInfo.notes
+                    }</p>
               </div>
               `
                   : ""
@@ -194,12 +180,8 @@ const generateOrderEmailTemplate = (order, language = "vi") => {
 
               <div style="background-color: #e7f3ff; padding: 20px; border-radius: 4px; margin-top: 30px;">
                 <p style="margin: 0 0 10px 0; font-weight: 600; color: #333;">${contactInfo}</p>
-                <p style="margin: 5px 0; color: #555;">📧 Email: ${
-                  process.env.EMAIL_USER
-                }</p>
-                <p style="margin: 5px 0; color: #555;">📞 ${
-                  isVietnamese ? "Hotline" : "Phone"
-                }: 1900-xxxx</p>
+                <p style="margin: 5px 0; color: #555;">📧 Email: ${process.env.EMAIL_USER}</p>
+                <p style="margin: 5px 0; color: #555;">📞 ${isVietnamese ? "Hotline" : "Phone"}: 1900-xxxx</p>
                 <p style="margin: 5px 0; color: #555;">🌐 Website: www.efttechnology.com</p>
               </div>
 
@@ -219,9 +201,7 @@ const generateOrderEmailTemplate = (order, language = "vi") => {
                 }
               </p>
               <p style="margin: 10px 0 0 0; font-size: 12px; color: #999;">
-                © 2025 EFT Technology. ${
-                  isVietnamese ? "Bản quyền thuộc về" : "All rights reserved"
-                }.
+                © 2025 EFT Technology. ${isVietnamese ? "Bản quyền thuộc về" : "All rights reserved"}.
               </p>
             </td>
           </tr>
@@ -265,9 +245,12 @@ const sendOrderConfirmationEmail = async (order, language = "vi") => {
       replyTo: process.env.EMAIL_USER,
     };
 
-    console.log("   Sending email from:", process.env.EMAIL_USER);
-    console.log("   Sending email to:", order.customerInfo.email);
-    console.log("   Subject:", subject);
+    console.log("   =============================================");
+    console.log("   📧 EMAIL DETAILS:");
+    console.log("   FROM:", process.env.EMAIL_USER);
+    console.log("   TO:", order.customerInfo.email);
+    console.log("   SUBJECT:", subject);
+    console.log("   =============================================");
 
     const info = await transporter.sendMail(mailOptions);
 
@@ -295,9 +278,7 @@ const sendAdminNotificationEmail = async (order, language = "vi") => {
 
     const isVietnamese = language === "vi";
     const orderNumber = order._id.toString().slice(-8).toUpperCase();
-    const subject = isVietnamese
-      ? `Đơn hàng mới #${orderNumber}`
-      : `New Order #${orderNumber}`;
+    const subject = isVietnamese ? `Đơn hàng mới #${orderNumber}` : `New Order #${orderNumber}`;
 
     const adminEmail = process.env.EMAIL_TO || process.env.EMAIL_USER;
     console.log("   Sending admin notification to:", adminEmail);
@@ -310,22 +291,12 @@ const sendAdminNotificationEmail = async (order, language = "vi") => {
       to: adminEmail,
       subject: subject,
       html: `
-        <h2>${isVietnamese ? "Đơn hàng mới từ" : "New order from"}: ${
-        order.customerInfo.fullName
-      }</h2>
-        <p><strong>${isVietnamese ? "Mã đơn" : "Order ID"}:</strong> ${
-        order._id
-      }</p>
+        <h2>${isVietnamese ? "Đơn hàng mới từ" : "New order from"}: ${order.customerInfo.fullName}</h2>
+        <p><strong>${isVietnamese ? "Mã đơn" : "Order ID"}:</strong> ${order._id}</p>
         <p><strong>Email:</strong> ${order.customerInfo.email}</p>
-        <p><strong>${isVietnamese ? "Điện thoại" : "Phone"}:</strong> ${
-        order.customerInfo.phone
-      }</p>
-        <p><strong>${
-          isVietnamese ? "Tổng tiền" : "Total"
-        }:</strong> ${order.total.toLocaleString()}đ</p>
-        <p><strong>${
-          isVietnamese ? "Phương thức thanh toán" : "Payment method"
-        }:</strong> ${order.paymentMethod}</p>
+        <p><strong>${isVietnamese ? "Điện thoại" : "Phone"}:</strong> ${order.customerInfo.phone}</p>
+        <p><strong>${isVietnamese ? "Tổng tiền" : "Total"}:</strong> ${order.total.toLocaleString()}đ</p>
+        <p><strong>${isVietnamese ? "Phương thức thanh toán" : "Payment method"}:</strong> ${order.paymentMethod}</p>
         <p><a href="http://localhost:3001" style="background-color: #667eea; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; display: inline-block; margin-top: 10px;">${
           isVietnamese ? "Xem chi tiết" : "View details"
         }</a></p>
