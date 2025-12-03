@@ -3,6 +3,7 @@
 ## ⚠️ VẤN ĐỀ HIỆN TẠI
 
 Resend API đang hoạt động **NHƯNG ở chế độ TEST MODE**:
+
 - ✅ Email gửi thành công
 - ❌ Chỉ gửi được đến: `vtu21102000@gmail.com` (email đã đăng ký)
 - ❌ Không gửi được đến email khách hàng khác
@@ -22,17 +23,20 @@ Resend API đang hoạt động **NHƯNG ở chế độ TEST MODE**:
 Có 2 options:
 
 #### Option A: Domain Riêng (Recommended - Production)
+
 ```
 Domain: efttech.vn (hoặc domain của bạn)
 FROM email: orders@efttech.vn
 ```
 
 **Yêu cầu:**
+
 - Phải có domain name
 - Phải có quyền truy cập DNS settings
 - Cần thêm DNS records (TXT, MX, CNAME)
 
 #### Option B: Subdomain (Easier)
+
 ```
 Domain: mail.yourdomain.com
 FROM email: noreply@mail.yourdomain.com
@@ -57,6 +61,7 @@ Value: resend._domainkey.resend.com
 ```
 
 **Thêm vào DNS Provider:**
+
 - Cloudflare
 - GoDaddy
 - Namecheap
@@ -73,10 +78,10 @@ Sau khi domain verified, cập nhật `emailServiceResend.js`:
 
 ```javascript
 // BEFORE (Test mode)
-from: "EFT Technology <onboarding@resend.dev>"
+from: "EFT Technology <onboarding@resend.dev>";
 
 // AFTER (Production)
-from: "EFT Technology <orders@yourdomain.com>"
+from: "EFT Technology <orders@yourdomain.com>";
 ```
 
 ## 🔧 WORKAROUND TẠM THỜI
@@ -84,27 +89,33 @@ from: "EFT Technology <orders@yourdomain.com>"
 Nếu **chưa có domain** hoặc **chưa verify được**, có thể dùng workaround:
 
 ### Cách 1: Dùng Gmail SMTP (Hiện tại)
+
 ```javascript
 // Backend sẽ tự động fallback về Gmail
 // Nhưng vẫn bị giới hạn Gmail
 ```
 
 ### Cách 2: Mock Customer Email
+
 Trong development, tạm thời gửi tất cả email test đến `vtu21102000@gmail.com`:
 
 ```javascript
 // orderController.js (TẠM THỜI - CHỈ ĐỂ TEST)
-const emailForTesting = process.env.NODE_ENV === 'development' 
-  ? 'vtu21102000@gmail.com'  // Override trong dev
-  : order.customerInfo.email; // Dùng thật trong production
+const emailForTesting =
+  process.env.NODE_ENV === "development"
+    ? "vtu21102000@gmail.com" // Override trong dev
+    : order.customerInfo.email; // Dùng thật trong production
 
-sendOrderConfirmationEmail({
-  ...order,
-  customerInfo: {
-    ...order.customerInfo,
-    email: emailForTesting
-  }
-}, language);
+sendOrderConfirmationEmail(
+  {
+    ...order,
+    customerInfo: {
+      ...order.customerInfo,
+      email: emailForTesting,
+    },
+  },
+  language
+);
 ```
 
 ## 📋 CHECKLIST PRODUCTION
@@ -122,11 +133,11 @@ sendOrderConfirmationEmail({
 
 ## 🎯 RECOMMENDED TIMELINE
 
-| Nếu có domain | Timeline |
-|---------------|----------|
-| Có domain + DNS access | 1-2 giờ |
-| Chưa có domain | 1-3 ngày (mua + verify) |
-| Không dùng domain | Dùng SendGrid/Mailgun thay thế |
+| Nếu có domain          | Timeline                       |
+| ---------------------- | ------------------------------ |
+| Có domain + DNS access | 1-2 giờ                        |
+| Chưa có domain         | 1-3 ngày (mua + verify)        |
+| Không dùng domain      | Dùng SendGrid/Mailgun thay thế |
 
 ## 🔄 TẠM THỜI: TEST VỚI GMAIL
 
@@ -137,6 +148,7 @@ Hiện tại, để test tính năng order:
 3. **Khi tạo order test:** Nhập email bất kỳ → Email vẫn chỉ đến `vtu21102000@gmail.com`
 
 **Để test:**
+
 ```bash
 # Tạo order với email test
 # Email sẽ gửi đến: vtu21102000@gmail.com (không phải email khách)
@@ -146,11 +158,13 @@ Hiện tại, để test tính năng order:
 ## 🚀 NEXT STEPS
 
 ### Ngay lập tức:
+
 1. ✅ RESEND_API_KEY đã được thêm vào `.env`
 2. ✅ Backend đã test thành công gửi email
 3. ⏳ Email hiện chỉ gửi đến verified address
 
 ### Để production-ready:
+
 1. **Verify domain tại Resend** (Quan trọng nhất!)
 2. Hoặc dùng alternative: SendGrid, Mailgun, AWS SES
 3. Update FROM address trong code
@@ -158,6 +172,7 @@ Hiện tại, để test tính năng order:
 ## 📞 SUPPORT
 
 Nếu cần hỗ trợ verify domain:
+
 - Resend Docs: https://resend.com/docs/dashboard/domains/introduction
 - Support: https://resend.com/support
 - Community: https://resend.com/discord
