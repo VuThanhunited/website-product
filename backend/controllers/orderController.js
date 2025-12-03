@@ -1,16 +1,23 @@
 const Order = require("../models/Order");
 const Product = require("../models/Product");
 
-// WORKAROUND: Use Gmail SMTP for customer emails (no test mode restrictions)
-// Use Resend only for admin notifications
-const gmailService = require("../services/emailService"); // Gmail SMTP - no restrictions
+// Email service configuration
+// On production (Render), SMTP is blocked - must use Resend API
+// On development (local), can use Gmail SMTP
+const isProduction = process.env.NODE_ENV === "production";
 const resendService = process.env.RESEND_API_KEY ? require("../services/emailServiceResend") : null;
+const gmailService = require("../services/emailService"); // Gmail SMTP
 
-console.log("✅ Email Configuration:");
-console.log("   Customer emails: Gmail SMTP (no test mode)");
-console.log("   Admin emails:", resendService ? "Resend" : "Gmail SMTP");
+let emailService;
+if (isProduction && resendService) {
+  emailService = resendService;
+  console.log("✅ Email Configuration: Using Resend API (production)");
+} else {
+  emailService = gmailService;
+  console.log("✅ Email Configuration: Using Gmail SMTP (development)");
+}
 
-const { sendOrderConfirmationEmail: sendCustomerEmail, sendAdminNotificationEmail: sendAdminEmail } = gmailService;
+const { sendOrderConfirmationEmail: sendCustomerEmail, sendAdminNotificationEmail: sendAdminEmail } = emailService;
 
 // Create a new order
 exports.createOrder = async (req, res) => {

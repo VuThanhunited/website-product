@@ -48,14 +48,6 @@ const generateOrderEmailHTML = (order, language = "vi") => {
         </div>
         
         <div style="padding: 40px;">
-          <!-- Test Mode Warning -->
-          <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin-bottom: 20px; border-radius: 4px;">
-            <p style="margin: 0; color: #856404; font-size: 14px;">
-              <strong>⚠️ TEST MODE:</strong> Email này được gửi đến admin vì Resend đang ở chế độ test.<br>
-              <strong>Email khách hàng gốc:</strong> ${order.customerInfo.email}
-            </p>
-          </div>
-          
           <p style="margin: 0 0 20px 0; font-size: 16px; color: #333;">${
             isVietnamese ? `Xin chào ${order.customerInfo.fullName},` : `Hello ${order.customerInfo.fullName},`
           }</p>
@@ -149,25 +141,11 @@ const sendOrderConfirmationEmail = async (order, language = "vi") => {
     const isVietnamese = language === "vi";
     const orderNumber = order._id.toString().slice(-8).toUpperCase();
 
-    // WORKAROUND: Resend test mode chỉ gửi được đến verified email
-    // Gửi đến admin email nhưng thêm thông tin customer vào subject
-    const isTestMode = true; // Set false khi đã verify domain
-    const recipientEmail = isTestMode ? process.env.EMAIL_TO || "vtu21102000@gmail.com" : order.customerInfo.email;
-
-    const emailSubject = isTestMode
-      ? `[KH: ${order.customerInfo.email}] ${isVietnamese ? "Xác nhận đơn hàng" : "Order"} #${orderNumber}`
-      : `${isVietnamese ? "Xác nhận đơn hàng" : "Order Confirmation"} #${orderNumber} - EFT Technology`;
-
-    console.log("   ⚠️  RESEND TEST MODE: Sending to", recipientEmail);
-    console.log("   📬 Original customer email:", order.customerInfo.email);
-
     const { data, error } = await resend.emails.send({
       from: "EFT Technology <onboarding@resend.dev>", // Resend test domain
-      to: [recipientEmail],
-      subject: emailSubject,
+      to: [order.customerInfo.email],
+      subject: `${isVietnamese ? "Xác nhận đơn hàng" : "Order Confirmation"} #${orderNumber} - EFT Technology`,
       html: generateOrderEmailHTML(order, language),
-      // Add reply-to để có thể reply trực tiếp cho khách
-      replyTo: order.customerInfo.email,
     });
 
     if (error) {
@@ -200,14 +178,74 @@ const sendAdminNotificationEmail = async (order, language = "vi") => {
     const { data, error } = await resend.emails.send({
       from: "EFT Technology <onboarding@resend.dev>",
       to: [adminEmail],
-      subject: isVietnamese ? `Đơn hàng mới #${orderNumber}` : `New Order #${orderNumber}`,
+      subject: isVietnamese
+        ? `Đơn hàng mới #${orderNumber} - ${order.customerInfo.email}`
+        : `New Order #${orderNumber} - ${order.customerInfo.email}`,
       html: `
-        <h2>${isVietnamese ? "Đơn hàng mới từ" : "New order from"}: ${order.customerInfo.fullName}</h2>
-        <p><strong>${isVietnamese ? "Mã đơn" : "Order ID"}:</strong> ${order._id}</p>
-        <p><strong>Email:</strong> ${order.customerInfo.email}</p>
-        <p><strong>${isVietnamese ? "Điện thoại" : "Phone"}:</strong> ${order.customerInfo.phone}</p>
-        <p><strong>${isVietnamese ? "Tổng tiền" : "Total"}:</strong> ${order.total.toLocaleString()}₫</p>
-        <p><strong>${isVietnamese ? "Phương thức thanh toán" : "Payment method"}:</strong> ${order.paymentMethod}</p>
+        <!DOCTYPE html>
+        <html>
+        <head><meta charset="UTF-8"></head>
+        <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+          <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px; border-radius: 8px 8px 0 0;">
+            <h2 style="color: white; margin: 0;">${isVietnamese ? "🛒 Đơn hàng mới" : "🛒 New Order"}</h2>
+          </div>
+          
+          <div style="background: white; padding: 30px; border: 1px solid #eee; border-top: none; border-radius: 0 0 8px 8px;">
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+              <h3 style="margin: 0 0 15px 0; color: #667eea;">${
+                isVietnamese ? "Thông tin khách hàng" : "Customer Information"
+              }</h3>
+              <p style="margin: 5px 0;"><strong>${isVietnamese ? "Họ tên" : "Name"}:</strong> ${
+        order.customerInfo.fullName
+      }</p>
+              <p style="margin: 5px 0;"><strong>Email:</strong> <a href="mailto:${order.customerInfo.email}">${
+        order.customerInfo.email
+      }</a></p>
+              <p style="margin: 5px 0;"><strong>${isVietnamese ? "Điện thoại" : "Phone"}:</strong> <a href="tel:${
+        order.customerInfo.phone
+      }">${order.customerInfo.phone}</a></p>
+              <p style="margin: 5px 0;"><strong>${isVietnamese ? "Địa chỉ" : "Address"}:</strong> ${
+        order.customerInfo.address
+      }</p>
+              <p style="margin: 5px 0;"><strong>${isVietnamese ? "Thành phố" : "City"}:</strong> ${
+        order.customerInfo.city
+      }</p>
+            </div>
+            
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+              <h3 style="margin: 0 0 15px 0; color: #667eea;">${
+                isVietnamese ? "Chi tiết đơn hàng" : "Order Details"
+              }</h3>
+              <p style="margin: 5px 0;"><strong>${isVietnamese ? "Mã đơn" : "Order ID"}:</strong> ${order._id}</p>
+              <p style="margin: 5px 0;"><strong>${
+                isVietnamese ? "Mã đơn ngắn" : "Short ID"
+              }:</strong> #${orderNumber}</p>
+              <p style="margin: 5px 0;"><strong>${
+                isVietnamese ? "Tổng tiền" : "Total"
+              }:</strong> <span style="color: #667eea; font-size: 18px; font-weight: bold;">${order.total.toLocaleString()}₫</span></p>
+              <p style="margin: 5px 0;"><strong>${
+                isVietnamese ? "Phương thức thanh toán" : "Payment method"
+              }:</strong> ${
+        order.paymentMethod === "cod"
+          ? isVietnamese
+            ? "COD - Thanh toán khi nhận hàng"
+            : "Cash on Delivery"
+          : order.paymentMethod
+      }</p>
+            </div>
+            
+            <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; border-radius: 4px;">
+              <p style="margin: 0; color: #856404;">
+                <strong>💡 ${isVietnamese ? "Lưu ý" : "Note"}:</strong> ${
+        isVietnamese
+          ? "Vui lòng liên hệ khách hàng để xác nhận và xử lý đơn hàng."
+          : "Please contact the customer to confirm and process the order."
+      }
+              </p>
+            </div>
+          </div>
+        </body>
+        </html>
       `,
     });
 
