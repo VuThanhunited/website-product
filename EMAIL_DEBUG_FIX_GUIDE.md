@@ -9,6 +9,7 @@ Email xác nhận đơn hàng có vẻ như chỉ gửi về `vtu21102000@gmail.
 ### 1. **Gmail SMTP Limitations**
 
 Khi sử dụng Gmail SMTP với Nodemailer (hiện tại):
+
 - Email được gửi **FROM**: `vtu21102000@gmail.com`
 - Email được gửi **TO**: `order.customerInfo.email` (đúng!)
 - **NHƯNG**: Gmail có các giới hạn:
@@ -19,15 +20,16 @@ Khi sử dụng Gmail SMTP với Nodemailer (hiện tại):
 ### 2. **Code Đúng Nhưng Configuration Sai**
 
 Code trong tất cả các file email service đều ĐÚNG:
+
 ```javascript
 // emailService.js
-to: order.customerInfo.email  // ✅ Đúng
+to: order.customerInfo.email; // ✅ Đúng
 
-// emailServiceResend.js  
-to: [order.customerInfo.email]  // ✅ Đúng
+// emailServiceResend.js
+to: [order.customerInfo.email]; // ✅ Đúng
 
 // emailServiceSendGrid.js
-to: order.customerInfo.email  // ✅ Đúng
+to: order.customerInfo.email; // ✅ Đúng
 ```
 
 ### 3. **Không Có RESEND_API_KEY**
@@ -39,17 +41,20 @@ File `.env` hiện tại không có `RESEND_API_KEY`, nên hệ thống đang fa
 ### **Giải pháp 1: Sử dụng Resend (Recommended)**
 
 1. **Đăng ký Resend** (miễn phí):
+
    - Truy cập: https://resend.com
    - Đăng ký tài khoản
    - Verify domain của bạn (hoặc dùng test domain)
    - Lấy API Key
 
 2. **Thêm vào `.env`**:
+
    ```env
    RESEND_API_KEY=re_your_actual_api_key_here
    ```
 
 3. **Restart server**:
+
    ```bash
    npm start
    ```
@@ -65,6 +70,7 @@ File `.env` hiện tại không có `RESEND_API_KEY`, nên hệ thống đang fa
 Để kiểm tra email có thực sự gửi đến đúng địa chỉ không:
 
 1. **Kiểm tra server logs** khi tạo order:
+
    ```
    📧 EMAIL DETAILS:
    FROM: vtu21102000@gmail.com
@@ -72,6 +78,7 @@ File `.env` hiện tại không có `RESEND_API_KEY`, nên hệ thống đang fa
    ```
 
 2. **Test với email thật**:
+
    - Nhập email của bạn (Gmail, Outlook, Yahoo)
    - Tạo order test
    - Kiểm tra inbox (và spam folder)
@@ -84,6 +91,7 @@ File `.env` hiện tại không có `RESEND_API_KEY`, nên hệ thống đang fa
 ### **Giải pháp 3: Verify Email Configuration**
 
 1. **Kiểm tra email khách hàng có hợp lệ không**:
+
    ```javascript
    // Frontend validation
    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -102,6 +110,7 @@ File `.env` hiện tại không có `RESEND_API_KEY`, nên hệ thống đang fa
 ### 1. Check Server Console
 
 Khi tạo order, xem trong console:
+
 ```
 📧 EMAIL DETAILS:
 FROM: vtu21102000@gmail.com
@@ -111,6 +120,7 @@ TO: [Email Address Here]  ← Địa chỉ này phải là email khách hàng
 ### 2. Check Gmail Sent Folder
 
 Vào Gmail `vtu21102000@gmail.com`:
+
 - Mở **Sent** folder
 - Tìm email vừa gửi
 - Xem **TO:** field có đúng địa chỉ khách hàng không
@@ -118,17 +128,18 @@ Vào Gmail `vtu21102000@gmail.com`:
 ### 3. Check Customer Email
 
 Yêu cầu khách hàng:
+
 - Kiểm tra **Inbox**
 - Kiểm tra **Spam/Junk** folder
 - Kiểm tra email có bị filter không
 
 ## 📊 Comparison: Email Services
 
-| Service | Pros | Cons | Cost |
-|---------|------|------|------|
-| **Gmail SMTP** | Free, Easy setup | Limited, Low deliverability, Branded as personal | Free |
-| **Resend** | High deliverability, Modern, Good docs | Need API key | Free tier: 3k emails/month |
-| **SendGrid** | Reliable, Industry standard | Complex setup | Free tier: 100 emails/day |
+| Service        | Pros                                   | Cons                                             | Cost                       |
+| -------------- | -------------------------------------- | ------------------------------------------------ | -------------------------- |
+| **Gmail SMTP** | Free, Easy setup                       | Limited, Low deliverability, Branded as personal | Free                       |
+| **Resend**     | High deliverability, Modern, Good docs | Need API key                                     | Free tier: 3k emails/month |
+| **SendGrid**   | Reliable, Industry standard            | Complex setup                                    | Free tier: 100 emails/day  |
 
 ## 🎯 Recommended Action
 
