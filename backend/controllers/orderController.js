@@ -1,41 +1,23 @@
 const Order = require("../models/Order");
 const Product = require("../models/Product");
 
-// Use Resend as primary, fallback to others
-let emailService;
-try {
-  if (process.env.RESEND_API_KEY) {
-    emailService = require("../services/emailServiceResend");
-    console.log("✅ Using Resend for email service");
-  } else if (process.env.SENDGRID_API_KEY) {
-    emailService = require("../services/emailServiceSendGrid");
-    console.log("Using SendGrid for email service");
-  } else {
-    emailService = require("../services/emailService");
-    console.log("Using Nodemailer for email service");
-  }
-} catch (error) {
-  emailService = require("../services/emailService");
-  console.log("Fallback to Nodemailer for email service");
-}
+// WORKAROUND: Use Gmail SMTP for customer emails (no test mode restrictions)
+// Use Resend only for admin notifications
+const gmailService = require("../services/emailService"); // Gmail SMTP - no restrictions
+const resendService = process.env.RESEND_API_KEY ? require("../services/emailServiceResend") : null;
 
-const { sendOrderConfirmationEmail, sendAdminNotificationEmail } = emailService;
+console.log("✅ Email Configuration:");
+console.log("   Customer emails: Gmail SMTP (no test mode)");
+console.log("   Admin emails:", resendService ? "Resend" : "Gmail SMTP");
+
+const { sendOrderConfirmationEmail: sendCustomerEmail, sendAdminNotificationEmail: sendAdminEmail } = gmailService;
 
 // Create a new order
 exports.createOrder = async (req, res) => {
   try {
     console.log("📦 Received order data:", JSON.stringify(req.body, null, 2));
 
-    const {
-      customerInfo,
-      items,
-      subtotal,
-      shippingFee,
-      total,
-      paymentMethod,
-      status,
-      language,
-    } = req.body;
+    const { customerInfo, items, subtotal, shippingFee, total, paymentMethod, status, language } = req.body;
 
     // Validate required fields
     if (
@@ -87,12 +69,7 @@ exports.createOrder = async (req, res) => {
 
     // Validate items
     for (const item of items) {
-      if (
-        !item.productId ||
-        !item.productName ||
-        !item.quantity ||
-        !item.price
-      ) {
+      if (!item.productId || !item.productName || !item.quantity || !item.price) {
         return res.status(400).json({
           success: false,
           message: "Invalid item data",
@@ -103,15 +80,11 @@ exports.createOrder = async (req, res) => {
       try {
         const product = await Product.findById(item.productId);
         if (!product) {
-          console.log(
-            `⚠️  Product ${item.productName} not found in database, but order will proceed`
-          );
+          console.log(`⚠️  Product ${item.productName} not found in database, but order will proceed`);
         }
       } catch (err) {
         // Invalid ObjectId format, skip validation
-        console.log(
-          `⚠️  Invalid product ID format for ${item.productName}, but order will proceed`
-        );
+        console.log(`⚠️  Invalid product ID format for ${item.productName}, but order will proceed`);
       }
     }
 
@@ -141,24 +114,25 @@ exports.createOrder = async (req, res) => {
     await order.save();
     console.log("✅ Order saved to database:", order._id);
 
-    // Gửi email xác nhận cho khách hàng (không chặn response)
-    console.log("📧 Initiating customer email...");
-    sendOrderConfirmationEmail(order, language || "vi")
+    // Gửi email xác nhận cho khách hàng qua Gmail SMTP (không có giới hạn)
+    console.log("📧 Sending customer confirmation email via Gmail SMTP...");
+    console.log("   To:", order.customerInfo.email);
+    sendCustomerEmail(order, language || "vi")
       .then((result) => {
         if (result.success) {
-          console.log("✅ Customer email sent successfully");
+          console.log("✅ Customer email sent successfully to:", order.customerInfo.email);
           console.log("   Message ID:", result.messageId);
         } else {
           console.log("⚠️ Failed to send customer email:", result.error);
         }
       })
       .catch((err) => {
-        console.error("❌ Email error:", err.message || err);
+        console.error("❌ Customer email error:", err.message || err);
       });
 
-    // Gửi email thông báo cho admin (không chặn response)
-    console.log("📧 Initiating admin notification...");
-    sendAdminNotificationEmail(order, language || "vi")
+    // Gửi email thông báo cho admin
+    console.log("📧 Sending admin notification...");
+    sendAdminEmail(order, language || "vi")
       .then((result) => {
         if (result.success) {
           console.log("✅ Admin notification sent successfully");
@@ -321,9 +295,7 @@ exports.getOrderByNumber = async (req, res) => {
   try {
     const { orderNumber } = req.params;
 
-    const order = await Order.findOne({ orderNumber }).populate(
-      "items.productId"
-    );
+    const order = await Order.findOne({ orderNumber }).populate("items.productId");
 
     if (!order) {
       return res.status(404).json({
