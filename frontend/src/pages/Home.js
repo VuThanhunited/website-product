@@ -155,7 +155,11 @@ const Home = () => {
                 currentPage * articlesPerPage
               )
               .map((article, index) => (
-                <div key={index} className="tech-article-card">
+                <Link
+                  to={`/tech-articles/${article.slug}`}
+                  key={index}
+                  className="tech-article-card"
+                >
                   {article.thumbnail && (
                     <div className="tech-article-image">
                       <LazyImage
@@ -177,26 +181,18 @@ const Home = () => {
                     <p className="tech-article-excerpt">
                       {language === "en" && article.contentEn
                         ? article.contentEn
-                        : article.content}
+                            .replace(/<[^>]*>/g, "")
+                            .substring(0, 150)
+                        : article.content
+                            .replace(/<[^>]*>/g, "")
+                            .substring(0, 150)}
+                      ...
                     </p>
-                    {article.link && (
-                      <a
-                        href={article.link}
-                        className="tech-article-read-more"
-                        target={
-                          article.link.startsWith("http") ? "_blank" : "_self"
-                        }
-                        rel={
-                          article.link.startsWith("http")
-                            ? "noopener noreferrer"
-                            : undefined
-                        }
-                      >
-                        {language === "vi" ? "Xem chi tiết →" : "Read more →"}
-                      </a>
-                    )}
+                    <span className="tech-article-read-more">
+                      {language === "vi" ? "Xem chi tiết →" : "Read more →"}
+                    </span>
                   </div>
-                </div>
+                </Link>
               ))}
           </div>
 

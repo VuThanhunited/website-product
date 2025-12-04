@@ -16,6 +16,7 @@ const Products = lazy(() => import("./pages/Products"));
 const ProductDetail = lazy(() => import("./pages/ProductDetail"));
 const Support = lazy(() => import("./pages/Support"));
 const SupportDetail = lazy(() => import("./pages/SupportDetail"));
+const TechArticleDetail = lazy(() => import("./pages/TechArticleDetail"));
 const Contact = lazy(() => import("./pages/Contact"));
 const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
@@ -42,6 +43,10 @@ function App() {
                     <Route path="/products/:slug" element={<ProductDetail />} />
                     <Route path="/support" element={<Support />} />
                     <Route path="/support/:slug" element={<SupportDetail />} />
+                    <Route
+                      path="/tech-articles/:slug"
+                      element={<TechArticleDetail />}
+                    />
                     <Route path="/contact" element={<Contact />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
