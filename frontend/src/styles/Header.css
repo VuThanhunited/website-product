@@ -464,9 +464,11 @@
     overflow-y: auto;
     transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 4px 0 30px rgba(0, 0, 0, 0.5);
-    padding: 20px 0;
+    padding: 0;
     z-index: 1000;
     border-radius: 0 0 12px 0;
+    display: flex;
+    justify-content: flex-start;
   }
 
   .nav-menu.active {
