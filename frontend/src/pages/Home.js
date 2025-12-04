@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Slider from "react-slick";
 import { Link } from "react-router-dom";
-import { getProducts, getSlogans } from "../services/api";
+import { getProducts, getSupportArticles } from "../services/api";
 import { useLanguage } from "../contexts/LanguageContext";
 import { translations } from "../utils/translations";
 import LazyImage from "../components/LazyImage";
@@ -9,11 +9,14 @@ import "../styles/Home.css";
 
 const Home = () => {
   const [slides, setSlides] = useState([]);
-  const [slogans, setSlogans] = useState([]);
+  const [techArticles, setTechArticles] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const [homeContent, setHomeContent] = useState(null);
   const [loading, setLoading] = useState(true);
   const { language } = useLanguage();
   const t = translations[language];
+  const articlesPerPage = 6;
 
   useEffect(() => {
     fetchHomeData();
@@ -21,10 +24,10 @@ const Home = () => {
 
   const fetchHomeData = async () => {
     try {
-      const [productsResponse, slogansResponse, contentResponse] =
+      const [productsResponse, articlesResponse, contentResponse] =
         await Promise.all([
           getProducts(),
-          getSlogans(),
+          getSupportArticles(),
           fetch(
             `${
               process.env.REACT_APP_API_URL || "http://localhost:5000/api"
@@ -44,7 +47,10 @@ const Home = () => {
       ].slice(0, 6);
 
       setSlides(selectedProducts);
-      setSlogans(slogansResponse.data);
+      setTechArticles(articlesResponse.data || []);
+      setTotalPages(
+        Math.ceil((articlesResponse.data || []).length / articlesPerPage)
+      );
       setHomeContent(contentResponse);
     } catch (error) {
       console.error("Error fetching home data:", error);
@@ -125,19 +131,53 @@ const Home = () => {
         )}
       </section>
 
-      {/* Phần slogan */}
-      <section className="slogan-section">
+      {/* Phần Thông tin công nghệ kỹ thuật */}
+      <section className="tech-articles-section">
         <div className="container">
-          {slogans.map((slogan, index) => {
-            const displayText =
-              language === "en" && slogan.textEn ? slogan.textEn : slogan.text;
-
-            return (
-              <div key={index} className="slogan-item">
-                <h2>{displayText}</h2>
-              </div>
-            );
-          })}
+          <h2 className="section-title">
+            {language === "vi" ? "Thông tin công nghệ kỹ thuật" : "Technical Information"}
+          </h2>
+          <div className="tech-articles-grid">
+            {techArticles
+              .slice((currentPage - 1) * articlesPerPage, currentPage * articlesPerPage)
+              .map((article) => (
+                <Link
+                  to={`/support/${article.slug}`}
+                  key={article._id}
+                  className="tech-article-card"
+                >
+                  <div className="tech-article-icon">📄</div>
+                  <h3 className="tech-article-title">
+                    {language === "en" && article.titleEn
+                      ? article.titleEn
+                      : article.title}
+                  </h3>
+                  <p className="tech-article-excerpt">
+                    {language === "en" && article.contentEn
+                      ? article.contentEn.substring(0, 100)
+                      : article.content.substring(0, 100)}...
+                  </p>
+                  <span className="tech-article-read-more">
+                    {language === "vi" ? "Xem chi tiết →" : "Read more →"}
+                  </span>
+                </Link>
+              ))}
+          </div>
+          
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="pagination">
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                <button
+                  key={page}
+                  className={`pagination-btn ${currentPage === page ? "active" : ""}`}
+                  onClick={() => setCurrentPage(page)}
+                >
+                  {page}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
