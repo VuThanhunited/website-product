@@ -24,14 +24,20 @@ const Home = () => {
 
   const fetchHomeData = async () => {
     try {
-      const [productsResponse, contentResponse] = await Promise.all([
-        getProducts(),
-        fetch(
-          `${
-            process.env.REACT_APP_API_URL || "http://localhost:5000/api"
-          }/home-content`
-        ).then((res) => res.json()),
-      ]);
+      const [productsResponse, contentResponse, techArticlesResponse] =
+        await Promise.all([
+          getProducts(),
+          fetch(
+            `${
+              process.env.REACT_APP_API_URL || "http://localhost:5000/api"
+            }/home-content`
+          ).then((res) => res.json()),
+          fetch(
+            `${
+              process.env.REACT_APP_API_URL || "http://localhost:5000/api"
+            }/tech-articles?limit=100`
+          ).then((res) => res.json()),
+        ]);
       // Lấy 6 sản phẩm featured hoặc 6 sản phẩm đầu tiên có hình ảnh
       const productsWithImages = productsResponse.data.filter(
         (product) => product.images && product.images.length > 0
@@ -46,8 +52,8 @@ const Home = () => {
 
       setSlides(selectedProducts);
 
-      // Use tech articles from homeContent instead of support articles
-      const articles = contentResponse.techArticles || [];
+      // Use tech articles from API
+      const articles = techArticlesResponse.articles || [];
       setTechArticles(articles);
       setTotalPages(Math.ceil(articles.length / articlesPerPage));
       setHomeContent(contentResponse);

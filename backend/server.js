@@ -87,11 +87,13 @@ const homePageContentRoutes = require("./routes/homePageContentRoutes");
 const companyPageContentRoutes = require("./routes/companyPageContentRoutes");
 const paymentQRRoutes = require("./routes/paymentQRRoutes");
 const seedRoutes = require("./routes/seedRoutes");
+const techArticleRoutes = require("./routes/techArticleRoutes");
 
 // Use Routes
 app.use("/api/products", productRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/support", supportRoutes);
+app.use("/api/tech-articles", techArticleRoutes);
 app.use("/api/company", companyRoutes);
 app.use("/api/media", mediaRoutes);
 app.use("/api/contact", contactRoutes);
