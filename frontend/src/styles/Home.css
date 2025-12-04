@@ -9,6 +9,21 @@
   background-color: #000;
 }
 
+.slideshow-title-wrapper {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 30px 0;
+  text-align: center;
+}
+
+.slideshow-title {
+  color: white;
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
 .loading {
   display: flex;
   align-items: center;
@@ -437,6 +452,15 @@
 @media (max-width: 768px) {
   .hero-slideshow-section {
     margin: 0;
+  }
+
+  .slideshow-title-wrapper {
+    padding: 20px 0;
+  }
+
+  .slideshow-title {
+    font-size: clamp(1.3rem, 5vw, 1.8rem);
+    letter-spacing: 1px;
   }
 
   .loading,

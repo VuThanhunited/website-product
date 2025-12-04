@@ -134,6 +134,12 @@ function AdminHomeContent() {
 
       <div className="admin-tabs">
         <button
+          className={activeTab === "titles" ? "active" : ""}
+          onClick={() => setActiveTab("titles")}
+        >
+          Tiêu Đề Trang
+        </button>
+        <button
           className={activeTab === "features" ? "active" : ""}
           onClick={() => setActiveTab("features")}
         >
@@ -152,6 +158,88 @@ function AdminHomeContent() {
           Call To Action
         </button>
       </div>
+
+      {activeTab === "titles" && (
+        <div className="admin-section">
+          <h2>Tiêu Đề Các Phần</h2>
+
+          <div className="content-item">
+            <h3>Tiêu Đề Slideshow</h3>
+            <div className="form-group">
+              <label>Tiêu đề (Tiếng Việt)</label>
+              <input
+                type="text"
+                value={content.slideshowTitle?.title || ""}
+                onChange={(e) =>
+                  setContent({
+                    ...content,
+                    slideshowTitle: {
+                      ...content.slideshowTitle,
+                      title: e.target.value,
+                    },
+                  })
+                }
+                placeholder="VD: Sản Phẩm Nổi Bật"
+              />
+            </div>
+            <div className="form-group">
+              <label>Tiêu đề (English)</label>
+              <input
+                type="text"
+                value={content.slideshowTitle?.titleEn || ""}
+                onChange={(e) =>
+                  setContent({
+                    ...content,
+                    slideshowTitle: {
+                      ...content.slideshowTitle,
+                      titleEn: e.target.value,
+                    },
+                  })
+                }
+                placeholder="VD: Featured Products"
+              />
+            </div>
+          </div>
+
+          <div className="content-item">
+            <h3>Tiêu Đề Thông Tin Công Nghệ Kỹ Thuật</h3>
+            <div className="form-group">
+              <label>Tiêu đề (Tiếng Việt)</label>
+              <input
+                type="text"
+                value={content.techArticlesTitle?.title || ""}
+                onChange={(e) =>
+                  setContent({
+                    ...content,
+                    techArticlesTitle: {
+                      ...content.techArticlesTitle,
+                      title: e.target.value,
+                    },
+                  })
+                }
+                placeholder="VD: Thông Tin Công Nghệ Kỹ Thuật"
+              />
+            </div>
+            <div className="form-group">
+              <label>Tiêu đề (English)</label>
+              <input
+                type="text"
+                value={content.techArticlesTitle?.titleEn || ""}
+                onChange={(e) =>
+                  setContent({
+                    ...content,
+                    techArticlesTitle: {
+                      ...content.techArticlesTitle,
+                      titleEn: e.target.value,
+                    },
+                  })
+                }
+                placeholder="VD: Technical Information"
+              />
+            </div>
+          </div>
+        </div>
+      )}
 
       {activeTab === "features" && (
         <div className="admin-section">

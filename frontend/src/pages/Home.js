@@ -76,6 +76,15 @@ const Home = () => {
     <div className="home-page">
       {/* Slideshow chiếm toàn bộ width */}
       <section className="hero-slideshow-section">
+        {homeContent && homeContent.slideshowTitle && (
+          <div className="slideshow-title-wrapper">
+            <h2 className="slideshow-title">
+              {language === "en" && homeContent.slideshowTitle.titleEn
+                ? homeContent.slideshowTitle.titleEn
+                : homeContent.slideshowTitle.title}
+            </h2>
+          </div>
+        )}
         {loading ? (
           <div className="loading">{t.loading}</div>
         ) : slides.length > 0 ? (
@@ -135,11 +144,20 @@ const Home = () => {
       <section className="tech-articles-section">
         <div className="container">
           <h2 className="section-title">
-            {language === "vi" ? "Thông tin công nghệ kỹ thuật" : "Technical Information"}
+            {homeContent && homeContent.techArticlesTitle
+              ? language === "en" && homeContent.techArticlesTitle.titleEn
+                ? homeContent.techArticlesTitle.titleEn
+                : homeContent.techArticlesTitle.title
+              : language === "vi"
+              ? "Thông tin công nghệ kỹ thuật"
+              : "Technical Information"}
           </h2>
           <div className="tech-articles-grid">
             {techArticles
-              .slice((currentPage - 1) * articlesPerPage, currentPage * articlesPerPage)
+              .slice(
+                (currentPage - 1) * articlesPerPage,
+                currentPage * articlesPerPage
+              )
               .map((article) => (
                 <Link
                   to={`/support/${article.slug}`}
@@ -155,7 +173,8 @@ const Home = () => {
                   <p className="tech-article-excerpt">
                     {language === "en" && article.contentEn
                       ? article.contentEn.substring(0, 100)
-                      : article.content.substring(0, 100)}...
+                      : article.content.substring(0, 100)}
+                    ...
                   </p>
                   <span className="tech-article-read-more">
                     {language === "vi" ? "Xem chi tiết →" : "Read more →"}
@@ -163,19 +182,23 @@ const Home = () => {
                 </Link>
               ))}
           </div>
-          
+
           {/* Pagination */}
           {totalPages > 1 && (
             <div className="pagination">
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                <button
-                  key={page}
-                  className={`pagination-btn ${currentPage === page ? "active" : ""}`}
-                  onClick={() => setCurrentPage(page)}
-                >
-                  {page}
-                </button>
-              ))}
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                (page) => (
+                  <button
+                    key={page}
+                    className={`pagination-btn ${
+                      currentPage === page ? "active" : ""
+                    }`}
+                    onClick={() => setCurrentPage(page)}
+                  >
+                    {page}
+                  </button>
+                )
+              )}
             </div>
           )}
         </div>

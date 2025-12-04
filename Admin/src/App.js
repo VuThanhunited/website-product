@@ -38,7 +38,6 @@ const AdminMedia = lazy(() => import("./pages/AdminMedia"));
 const AdminMessages = lazy(() => import("./pages/AdminMessages"));
 const AdminSupport = lazy(() => import("./pages/AdminSupport"));
 const AdminCompany = lazy(() => import("./pages/AdminCompany"));
-const AdminSlogans = lazy(() => import("./pages/AdminSlogans"));
 const AdminOrders = lazy(() => import("./pages/AdminOrders"));
 const AdminPartners = lazy(() => import("./pages/AdminPartners"));
 const AdminUsers = lazy(() => import("./pages/AdminUsers"));
@@ -184,8 +183,8 @@ function App() {
                     <Link to="/media" className="nav-item">
                       <FaImages /> Quản Lý Media
                     </Link>
-                    <Link to="/slogans" className="nav-item">
-                      <FaCommentDots /> Quản Lý Slogan
+                    <Link to="/support" className="nav-item">
+                      <FaQuestionCircle /> Thông Tin Công Nghệ Kỹ Thuật
                     </Link>
                     <Link to="/company" className="nav-item">
                       <FaBuilding /> Thông Tin Công Ty
@@ -229,7 +228,7 @@ function App() {
                       <Route path="/payment-qr" element={<AdminPaymentQR />} />
                       <Route path="/users" element={<AdminUsers />} />
                       <Route path="/media" element={<AdminMedia />} />
-                      <Route path="/slogans" element={<AdminSlogans />} />
+                      <Route path="/support" element={<AdminSupport />} />
                       <Route path="/company" element={<AdminCompany />} />
                       <Route
                         path="/home-content"
