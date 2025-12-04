@@ -297,10 +297,10 @@
   }
 
   .product-card img {
-    height: 180px;
+    height: 220px;
     object-fit: contain;
     background: #f8f9fa;
-    padding: 8px;
+    padding: 12px;
   }
 
   .products-grid.list .product-card {

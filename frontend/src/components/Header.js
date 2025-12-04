@@ -176,13 +176,27 @@ const Header = () => {
 
       <nav className="navbar">
         <div className="container">
-          <button className="menu-toggle" onClick={toggleMenu}>
-            {menuOpen ? <FaTimes /> : <FaBars />}
+          <button
+            className={`menu-toggle ${menuOpen ? "active" : ""}`}
+            onClick={toggleMenu}
+            aria-label="Toggle menu"
+          >
+            <span></span>
+            <span></span>
+            <span></span>
           </button>
           <ul className={`nav-menu ${menuOpen ? "active" : ""}`}>
             {menuItems.map((item, index) => (
               <li key={index}>
-                <Link to={menuLinks[index]} onClick={() => setMenuOpen(false)}>
+                <Link
+                  to={menuLinks[index]}
+                  onClick={() => setMenuOpen(false)}
+                  className={
+                    window.location.pathname === menuLinks[index]
+                      ? "active"
+                      : ""
+                  }
+                >
                   {item}
                 </Link>
               </li>
