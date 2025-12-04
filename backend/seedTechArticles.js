@@ -4,9 +4,7 @@ const path = require("path");
 require("dotenv").config();
 
 // Load data from JSON file
-const techArticlesData = JSON.parse(
-  fs.readFileSync(path.join(__dirname, "data", "techArticles.json"), "utf8")
-);
+const techArticlesData = JSON.parse(fs.readFileSync(path.join(__dirname, "data", "techArticles.json"), "utf8"));
 
 async function seedTechArticles() {
   try {
