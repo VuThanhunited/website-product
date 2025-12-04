@@ -164,16 +164,16 @@ function AdminHomeContent() {
 
       <div className="admin-tabs">
         <button
-          className={activeTab === "titles" ? "active" : ""}
-          onClick={() => setActiveTab("titles")}
-        >
-          Tiêu Đề Trang
-        </button>
-        <button
           className={activeTab === "features" ? "active" : ""}
           onClick={() => setActiveTab("features")}
         >
           Tính Năng
+        </button>
+        <button
+          className={activeTab === "techArticles" ? "active" : ""}
+          onClick={() => setActiveTab("techArticles")}
+        >
+          Thông Tin Công Nghệ Kỹ Thuật
         </button>
         <button
           className={activeTab === "whyChooseUs" ? "active" : ""}
