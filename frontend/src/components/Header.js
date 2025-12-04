@@ -121,6 +121,7 @@ const Header = () => {
                 />
               </Link>
               <div className="company-details">
+                <h2 className="company-name">{companyInfo?.companyName || "EFT Technology"}</h2>
                 <p className="address">📍 {companyInfo?.address}</p>
                 <p className="phone">📞 {companyInfo?.phone}</p>
               </div>

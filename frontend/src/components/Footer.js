@@ -38,6 +38,7 @@ const Footer = () => {
               alt={companyInfo?.companyName || "EFT Technology"}
               className="footer-logo"
             />
+            <h3>{companyInfo?.companyName || "EFT Technology"}</h3>
             <p>{companyInfo?.address}</p>
             <p>
               {t.phone}: {companyInfo?.phone}
