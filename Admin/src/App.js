@@ -183,14 +183,11 @@ function App() {
                     <Link to="/media" className="nav-item">
                       <FaImages /> Quản Lý Media
                     </Link>
-                    <Link to="/support" className="nav-item">
+                    <Link to="/home-content" className="nav-item">
                       <FaQuestionCircle /> Thông Tin Công Nghệ Kỹ Thuật
                     </Link>
                     <Link to="/company" className="nav-item">
                       <FaBuilding /> Thông Tin Công Ty
-                    </Link>
-                    <Link to="/home-content" className="nav-item">
-                      <FaImages /> Nội Dung Trang Chủ
                     </Link>
                     <Link to="/company-content" className="nav-item">
                       <FaBuilding /> Nội Dung Trang Công Ty

@@ -336,14 +336,11 @@
 .tech-article-card {
   background: white;
   border-radius: 12px;
-  padding: 30px;
-  text-decoration: none;
-  color: inherit;
+  overflow: hidden;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
   transition: all 0.3s ease;
   display: flex;
   flex-direction: column;
-  gap: 15px;
   border: 2px solid transparent;
 }
 
@@ -353,10 +350,30 @@
   border-color: #667eea;
 }
 
-.tech-article-icon {
-  font-size: 3rem;
-  text-align: center;
-  margin-bottom: 10px;
+.tech-article-image {
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  background: #f0f0f0;
+}
+
+.tech-article-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.tech-article-card:hover .tech-article-image img {
+  transform: scale(1.05);
+}
+
+.tech-article-content {
+  padding: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  flex-grow: 1;
 }
 
 .tech-article-title {
@@ -380,6 +397,13 @@
   font-weight: 600;
   font-size: 0.9rem;
   margin-top: auto;
+  text-decoration: none;
+  display: inline-block;
+  transition: color 0.3s ease;
+}
+
+.tech-article-read-more:hover {
+  color: #764ba2;
 }
 
 /* Pagination */
@@ -551,7 +575,15 @@
   }
 
   .tech-article-card {
-    padding: clamp(1.5rem, 4vw, 2rem);
+    border-radius: 8px;
+  }
+
+  .tech-article-image {
+    height: 180px;
+  }
+
+  .tech-article-content {
+    padding: clamp(1.2rem, 3vw, 1.5rem);
   }
 
   .tech-article-title {

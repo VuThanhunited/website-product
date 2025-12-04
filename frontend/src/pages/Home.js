@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Slider from "react-slick";
 import { Link } from "react-router-dom";
-import { getProducts, getSupportArticles } from "../services/api";
+import { getProducts } from "../services/api";
 import { useLanguage } from "../contexts/LanguageContext";
 import { translations } from "../utils/translations";
 import LazyImage from "../components/LazyImage";
@@ -24,16 +24,14 @@ const Home = () => {
 
   const fetchHomeData = async () => {
     try {
-      const [productsResponse, articlesResponse, contentResponse] =
-        await Promise.all([
-          getProducts(),
-          getSupportArticles(),
-          fetch(
-            `${
-              process.env.REACT_APP_API_URL || "http://localhost:5000/api"
-            }/home-content`
-          ).then((res) => res.json()),
-        ]);
+      const [productsResponse, contentResponse] = await Promise.all([
+        getProducts(),
+        fetch(
+          `${
+            process.env.REACT_APP_API_URL || "http://localhost:5000/api"
+          }/home-content`
+        ).then((res) => res.json()),
+      ]);
       // Lấy 6 sản phẩm featured hoặc 6 sản phẩm đầu tiên có hình ảnh
       const productsWithImages = productsResponse.data.filter(
         (product) => product.images && product.images.length > 0
@@ -47,10 +45,11 @@ const Home = () => {
       ].slice(0, 6);
 
       setSlides(selectedProducts);
-      setTechArticles(articlesResponse.data || []);
-      setTotalPages(
-        Math.ceil((articlesResponse.data || []).length / articlesPerPage)
-      );
+      
+      // Use tech articles from homeContent instead of support articles
+      const articles = contentResponse.techArticles || [];
+      setTechArticles(articles);
+      setTotalPages(Math.ceil(articles.length / articlesPerPage));
       setHomeContent(contentResponse);
     } catch (error) {
       console.error("Error fetching home data:", error);
@@ -158,28 +157,49 @@ const Home = () => {
                 (currentPage - 1) * articlesPerPage,
                 currentPage * articlesPerPage
               )
-              .map((article) => (
-                <Link
-                  to={`/support/${article.slug}`}
-                  key={article._id}
-                  className="tech-article-card"
-                >
-                  <div className="tech-article-icon">📄</div>
-                  <h3 className="tech-article-title">
-                    {language === "en" && article.titleEn
-                      ? article.titleEn
-                      : article.title}
-                  </h3>
-                  <p className="tech-article-excerpt">
-                    {language === "en" && article.contentEn
-                      ? article.contentEn.substring(0, 100)
-                      : article.content.substring(0, 100)}
-                    ...
-                  </p>
-                  <span className="tech-article-read-more">
-                    {language === "vi" ? "Xem chi tiết →" : "Read more →"}
-                  </span>
-                </Link>
+              .map((article, index) => (
+                <div key={index} className="tech-article-card">
+                  {article.thumbnail && (
+                    <div className="tech-article-image">
+                      <LazyImage
+                        src={article.thumbnail}
+                        alt={
+                          language === "en" && article.titleEn
+                            ? article.titleEn
+                            : article.title
+                        }
+                      />
+                    </div>
+                  )}
+                  <div className="tech-article-content">
+                    <h3 className="tech-article-title">
+                      {language === "en" && article.titleEn
+                        ? article.titleEn
+                        : article.title}
+                    </h3>
+                    <p className="tech-article-excerpt">
+                      {language === "en" && article.contentEn
+                        ? article.contentEn
+                        : article.content}
+                    </p>
+                    {article.link && (
+                      <a
+                        href={article.link}
+                        className="tech-article-read-more"
+                        target={
+                          article.link.startsWith("http") ? "_blank" : "_self"
+                        }
+                        rel={
+                          article.link.startsWith("http")
+                            ? "noopener noreferrer"
+                            : undefined
+                        }
+                      >
+                        {language === "vi" ? "Xem chi tiết →" : "Read more →"}
+                      </a>
+                    )}
+                  </div>
+                </div>
               ))}
           </div>
 
@@ -207,6 +227,15 @@ const Home = () => {
       {/* Features Section */}
       <section className="features-section">
         <div className="container">
+          <h2 className="section-title">
+            {homeContent && homeContent.featuresTitle
+              ? language === "en" && homeContent.featuresTitle.titleEn
+                ? homeContent.featuresTitle.titleEn
+                : homeContent.featuresTitle.title
+              : language === "vi"
+              ? "Tính Năng Nổi Bật"
+              : "Outstanding Features"}
+          </h2>
           <div className="features-grid">
             {homeContent &&
             homeContent.features &&

@@ -108,6 +108,36 @@ function AdminHomeContent() {
     }
   };
 
+  const updateTechArticle = (index, field, value) => {
+    const newArticles = [...(content.techArticles || [])];
+    newArticles[index] = { ...newArticles[index], [field]: value };
+    setContent({ ...content, techArticles: newArticles });
+  };
+
+  const addTechArticle = () => {
+    const newArticle = {
+      title: "",
+      titleEn: "",
+      content: "",
+      contentEn: "",
+      thumbnail: "",
+      link: "",
+    };
+    setContent({
+      ...content,
+      techArticles: [...(content.techArticles || []), newArticle],
+    });
+  };
+
+  const removeTechArticle = (index) => {
+    if (window.confirm("Bạn có chắc muốn xóa bài viết này?")) {
+      const newArticles = (content.techArticles || []).filter(
+        (_, i) => i !== index
+      );
+      setContent({ ...content, techArticles: newArticles });
+    }
+  };
+
   const updateCTA = (field, value) => {
     setContent({
       ...content,
@@ -159,92 +189,234 @@ function AdminHomeContent() {
         </button>
       </div>
 
-      {activeTab === "titles" && (
+      {activeTab === "techArticles" && (
         <div className="admin-section">
-          <h2>Tiêu Đề Các Phần</h2>
+          <h2>Thông Tin Công Nghệ Kỹ Thuật</h2>
 
           <div className="content-item">
-            <h3>Tiêu Đề Slideshow</h3>
-            <div className="form-group">
-              <label>Tiêu đề (Tiếng Việt)</label>
-              <input
-                type="text"
-                value={content.slideshowTitle?.title || ""}
-                onChange={(e) =>
-                  setContent({
-                    ...content,
-                    slideshowTitle: {
-                      ...content.slideshowTitle,
-                      title: e.target.value,
-                    },
-                  })
-                }
-                placeholder="VD: Sản Phẩm Nổi Bật"
-              />
-            </div>
-            <div className="form-group">
-              <label>Tiêu đề (English)</label>
-              <input
-                type="text"
-                value={content.slideshowTitle?.titleEn || ""}
-                onChange={(e) =>
-                  setContent({
-                    ...content,
-                    slideshowTitle: {
-                      ...content.slideshowTitle,
-                      titleEn: e.target.value,
-                    },
-                  })
-                }
-                placeholder="VD: Featured Products"
-              />
+            <h3>Tiêu Đề Phần</h3>
+            <div className="form-row">
+              <div className="form-group">
+                <label>Tiêu đề (Tiếng Việt)</label>
+                <input
+                  type="text"
+                  value={content.techArticlesTitle?.title || ""}
+                  onChange={(e) =>
+                    setContent({
+                      ...content,
+                      techArticlesTitle: {
+                        ...content.techArticlesTitle,
+                        title: e.target.value,
+                      },
+                    })
+                  }
+                  placeholder="VD: Thông Tin Công Nghệ Kỹ Thuật"
+                />
+              </div>
+              <div className="form-group">
+                <label>Tiêu đề (English)</label>
+                <input
+                  type="text"
+                  value={content.techArticlesTitle?.titleEn || ""}
+                  onChange={(e) =>
+                    setContent({
+                      ...content,
+                      techArticlesTitle: {
+                        ...content.techArticlesTitle,
+                        titleEn: e.target.value,
+                      },
+                    })
+                  }
+                  placeholder="VD: Technical Information"
+                />
+              </div>
             </div>
           </div>
 
-          <div className="content-item">
-            <h3>Tiêu Đề Thông Tin Công Nghệ Kỹ Thuật</h3>
-            <div className="form-group">
-              <label>Tiêu đề (Tiếng Việt)</label>
-              <input
-                type="text"
-                value={content.techArticlesTitle?.title || ""}
-                onChange={(e) =>
-                  setContent({
-                    ...content,
-                    techArticlesTitle: {
-                      ...content.techArticlesTitle,
-                      title: e.target.value,
-                    },
-                  })
-                }
-                placeholder="VD: Thông Tin Công Nghệ Kỹ Thuật"
-              />
-            </div>
-            <div className="form-group">
-              <label>Tiêu đề (English)</label>
-              <input
-                type="text"
-                value={content.techArticlesTitle?.titleEn || ""}
-                onChange={(e) =>
-                  setContent({
-                    ...content,
-                    techArticlesTitle: {
-                      ...content.techArticlesTitle,
-                      titleEn: e.target.value,
-                    },
-                  })
-                }
-                placeholder="VD: Technical Information"
-              />
-            </div>
+          <div className="section-header">
+            <h3>Các Bài Viết</h3>
+            <button onClick={addTechArticle} className="btn-add">
+              ➕ Thêm Bài Viết
+            </button>
           </div>
+
+          {content.techArticles && content.techArticles.map((article, index) => (
+            <div key={index} className="content-item">
+              <div className="item-header">
+                <h3>Bài viết {index + 1}</h3>
+                <button
+                  onClick={() => removeTechArticle(index)}
+                  className="btn-remove"
+                >
+                  🗑️
+                </button>
+              </div>
+
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Tiêu đề (Tiếng Việt)</label>
+                  <input
+                    type="text"
+                    value={article.title}
+                    onChange={(e) =>
+                      updateTechArticle(index, "title", e.target.value)
+                    }
+                    placeholder="Tiêu đề bài viết"
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Title (English)</label>
+                  <input
+                    type="text"
+                    value={article.titleEn}
+                    onChange={(e) =>
+                      updateTechArticle(index, "titleEn", e.target.value)
+                    }
+                    placeholder="Article title"
+                  />
+                </div>
+              </div>
+
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Nội dung (Tiếng Việt)</label>
+                  <textarea
+                    rows="3"
+                    value={article.content}
+                    onChange={(e) =>
+                      updateTechArticle(index, "content", e.target.value)
+                    }
+                    placeholder="Mô tả ngắn về bài viết"
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Content (English)</label>
+                  <textarea
+                    rows="3"
+                    value={article.contentEn}
+                    onChange={(e) =>
+                      updateTechArticle(index, "contentEn", e.target.value)
+                    }
+                    placeholder="Short description"
+                  />
+                </div>
+              </div>
+
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Hình Ảnh (URL)</label>
+                  <input
+                    type="text"
+                    value={article.thumbnail}
+                    onChange={(e) =>
+                      updateTechArticle(index, "thumbnail", e.target.value)
+                    }
+                    placeholder="https://example.com/image.jpg"
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Link Chi Tiết</label>
+                  <input
+                    type="text"
+                    value={article.link}
+                    onChange={(e) =>
+                      updateTechArticle(index, "link", e.target.value)
+                    }
+                    placeholder="/support/article-slug hoặc URL đầy đủ"
+                  />
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       )}
 
       {activeTab === "features" && (
         <div className="admin-section">
+          <h2>Tiêu Đề & Tính Năng</h2>
+
+          <div className="content-item">
+            <h3>Tiêu Đề Slideshow</h3>
+            <div className="form-row">
+              <div className="form-group">
+                <label>Tiêu đề (Tiếng Việt)</label>
+                <input
+                  type="text"
+                  value={content.slideshowTitle?.title || ""}
+                  onChange={(e) =>
+                    setContent({
+                      ...content,
+                      slideshowTitle: {
+                        ...content.slideshowTitle,
+                        title: e.target.value,
+                      },
+                    })
+                  }
+                  placeholder="VD: Sản Phẩm Nổi Bật"
+                />
+              </div>
+              <div className="form-group">
+                <label>Tiêu đề (English)</label>
+                <input
+                  type="text"
+                  value={content.slideshowTitle?.titleEn || ""}
+                  onChange={(e) =>
+                    setContent({
+                      ...content,
+                      slideshowTitle: {
+                        ...content.slideshowTitle,
+                        titleEn: e.target.value,
+                      },
+                    })
+                  }
+                  placeholder="VD: Featured Products"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="content-item">
+            <h3>Tiêu Đề Tính Năng Nổi Bật</h3>
+            <div className="form-row">
+              <div className="form-group">
+                <label>Tiêu đề (Tiếng Việt)</label>
+                <input
+                  type="text"
+                  value={content.featuresTitle?.title || ""}
+                  onChange={(e) =>
+                    setContent({
+                      ...content,
+                      featuresTitle: {
+                        ...content.featuresTitle,
+                        title: e.target.value,
+                      },
+                    })
+                  }
+                  placeholder="VD: Tính Năng Nổi Bật"
+                />
+              </div>
+              <div className="form-group">
+                <label>Tiêu đề (English)</label>
+                <input
+                  type="text"
+                  value={content.featuresTitle?.titleEn || ""}
+                  onChange={(e) =>
+                    setContent({
+                      ...content,
+                      featuresTitle: {
+                        ...content.featuresTitle,
+                        titleEn: e.target.value,
+                      },
+                    })
+                  }
+                  placeholder="VD: Outstanding Features"
+                />
+              </div>
+            </div>
+          </div>
+
           <div className="section-header">
-            <h2>Tính Năng Nổi Bật</h2>
+            <h3>Danh Sách Tính Năng</h3>
             <button onClick={addFeature} className="btn-add">
               ➕ Thêm Tính Năng
             </button>
