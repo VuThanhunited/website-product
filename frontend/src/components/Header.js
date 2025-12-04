@@ -32,6 +32,32 @@ const Header = () => {
     fetchCompanyInfo();
   }, []);
 
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        menuOpen &&
+        !event.target.closest(".nav-menu") &&
+        !event.target.closest(".menu-toggle")
+      ) {
+        setMenuOpen(false);
+      }
+    };
+
+    // Lock body scroll when menu is open
+    if (menuOpen) {
+      document.body.style.overflow = "hidden";
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.body.style.overflow = "unset";
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.body.style.overflow = "unset";
+    };
+  }, [menuOpen]);
+
   const fetchCompanyInfo = async () => {
     try {
       const response = await getCompanyInfo();
@@ -185,6 +211,9 @@ const Header = () => {
             <span></span>
             <span></span>
           </button>
+          {menuOpen && (
+            <div className="menu-overlay" onClick={() => setMenuOpen(false)} />
+          )}
           <ul className={`nav-menu ${menuOpen ? "active" : ""}`}>
             {menuItems.map((item, index) => (
               <li key={index}>
