@@ -61,23 +61,28 @@ const techArticlesData = [
     title: "Hệ Thống Giám Sát Thông Minh",
     titleEn: "Smart Monitoring System",
     content: "Công nghệ IoT cho phép giám sát và điều khiển quy trình sản xuất từ xa, tối ưu hóa hiệu suất vận hành.",
-    contentEn: "IoT technology enables remote monitoring and control of production processes, optimizing operational efficiency.",
+    contentEn:
+      "IoT technology enables remote monitoring and control of production processes, optimizing operational efficiency.",
     thumbnail: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=600&fit=crop",
     link: "/support",
   },
   {
     title: "Công Nghệ Làm Sạch Không Khí",
     titleEn: "Air Purification Technology",
-    content: "Hệ thống lọc không khí công nghiệp loại bỏ các hạt bụi, khí độc hại, đảm bảo môi trường làm việc an toàn.",
-    contentEn: "Industrial air filtration systems remove dust particles and toxic gases, ensuring a safe working environment.",
+    content:
+      "Hệ thống lọc không khí công nghiệp loại bỏ các hạt bụi, khí độc hại, đảm bảo môi trường làm việc an toàn.",
+    contentEn:
+      "Industrial air filtration systems remove dust particles and toxic gases, ensuring a safe working environment.",
     thumbnail: "https://images.unsplash.com/photo-1497436072909-60f360e1d4b1?w=800&h=600&fit=crop",
     link: "/support",
   },
   {
     title: "Quản Lý Chuỗi Cung Ứng Thông Minh",
     titleEn: "Smart Supply Chain Management",
-    content: "Giải pháp số hóa chuỗi cung ứng giúp theo dõi và tối ưu hóa toàn bộ quy trình từ nguyên liệu đến sản phẩm.",
-    contentEn: "Digital supply chain solutions help track and optimize the entire process from raw materials to finished products.",
+    content:
+      "Giải pháp số hóa chuỗi cung ứng giúp theo dõi và tối ưu hóa toàn bộ quy trình từ nguyên liệu đến sản phẩm.",
+    contentEn:
+      "Digital supply chain solutions help track and optimize the entire process from raw materials to finished products.",
     thumbnail: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800&h=600&fit=crop",
     link: "/support",
   },

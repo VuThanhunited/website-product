@@ -2,6 +2,18 @@ const mongoose = require("mongoose");
 
 const homePageContentSchema = new mongoose.Schema(
   {
+    // Slideshow Title
+    slideshowTitle: {
+      title: { type: String, default: "Sản Phẩm Nổi Bật" },
+      titleEn: { type: String, default: "Featured Products" },
+    },
+
+    // Features Title
+    featuresTitle: {
+      title: { type: String, default: "Tính Năng Nổi Bật" },
+      titleEn: { type: String, default: "Outstanding Features" },
+    },
+
     // Features Section
     features: [
       {
@@ -11,6 +23,24 @@ const homePageContentSchema = new mongoose.Schema(
         description: { type: String, default: "" },
         descriptionEn: { type: String, default: "" },
         order: { type: Number, default: 0 },
+      },
+    ],
+
+    // Tech Articles Title
+    techArticlesTitle: {
+      title: { type: String, default: "Thông tin công nghệ kỹ thuật" },
+      titleEn: { type: String, default: "Technical Information" },
+    },
+
+    // Tech Articles Section
+    techArticles: [
+      {
+        title: { type: String, default: "" },
+        titleEn: { type: String, default: "" },
+        content: { type: String, default: "" },
+        contentEn: { type: String, default: "" },
+        thumbnail: { type: String, default: "" },
+        link: { type: String, default: "" },
       },
     ],
 
