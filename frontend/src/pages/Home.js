@@ -75,15 +75,6 @@ const Home = () => {
     <div className="home-page">
       {/* Slideshow chiếm toàn bộ width */}
       <section className="hero-slideshow-section">
-        {homeContent && homeContent.slideshowTitle && (
-          <div className="slideshow-title-wrapper">
-            <h2 className="slideshow-title">
-              {language === "en" && homeContent.slideshowTitle.titleEn
-                ? homeContent.slideshowTitle.titleEn
-                : homeContent.slideshowTitle.title}
-            </h2>
-          </div>
-        )}
         {loading ? (
           <div className="loading">{t.loading}</div>
         ) : slides.length > 0 ? (

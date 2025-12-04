@@ -145,35 +145,6 @@ function AdminHomeContent() {
     });
   };
 
-  const handleSeedTechArticles = async () => {
-    if (
-      !window.confirm(
-        "Bạn có chắc muốn tải dữ liệu mẫu cho phần Thông Tin Công Nghệ Kỹ Thuật? Điều này sẽ thay thế các bài viết hiện tại."
-      )
-    ) {
-      return;
-    }
-
-    try {
-      setSaving(true);
-      const token = localStorage.getItem("token");
-      await axios.post(
-        `${API_URL}/seed/tech-articles`,
-        {},
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      alert("✅ Đã tải 9 bài viết mẫu thành công!");
-      fetchContent(); // Reload data
-    } catch (error) {
-      console.error("Error seeding tech articles:", error);
-      alert("❌ Lỗi khi tải dữ liệu mẫu");
-    } finally {
-      setSaving(false);
-    }
-  };
-
   if (loading) {
     return <div className="admin-loading">Đang tải...</div>;
   }
@@ -264,19 +235,9 @@ function AdminHomeContent() {
 
           <div className="section-header">
             <h3>Các Bài Viết</h3>
-            <div style={{ display: "flex", gap: "10px" }}>
-              <button
-                onClick={handleSeedTechArticles}
-                className="btn-add"
-                style={{ backgroundColor: "#28a745" }}
-                disabled={saving}
-              >
-                📥 Tải Dữ Liệu Mẫu (9 bài)
-              </button>
-              <button onClick={addTechArticle} className="btn-add">
-                ➕ Thêm Bài Viết
-              </button>
-            </div>
+            <button onClick={addTechArticle} className="btn-add">
+              ➕ Thêm Bài Viết
+            </button>
           </div>
 
           {content.techArticles &&

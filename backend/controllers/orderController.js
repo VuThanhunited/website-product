@@ -17,7 +17,7 @@ if (isProduction && resendService) {
   console.log("✅ Email Configuration: Using Gmail SMTP (development)");
 }
 
-const { sendOrderConfirmationEmail: sendCustomerEmail, sendAdminNotificationEmail: sendAdminEmail } = emailService;
+const { sendOrderConfirmationEmail: sendCustomerEmail } = emailService;
 
 // Create a new order
 exports.createOrder = async (req, res) => {
@@ -135,21 +135,6 @@ exports.createOrder = async (req, res) => {
       })
       .catch((err) => {
         console.error("❌ Customer email error:", err.message || err);
-      });
-
-    // Gửi email thông báo cho admin
-    console.log("📧 Sending admin notification...");
-    sendAdminEmail(order, language || "vi")
-      .then((result) => {
-        if (result.success) {
-          console.log("✅ Admin notification sent successfully");
-          console.log("   Message ID:", result.messageId);
-        } else {
-          console.log("⚠️ Failed to send admin notification:", result.error);
-        }
-      })
-      .catch((err) => {
-        console.error("❌ Admin email error:", err.message || err);
       });
 
     console.log("📦 Sending response to client...");

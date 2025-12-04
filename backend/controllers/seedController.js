@@ -3,12 +3,7 @@ const fs = require("fs");
 const path = require("path");
 
 // Load data from JSON file
-const techArticlesData = JSON.parse(
-  fs.readFileSync(
-    path.join(__dirname, "..", "data", "techArticles.json"),
-    "utf8"
-  )
-);
+const techArticlesData = JSON.parse(fs.readFileSync(path.join(__dirname, "..", "data", "techArticles.json"), "utf8"));
 
 exports.seedTechArticles = async (req, res) => {
   try {

@@ -2,7 +2,7 @@ const nodemailer = require("nodemailer");
 
 // Tạo transporter để gửi email - với config tối ưu cho Gmail
 const transporter = nodemailer.createTransport({
-  service: "gmail", // Use Gmail service for better reliability
+  service: "gmail",
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
@@ -10,14 +10,6 @@ const transporter = nodemailer.createTransport({
   tls: {
     rejectUnauthorized: false,
   },
-  connectionTimeout: 30000, // 30 seconds
-  greetingTimeout: 30000,
-  socketTimeout: 30000,
-  pool: true, // Use pooled connections
-  maxConnections: 1,
-  maxMessages: 3,
-  rateDelta: 1000,
-  rateLimit: 1,
 });
 
 // Verify transporter on startup
@@ -25,7 +17,7 @@ transporter.verify((error, success) => {
   if (error) {
     console.error("❌ Email transporter verification failed:", error.message);
   } else {
-    console.log("✅ Email service is ready to send messages");
+    console.log("✅ Gmail SMTP email service is ready");
   }
 });
 
@@ -234,12 +226,12 @@ const sendOrderConfirmationEmail = async (order, language = "vi") => {
       ? `Xác nhận đơn hàng #${orderNumber} - EFT Technology`
       : `Order Confirmation #${orderNumber} - EFT Technology`;
 
-    const mailOptions = {
+    const msg = {
+      to: order.customerInfo.email,
       from: {
         name: "EFT Technology",
         address: process.env.EMAIL_USER,
       },
-      to: order.customerInfo.email,
       subject: subject,
       html: generateOrderEmailTemplate(order, language),
       replyTo: process.env.EMAIL_USER,
