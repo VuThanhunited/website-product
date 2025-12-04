@@ -240,94 +240,95 @@ function AdminHomeContent() {
             </button>
           </div>
 
-          {content.techArticles && content.techArticles.map((article, index) => (
-            <div key={index} className="content-item">
-              <div className="item-header">
-                <h3>Bài viết {index + 1}</h3>
-                <button
-                  onClick={() => removeTechArticle(index)}
-                  className="btn-remove"
-                >
-                  🗑️
-                </button>
-              </div>
+          {content.techArticles &&
+            content.techArticles.map((article, index) => (
+              <div key={index} className="content-item">
+                <div className="item-header">
+                  <h3>Bài viết {index + 1}</h3>
+                  <button
+                    onClick={() => removeTechArticle(index)}
+                    className="btn-remove"
+                  >
+                    🗑️
+                  </button>
+                </div>
 
-              <div className="form-row">
-                <div className="form-group">
-                  <label>Tiêu đề (Tiếng Việt)</label>
-                  <input
-                    type="text"
-                    value={article.title}
-                    onChange={(e) =>
-                      updateTechArticle(index, "title", e.target.value)
-                    }
-                    placeholder="Tiêu đề bài viết"
-                  />
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Tiêu đề (Tiếng Việt)</label>
+                    <input
+                      type="text"
+                      value={article.title}
+                      onChange={(e) =>
+                        updateTechArticle(index, "title", e.target.value)
+                      }
+                      placeholder="Tiêu đề bài viết"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Title (English)</label>
+                    <input
+                      type="text"
+                      value={article.titleEn}
+                      onChange={(e) =>
+                        updateTechArticle(index, "titleEn", e.target.value)
+                      }
+                      placeholder="Article title"
+                    />
+                  </div>
                 </div>
-                <div className="form-group">
-                  <label>Title (English)</label>
-                  <input
-                    type="text"
-                    value={article.titleEn}
-                    onChange={(e) =>
-                      updateTechArticle(index, "titleEn", e.target.value)
-                    }
-                    placeholder="Article title"
-                  />
-                </div>
-              </div>
 
-              <div className="form-row">
-                <div className="form-group">
-                  <label>Nội dung (Tiếng Việt)</label>
-                  <textarea
-                    rows="3"
-                    value={article.content}
-                    onChange={(e) =>
-                      updateTechArticle(index, "content", e.target.value)
-                    }
-                    placeholder="Mô tả ngắn về bài viết"
-                  />
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Nội dung (Tiếng Việt)</label>
+                    <textarea
+                      rows="3"
+                      value={article.content}
+                      onChange={(e) =>
+                        updateTechArticle(index, "content", e.target.value)
+                      }
+                      placeholder="Mô tả ngắn về bài viết"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Content (English)</label>
+                    <textarea
+                      rows="3"
+                      value={article.contentEn}
+                      onChange={(e) =>
+                        updateTechArticle(index, "contentEn", e.target.value)
+                      }
+                      placeholder="Short description"
+                    />
+                  </div>
                 </div>
-                <div className="form-group">
-                  <label>Content (English)</label>
-                  <textarea
-                    rows="3"
-                    value={article.contentEn}
-                    onChange={(e) =>
-                      updateTechArticle(index, "contentEn", e.target.value)
-                    }
-                    placeholder="Short description"
-                  />
-                </div>
-              </div>
 
-              <div className="form-row">
-                <div className="form-group">
-                  <label>Hình Ảnh (URL)</label>
-                  <input
-                    type="text"
-                    value={article.thumbnail}
-                    onChange={(e) =>
-                      updateTechArticle(index, "thumbnail", e.target.value)
-                    }
-                    placeholder="https://example.com/image.jpg"
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Link Chi Tiết</label>
-                  <input
-                    type="text"
-                    value={article.link}
-                    onChange={(e) =>
-                      updateTechArticle(index, "link", e.target.value)
-                    }
-                    placeholder="/support/article-slug hoặc URL đầy đủ"
-                  />
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Hình Ảnh (URL)</label>
+                    <input
+                      type="text"
+                      value={article.thumbnail}
+                      onChange={(e) =>
+                        updateTechArticle(index, "thumbnail", e.target.value)
+                      }
+                      placeholder="https://example.com/image.jpg"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Link Chi Tiết</label>
+                    <input
+                      type="text"
+                      value={article.link}
+                      onChange={(e) =>
+                        updateTechArticle(index, "link", e.target.value)
+                      }
+                      placeholder="/support/article-slug hoặc URL đầy đủ"
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
         </div>
       )}
 

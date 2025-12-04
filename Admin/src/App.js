@@ -184,7 +184,7 @@ function App() {
                       <FaImages /> Quản Lý Media
                     </Link>
                     <Link to="/home-content" className="nav-item">
-                      <FaQuestionCircle /> Thông Tin Công Nghệ Kỹ Thuật
+                      <FaImages /> Quản Lý Nội Dung Trang Chủ
                     </Link>
                     <Link to="/company" className="nav-item">
                       <FaBuilding /> Thông Tin Công Ty

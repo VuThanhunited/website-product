@@ -1,0 +1,116 @@
+const mongoose = require("mongoose");
+require("dotenv").config();
+
+const techArticlesData = [
+  {
+    title: "Công Nghệ Xử Lý Nước Tiên Tiến",
+    titleEn: "Advanced Water Treatment Technology",
+    content:
+      "Hệ thống xử lý nước hiện đại sử dụng công nghệ lọc đa tầng, đảm bảo loại bỏ tạp chất và vi khuẩn, mang lại nguồn nước sạch cho sản xuất công nghiệp.",
+    contentEn:
+      "Modern water treatment systems using multi-layer filtration technology, ensuring the removal of impurities and bacteria, providing clean water for industrial production.",
+    thumbnail: "https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=800&h=600&fit=crop",
+    link: "/support",
+  },
+  {
+    title: "Giải Pháp Hóa Chất Thân Thiện Môi Trường",
+    titleEn: "Eco-Friendly Chemical Solutions",
+    content:
+      "Các sản phẩm hóa chất của chúng tôi được nghiên cứu để giảm thiểu tác động đến môi trường, đồng thời đảm bảo hiệu quả cao trong quá trình sản xuất.",
+    contentEn:
+      "Our chemical products are researched to minimize environmental impact while ensuring high efficiency in the production process.",
+    thumbnail: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=800&h=600&fit=crop",
+    link: "/support",
+  },
+  {
+    title: "Hệ Thống Tự Động Hóa Sản Xuất",
+    titleEn: "Production Automation System",
+    content:
+      "Ứng dụng công nghệ tự động hóa giúp tối ưu hóa quy trình sản xuất, giảm thiểu sai sót và nâng cao năng suất lao động.",
+    contentEn:
+      "Application of automation technology helps optimize production processes, minimize errors and improve labor productivity.",
+    thumbnail: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&h=600&fit=crop",
+    link: "/support",
+  },
+  {
+    title: "Công Nghệ Tiết Kiệm Năng Lượng",
+    titleEn: "Energy Saving Technology",
+    content: "Giải pháp tiết kiệm năng lượng thông minh giúp doanh nghiệp giảm chi phí vận hành và bảo vệ môi trường.",
+    contentEn: "Smart energy-saving solutions help businesses reduce operating costs and protect the environment.",
+    thumbnail: "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=800&h=600&fit=crop",
+    link: "/support",
+  },
+  {
+    title: "Kiểm Soát Chất Lượng Tự Động",
+    titleEn: "Automated Quality Control",
+    content:
+      "Hệ thống kiểm soát chất lượng tự động đảm bảo mọi sản phẩm đều đạt tiêu chuẩn cao nhất trước khi xuất xưởng.",
+    contentEn: "Automated quality control system ensures all products meet the highest standards before delivery.",
+    thumbnail: "https://images.unsplash.com/photo-1507537297725-24a1c029d3ca?w=800&h=600&fit=crop",
+    link: "/support",
+  },
+  {
+    title: "Công Nghệ Xử Lý Chất Thải",
+    titleEn: "Waste Treatment Technology",
+    content: "Giải pháp xử lý chất thải công nghiệp hiện đại, đáp ứng các tiêu chuẩn môi trường nghiêm ngặt nhất.",
+    contentEn: "Modern industrial waste treatment solutions meeting the strictest environmental standards.",
+    thumbnail: "https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=800&h=600&fit=crop",
+    link: "/support",
+  },
+];
+
+async function seedTechArticles() {
+  try {
+    // Connect to MongoDB
+    await mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost:27017/ecommerce");
+    console.log("✅ Connected to MongoDB");
+
+    // Find or create homeContent
+    const HomeContent = mongoose.model("HomeContent", new mongoose.Schema({}, { strict: false }));
+
+    let homeContent = await HomeContent.findOne();
+
+    if (!homeContent) {
+      homeContent = new HomeContent({
+        techArticles: techArticlesData,
+        techArticlesTitle: {
+          title: "Thông tin công nghệ kỹ thuật",
+          titleEn: "Technical Information",
+        },
+        features: [],
+        whyChooseUs: { title: "", titleEn: "", items: [] },
+        cta: {
+          title: "",
+          titleEn: "",
+          description: "",
+          descriptionEn: "",
+          primaryButtonText: "",
+          primaryButtonTextEn: "",
+          primaryButtonLink: "",
+          secondaryButtonText: "",
+          secondaryButtonTextEn: "",
+          secondaryButtonLink: "",
+        },
+      });
+    } else {
+      homeContent.techArticles = techArticlesData;
+      if (!homeContent.techArticlesTitle) {
+        homeContent.techArticlesTitle = {
+          title: "Thông tin công nghệ kỹ thuật",
+          titleEn: "Technical Information",
+        };
+      }
+    }
+
+    await homeContent.save();
+    console.log("✅ Tech articles seeded successfully!");
+    console.log(`📝 Added ${techArticlesData.length} tech articles`);
+
+    mongoose.connection.close();
+  } catch (error) {
+    console.error("❌ Error seeding tech articles:", error);
+    process.exit(1);
+  }
+}
+
+seedTechArticles();

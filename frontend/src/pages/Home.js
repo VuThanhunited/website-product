@@ -45,7 +45,7 @@ const Home = () => {
       ].slice(0, 6);
 
       setSlides(selectedProducts);
-      
+
       // Use tech articles from homeContent instead of support articles
       const articles = contentResponse.techArticles || [];
       setTechArticles(articles);
