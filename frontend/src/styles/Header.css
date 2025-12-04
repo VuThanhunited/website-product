@@ -477,9 +477,13 @@
     z-index: -1;
   }
 
+  .top-section {
+    padding: 8px 0;
+  }
+
   .top-content {
     flex-direction: column;
-    gap: var(--spacing-sm);
+    gap: 8px;
     align-items: stretch;
   }
 
@@ -506,12 +510,12 @@
   }
 
   .company-details p {
-    font-size: clamp(0.7rem, 2vw, 0.8rem);
+    display: none;
   }
 
   .logo {
-    height: 50px;
-    max-width: 120px;
+    height: 40px;
+    max-width: 100px;
   }
 
   .header-right {
@@ -543,11 +547,20 @@
     font-size: 1rem;
   }
 
+  .nav-menu {
+    padding: 8px 0;
+  }
+
+  .nav-menu a {
+    padding: 10px 12px;
+    font-size: 0.9rem;
+  }
+
   .header-icon {
-    font-size: 1.25rem;
-    padding: 0.625rem;
-    min-width: 44px;
-    min-height: 44px;
+    font-size: 1.15rem;
+    padding: 0.5rem;
+    min-width: 40px;
+    min-height: 40px;
   }
 
   .language-toggle {
