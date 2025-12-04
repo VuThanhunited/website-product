@@ -86,6 +86,7 @@ const paymentMethodRoutes = require("./routes/paymentMethodRoutes");
 const homePageContentRoutes = require("./routes/homePageContentRoutes");
 const companyPageContentRoutes = require("./routes/companyPageContentRoutes");
 const paymentQRRoutes = require("./routes/paymentQRRoutes");
+const seedRoutes = require("./routes/seedRoutes");
 
 // Use Routes
 app.use("/api/products", productRoutes);
@@ -102,6 +103,7 @@ app.use("/api/payment-methods", paymentMethodRoutes);
 app.use("/api/home-content", homePageContentRoutes);
 app.use("/api/company-content", companyPageContentRoutes);
 app.use("/api/payment-qr", paymentQRRoutes);
+app.use("/api/seed", seedRoutes);
 
 // Health check endpoint
 app.get("/api/health", (req, res) => {
