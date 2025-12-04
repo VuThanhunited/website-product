@@ -16,7 +16,7 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const { language } = useLanguage();
   const t = translations[language];
-  const articlesPerPage = 6;
+  const articlesPerPage = 3;
 
   useEffect(() => {
     fetchHomeData();
