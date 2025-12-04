@@ -334,47 +334,7 @@ function AdminHomeContent() {
 
       {activeTab === "features" && (
         <div className="admin-section">
-          <h2>Tiêu Đề & Tính Năng</h2>
-
-          <div className="content-item">
-            <h3>Tiêu Đề Slideshow</h3>
-            <div className="form-row">
-              <div className="form-group">
-                <label>Tiêu đề (Tiếng Việt)</label>
-                <input
-                  type="text"
-                  value={content.slideshowTitle?.title || ""}
-                  onChange={(e) =>
-                    setContent({
-                      ...content,
-                      slideshowTitle: {
-                        ...content.slideshowTitle,
-                        title: e.target.value,
-                      },
-                    })
-                  }
-                  placeholder="VD: Sản Phẩm Nổi Bật"
-                />
-              </div>
-              <div className="form-group">
-                <label>Tiêu đề (English)</label>
-                <input
-                  type="text"
-                  value={content.slideshowTitle?.titleEn || ""}
-                  onChange={(e) =>
-                    setContent({
-                      ...content,
-                      slideshowTitle: {
-                        ...content.slideshowTitle,
-                        titleEn: e.target.value,
-                      },
-                    })
-                  }
-                  placeholder="VD: Featured Products"
-                />
-              </div>
-            </div>
-          </div>
+          <h2>Tính Năng Nổi Bật</h2>
 
           <div className="content-item">
             <h3>Tiêu Đề Tính Năng Nổi Bật</h3>
