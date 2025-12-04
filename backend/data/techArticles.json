@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Công Nghệ Xử Lý Nước Tiên Tiến",
+    "titleEn": "Advanced Water Treatment Technology",
+    "content": "Hệ thống xử lý nước hiện đại sử dụng công nghệ lọc đa tầng, đảm bảo loại bỏ tạp chất và vi khuẩn, mang lại nguồn nước sạch cho sản xuất công nghiệp.",
+    "contentEn": "Modern water treatment systems using multi-layer filtration technology, ensuring the removal of impurities and bacteria, providing clean water for industrial production.",
+    "thumbnail": "https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=800&h=600&fit=crop",
+    "link": "/support"
+  },
+  {
+    "title": "Giải Pháp Hóa Chất Thân Thiện Môi Trường",
+    "titleEn": "Eco-Friendly Chemical Solutions",
+    "content": "Các sản phẩm hóa chất của chúng tôi được nghiên cứu để giảm thiểu tác động đến môi trường, đồng thời đảm bảo hiệu quả cao trong quá trình sản xuất.",
+    "contentEn": "Our chemical products are researched to minimize environmental impact while ensuring high efficiency in the production process.",
+    "thumbnail": "https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=800&h=600&fit=crop",
+    "link": "/support"
+  },
+  {
+    "title": "Hệ Thống Tự Động Hóa Sản Xuất",
+    "titleEn": "Production Automation System",
+    "content": "Ứng dụng công nghệ tự động hóa giúp tối ưu hóa quy trình sản xuất, giảm thiểu sai sót và nâng cao năng suất lao động.",
+    "contentEn": "Application of automation technology helps optimize production processes, minimize errors and improve labor productivity.",
+    "thumbnail": "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&h=600&fit=crop",
+    "link": "/support"
+  },
+  {
+    "title": "Công Nghệ Tiết Kiệm Năng Lượng",
+    "titleEn": "Energy Saving Technology",
+    "content": "Giải pháp tiết kiệm năng lượng thông minh giúp doanh nghiệp giảm chi phí vận hành và bảo vệ môi trường.",
+    "contentEn": "Smart energy-saving solutions help businesses reduce operating costs and protect the environment.",
+    "thumbnail": "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=800&h=600&fit=crop",
+    "link": "/support"
+  },
+  {
+    "title": "Kiểm Soát Chất Lượng Tự Động",
+    "titleEn": "Automated Quality Control",
+    "content": "Hệ thống kiểm soát chất lượng tự động đảm bảo mọi sản phẩm đều đạt tiêu chuẩn cao nhất trước khi xuất xưởng.",
+    "contentEn": "Automated quality control system ensures all products meet the highest standards before delivery.",
+    "thumbnail": "https://images.unsplash.com/photo-1507537297725-24a1c029d3ca?w=800&h=600&fit=crop",
+    "link": "/support"
+  },
+  {
+    "title": "Công Nghệ Xử Lý Chất Thải",
+    "titleEn": "Waste Treatment Technology",
+    "content": "Giải pháp xử lý chất thải công nghiệp hiện đại, đáp ứng các tiêu chuẩn môi trường nghiêm ngặt nhất.",
+    "contentEn": "Modern industrial waste treatment solutions meeting the strictest environmental standards.",
+    "thumbnail": "https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=800&h=600&fit=crop",
+    "link": "/support"
+  },
+  {
+    "title": "Hệ Thống Giám Sát Thông Minh",
+    "titleEn": "Smart Monitoring System",
+    "content": "Công nghệ IoT cho phép giám sát và điều khiển quy trình sản xuất từ xa, tối ưu hóa hiệu suất vận hành.",
+    "contentEn": "IoT technology enables remote monitoring and control of production processes, optimizing operational efficiency.",
+    "thumbnail": "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=600&fit=crop",
+    "link": "/support"
+  },
+  {
+    "title": "Công Nghệ Làm Sạch Không Khí",
+    "titleEn": "Air Purification Technology",
+    "content": "Hệ thống lọc không khí công nghiệp loại bỏ các hạt bụi, khí độc hại, đảm bảo môi trường làm việc an toàn.",
+    "contentEn": "Industrial air filtration systems remove dust particles and toxic gases, ensuring a safe working environment.",
+    "thumbnail": "https://images.unsplash.com/photo-1497436072909-60f360e1d4b1?w=800&h=600&fit=crop",
+    "link": "/support"
+  },
+  {
+    "title": "Quản Lý Chuỗi Cung Ứng Thông Minh",
+    "titleEn": "Smart Supply Chain Management",
+    "content": "Giải pháp số hóa chuỗi cung ứng giúp theo dõi và tối ưu hóa toàn bộ quy trình từ nguyên liệu đến sản phẩm.",
+    "contentEn": "Digital supply chain solutions help track and optimize the entire process from raw materials to finished products.",
+    "thumbnail": "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800&h=600&fit=crop",
+    "link": "/support"
+  }
+]

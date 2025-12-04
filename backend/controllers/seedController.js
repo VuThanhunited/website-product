@@ -1,6 +1,14 @@
 const HomePageContent = require("../models/HomePageContent");
+const fs = require("fs");
+const path = require("path");
 
-const techArticlesData = [
+// Load data from JSON file
+const techArticlesData = JSON.parse(
+  fs.readFileSync(
+    path.join(__dirname, "..", "data", "techArticles.json"),
+    "utf8"
+  )
+);
   {
     title: "Công Nghệ Xử Lý Nước Tiên Tiến",
     titleEn: "Advanced Water Treatment Technology",
@@ -76,13 +84,11 @@ const techArticlesData = [
     link: "/support",
   },
   {
-    title: "Quản Lý Chuỗi Cung Ứng Thông Minh",
-    titleEn: "Smart Supply Chain Management",
-    content:
-      "Giải pháp số hóa chuỗi cung ứng giúp theo dõi và tối ưu hóa toàn bộ quy trình từ nguyên liệu đến sản phẩm.",
-    contentEn:
-      "Digital supply chain solutions help track and optimize the entire process from raw materials to finished products.",
-    thumbnail: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800&h=600&fit=crop",
+    title: "Công Nghệ Xử Lý Chất Thải",
+    titleEn: "Waste Treatment Technology",
+    content: "Giải pháp xử lý chất thải công nghiệp hiện đại, đáp ứng các tiêu chuẩn môi trường nghiêm ngặt nhất.",
+    contentEn: "Modern industrial waste treatment solutions meeting the strictest environmental standards.",
+    thumbnail: "https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=800&h=600&fit=crop",
     link: "/support",
   },
 ];
