@@ -61,9 +61,9 @@ const generateOrderEmailHTML = (order, language = "vi") => {
         <p style="margin: 5px 0; color: #555;"><strong>${
           isVietnamese ? "Mã đơn hàng" : "Order Number"
         }:</strong> #${order._id.toString().slice(-8).toUpperCase()}</p>
-        <p style="margin: 5px 0; color: #555;"><strong>${
-          isVietnamese ? "Ngày đặt" : "Order Date"
-        }:</strong> ${new Date(order.createdAt).toLocaleString(isVietnamese ? "vi-VN" : "en-US")}</p>
+        <p style="margin: 5px 0; color: #555;"><strong>${isVietnamese ? "Ngày đặt" : "Order Date"}:</strong> ${new Date(
+    order.createdAt
+  ).toLocaleString(isVietnamese ? "vi-VN" : "en-US")}</p>
         <p style="margin: 5px 0; color: #555;"><strong>${
           isVietnamese ? "Phương thức thanh toán" : "Payment Method"
         }:</strong> ${paymentMethodText[order.paymentMethod] || order.paymentMethod}</p>
