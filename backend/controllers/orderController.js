@@ -2,13 +2,13 @@ const Order = require("../models/Order");
 const Product = require("../models/Product");
 
 // ============================================
-// EMAIL SERVICE CONFIGURATION - GMAIL SMTP ONLY
+// EMAIL SERVICE CONFIGURATION - SENDGRID
 // ============================================
-// Chỉ sử dụng Gmail SMTP để gửi email
-// Không sử dụng Resend hay SendGrid
+// Sử dụng SendGrid vì Render.com chặn SMTP ports
+// Gmail SMTP không hoạt động trên Render.com
 // ============================================
-const emailService = require("../services/emailService"); // Gmail SMTP
-console.log("✅ Email Service: Gmail SMTP initialized");
+const emailService = require("../services/emailServiceSendGrid");
+console.log("✅ Email Service: SendGrid initialized");
 
 const { sendOrderConfirmationEmail: sendCustomerEmail } = emailService;
 
@@ -114,8 +114,8 @@ exports.createOrder = async (req, res) => {
     await order.save();
     console.log("✅ Order saved to database:", order._id);
 
-    // Gửi email xác nhận cho khách hàng qua Gmail SMTP (không có giới hạn)
-    console.log("📧 Sending customer confirmation email via Gmail SMTP...");
+    // Gửi email xác nhận cho khách hàng qua SendGrid
+    console.log("📧 Sending customer confirmation email via SendGrid...");
     console.log("   To:", order.customerInfo.email);
     sendCustomerEmail(order, language || "vi")
       .then((result) => {
