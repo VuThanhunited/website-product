@@ -11,10 +11,10 @@ Hệ thống email đã được cấu hình để **CHỈ SỬ DỤNG GMAIL SMT
   - Không có giới hạn gửi email
   - Email gửi từ: `process.env.EMAIL_USER`
 
-### 🚫 Services Đã Vô Hiệu Hóa:
+### 🚫 Services Đã Xóa Hoàn Toàn:
 
-- ~~Resend~~ → Đã đổi tên thành `.backup`
-- ~~SendGrid~~ → Đã đổi tên thành `.backup`
+- ~~Resend~~ → **ĐÃ XÓA** (files + dependencies)
+- ~~SendGrid~~ → **ĐÃ XÓA** (files + dependencies)
 
 ## 🔧 Biến Môi Trường Cần Thiết
 
@@ -57,9 +57,8 @@ Email xác nhận gửi cho khách hàng (Gmail SMTP)
 ## 📂 File Quan Trọng
 
 - `controllers/orderController.js` - Controller xử lý đơn hàng và gửi email
-- `services/emailService.js` - Gmail SMTP service
-- `services/emailServiceResend.js.backup` - Resend backup (không dùng)
-- `services/emailServiceSendGrid.js.backup` - SendGrid backup (không dùng)
+- `services/emailService.js` - **Gmail SMTP service (DUY NHẤT)**
+- `package.json` - Đã loại bỏ `resend` và `@sendgrid/mail`
 
 ## 🚀 Deploy
 
