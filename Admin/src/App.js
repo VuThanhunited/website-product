@@ -230,7 +230,10 @@ function App() {
                       <Route path="/users" element={<AdminUsers />} />
                       <Route path="/media" element={<AdminMedia />} />
                       <Route path="/support" element={<AdminSupport />} />
-                      <Route path="/tech-articles" element={<AdminTechArticles />} />
+                      <Route
+                        path="/tech-articles"
+                        element={<AdminTechArticles />}
+                      />
                       <Route path="/company" element={<AdminCompany />} />
                       <Route
                         path="/home-content"

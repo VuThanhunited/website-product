@@ -1,21 +1,14 @@
 const Order = require("../models/Order");
 const Product = require("../models/Product");
 
-// Email service configuration
-// On production (Render), SMTP is blocked - must use Resend API
-// On development (local), can use Gmail SMTP
-const isProduction = process.env.NODE_ENV === "production";
-const resendService = process.env.RESEND_API_KEY ? require("../services/emailServiceResend") : null;
-const gmailService = require("../services/emailService"); // Gmail SMTP
-
-let emailService;
-if (isProduction && resendService) {
-  emailService = resendService;
-  console.log("✅ Email Configuration: Using Resend API (production)");
-} else {
-  emailService = gmailService;
-  console.log("✅ Email Configuration: Using Gmail SMTP (development)");
-}
+// ============================================
+// EMAIL SERVICE CONFIGURATION - GMAIL SMTP ONLY
+// ============================================
+// Chỉ sử dụng Gmail SMTP để gửi email
+// Không sử dụng Resend hay SendGrid
+// ============================================
+const emailService = require("../services/emailService"); // Gmail SMTP
+console.log("✅ Email Service: Gmail SMTP initialized");
 
 const { sendOrderConfirmationEmail: sendCustomerEmail } = emailService;
 

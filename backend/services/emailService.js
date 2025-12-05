@@ -226,7 +226,7 @@ const sendOrderConfirmationEmail = async (order, language = "vi") => {
       ? `Xác nhận đơn hàng #${orderNumber} - EFT Technology`
       : `Order Confirmation #${orderNumber} - EFT Technology`;
 
-    const msg = {
+    const mailOptions = {
       to: order.customerInfo.email,
       from: {
         name: "EFT Technology",
