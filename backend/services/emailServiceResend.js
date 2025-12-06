@@ -62,9 +62,9 @@ const generateOrderEmailHTML = (order, language = "vi") => {
         <p style="margin: 5px 0; color: #555;"><strong>${
           isVietnamese ? "Mã đơn hàng" : "Order Number"
         }:</strong> #${order._id.toString().slice(-8).toUpperCase()}</p>
-        <p style="margin: 5px 0; color: #555;"><strong>${
-          isVietnamese ? "Ngày đặt" : "Order Date"
-        }:</strong> ${new Date(order.createdAt).toLocaleString(isVietnamese ? "vi-VN" : "en-US")}</p>
+        <p style="margin: 5px 0; color: #555;"><strong>${isVietnamese ? "Ngày đặt" : "Order Date"}:</strong> ${new Date(
+    order.createdAt
+  ).toLocaleString(isVietnamese ? "vi-VN" : "en-US")}</p>
         <p style="margin: 5px 0; color: #555;"><strong>${
           isVietnamese ? "Phương thức thanh toán" : "Payment Method"
         }:</strong> ${paymentMethodText[order.paymentMethod] || order.paymentMethod}</p>
@@ -141,9 +141,9 @@ const sendOrderConfirmationEmail = async (order, language = "vi") => {
     const isVietnamese = language === "vi";
     const orderNumber = order._id.toString().slice(-8).toUpperCase();
 
-    // Sử dụng domain verified của Resend (onboarding@resend.dev)
+    // Sử dụng domain verified của Resend (eft-chem.com)
     const { data, error } = await resend.emails.send({
-      from: "EFT Technology <onboarding@resend.dev>",
+      from: "EFT Technology <no-reply@eft-chem.com>",
       to: [order.customerInfo.email],
       subject: `${isVietnamese ? "Xác nhận đơn hàng" : "Order Confirmation"} #${orderNumber} - EFT Technology`,
       html: generateOrderEmailHTML(order, language),
@@ -177,7 +177,7 @@ const sendAdminNotificationEmail = async (order, language = "vi") => {
     const adminEmail = process.env.EMAIL_TO || "vtu21102000@gmail.com";
 
     const { data, error } = await resend.emails.send({
-      from: "EFT Technology <onboarding@resend.dev>",
+      from: "EFT Technology <no-reply@eft-chem.com>",
       to: [adminEmail],
       subject: isVietnamese
         ? `Đơn hàng mới #${orderNumber} - ${order.customerInfo.email}`
