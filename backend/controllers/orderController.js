@@ -2,13 +2,15 @@ const Order = require("../models/Order");
 const Product = require("../models/Product");
 
 // ============================================
-// EMAIL SERVICE CONFIGURATION - RESEND
+// EMAIL SERVICE CONFIGURATION - MAILGUN
 // ============================================
-// Sử dụng Resend vì không cần verify domain
-// SendGrid có issue với verified sender
+// Sử dụng Mailgun vì:
+// - Free tier: 5,000 emails/tháng
+// - Không cần verify domain (dùng sandbox)
+// - API đơn giản, reliable
 // ============================================
-const emailService = require("../services/emailServiceResend");
-console.log("✅ Email Service: Resend initialized");
+const emailService = require("../services/emailServiceMailgun");
+console.log("✅ Email Service: Mailgun initialized");
 
 const { sendOrderConfirmationEmail: sendCustomerEmail } = emailService;
 
