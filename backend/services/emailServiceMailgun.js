@@ -79,9 +79,7 @@ const generateOrderEmailHTML = (order, language = "vi") => {
         </p>
         <p style="margin: 5px 0; color: #555;">
           <strong>${isVietnamese ? "Trạng thái:" : "Status:"}</strong> 
-          <span style="color: #f59e0b; font-weight: bold;">${
-            isVietnamese ? "Đang xử lý" : "Processing"
-          }</span>
+          <span style="color: #f59e0b; font-weight: bold;">${isVietnamese ? "Đang xử lý" : "Processing"}</span>
         </p>
       </div>
       
@@ -147,7 +145,9 @@ const generateOrderEmailHTML = (order, language = "vi") => {
       </p>
       <p style="margin: 0; font-size: 14px; color: #999; text-align: center;">
         ${isVietnamese ? "Nếu có thắc mắc, vui lòng liên hệ:" : "For questions, please contact:"} 
-        <a href="mailto:${process.env.EMAIL_TO || "eft.gretech@gmail.com"}" style="color: #667eea; text-decoration: none;">
+        <a href="mailto:${
+          process.env.EMAIL_TO || "eft.gretech@gmail.com"
+        }" style="color: #667eea; text-decoration: none;">
           ${process.env.EMAIL_TO || "eft.gretech@gmail.com"}
         </a>
       </p>

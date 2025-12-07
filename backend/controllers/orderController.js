@@ -116,8 +116,8 @@ exports.createOrder = async (req, res) => {
     await order.save();
     console.log("✅ Order saved to database:", order._id);
 
-    // Gửi email xác nhận cho khách hàng qua Resend
-    console.log("📧 Sending customer confirmation email via Resend...");
+    // Gửi email xác nhận cho khách hàng qua Mailgun
+    console.log("📧 Sending customer confirmation email via Mailgun...");
     console.log("   To:", order.customerInfo.email);
     sendCustomerEmail(order, language || "vi")
       .then((result) => {
