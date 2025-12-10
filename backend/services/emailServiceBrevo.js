@@ -2,10 +2,9 @@ const brevo = require("@getbrevo/brevo");
 
 // Initialize Brevo API
 let apiInstance;
-let defaultClient;
 
 if (process.env.BREVO_API_KEY) {
-  defaultClient = brevo.ApiClient.instance;
+  const defaultClient = brevo.ApiClient.instance;
   const apiKey = defaultClient.authentications["api-key"];
   apiKey.apiKey = process.env.BREVO_API_KEY;
   apiInstance = new brevo.TransactionalEmailsApi();
