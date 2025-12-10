@@ -1,13 +1,11 @@
-const { ApiClient, TransactionalEmailsApi, SendSmtpEmail } = require("@getbrevo/brevo");
+const axios = require("axios");
 
-// Initialize Brevo API
-let apiInstance;
+// Brevo API configuration
+const BREVO_API_URL = "https://api.brevo.com/v3/smtp/email";
+let brevoConfigured = false;
 
 if (process.env.BREVO_API_KEY) {
-  const defaultClient = ApiClient.instance;
-  const apiKey = defaultClient.authentications["api-key"];
-  apiKey.apiKey = process.env.BREVO_API_KEY;
-  apiInstance = new TransactionalEmailsApi();
+  brevoConfigured = true;
   console.log("✅ Brevo email service initialized");
 } else {
   console.warn("⚠️  BREVO_API_KEY not found");
@@ -161,7 +159,7 @@ const generateOrderEmailHTML = (order, language = "vi") => {
 // Send order confirmation email to customer
 const sendOrderConfirmationEmail = async (order, language = "vi") => {
   try {
-    if (!apiInstance) {
+    if (!brevoConfigured) {
       throw new Error("Brevo not configured - BREVO_API_KEY missing");
     }
 
@@ -172,19 +170,23 @@ const sendOrderConfirmationEmail = async (order, language = "vi") => {
     const isVietnamese = language === "vi";
     const orderNumber = order._id.toString().slice(-8).toUpperCase();
 
-    const sendSmtpEmail = new SendSmtpEmail();
-    sendSmtpEmail.sender = { name: "EFT Technology", email: "no-reply@eft-chem.com" };
-    sendSmtpEmail.to = [{ email: order.customerInfo.email, name: order.customerInfo.fullName }];
-    sendSmtpEmail.subject = `${
-      isVietnamese ? "Xác nhận đơn hàng" : "Order Confirmation"
-    } #${orderNumber} - EFT Technology`;
-    sendSmtpEmail.htmlContent = generateOrderEmailHTML(order, language);
+    const emailData = {
+      sender: { name: "EFT Technology", email: "no-reply@eft-chem.com" },
+      to: [{ email: order.customerInfo.email, name: order.customerInfo.fullName }],
+      subject: `${isVietnamese ? "Xác nhận đơn hàng" : "Order Confirmation"} #${orderNumber} - EFT Technology`,
+      htmlContent: generateOrderEmailHTML(order, language),
+    };
 
-    const data = await apiInstance.sendTransacEmail(sendSmtpEmail);
+    const response = await axios.post(BREVO_API_URL, emailData, {
+      headers: {
+        "api-key": process.env.BREVO_API_KEY,
+        "Content-Type": "application/json",
+      },
+    });
 
     console.log("✅ Order confirmation email sent successfully!");
-    console.log("   Message ID:", data.messageId);
-    return { success: true, messageId: data.messageId };
+    console.log("   Message ID:", response.data.messageId);
+    return { success: true, messageId: response.data.messageId };
   } catch (error) {
     console.error("❌ Error sending order confirmation email:");
     console.error("   Error:", error.message || error);
@@ -195,7 +197,7 @@ const sendOrderConfirmationEmail = async (order, language = "vi") => {
 // Send admin notification email
 const sendAdminNotificationEmail = async (order, language = "vi") => {
   try {
-    if (!apiInstance) {
+    if (!brevoConfigured) {
       throw new Error("Brevo not configured - BREVO_API_KEY missing");
     }
 
@@ -205,19 +207,25 @@ const sendAdminNotificationEmail = async (order, language = "vi") => {
     const orderNumber = order._id.toString().slice(-8).toUpperCase();
     const adminEmail = process.env.EMAIL_TO || "eft.gretech@gmail.com";
 
-    const sendSmtpEmail = new SendSmtpEmail();
-    sendSmtpEmail.sender = { name: "EFT Technology", email: "no-reply@eft-chem.com" };
-    sendSmtpEmail.to = [{ email: adminEmail }];
-    sendSmtpEmail.subject = isVietnamese
-      ? `Đơn hàng mới #${orderNumber} - ${order.customerInfo.email}`
-      : `New Order #${orderNumber} - ${order.customerInfo.email}`;
-    sendSmtpEmail.htmlContent = generateOrderEmailHTML(order, language);
+    const emailData = {
+      sender: { name: "EFT Technology", email: "no-reply@eft-chem.com" },
+      to: [{ email: adminEmail }],
+      subject: isVietnamese
+        ? `Đơn hàng mới #${orderNumber} - ${order.customerInfo.email}`
+        : `New Order #${orderNumber} - ${order.customerInfo.email}`,
+      htmlContent: generateOrderEmailHTML(order, language),
+    };
 
-    const data = await apiInstance.sendTransacEmail(sendSmtpEmail);
+    const response = await axios.post(BREVO_API_URL, emailData, {
+      headers: {
+        "api-key": process.env.BREVO_API_KEY,
+        "Content-Type": "application/json",
+      },
+    });
 
     console.log("✅ Admin notification sent successfully!");
-    console.log("   Message ID:", data.messageId);
-    return { success: true, messageId: data.messageId };
+    console.log("   Message ID:", response.data.messageId);
+    return { success: true, messageId: response.data.messageId };
   } catch (error) {
     console.error("❌ Error sending admin notification:");
     console.error("   Error:", error.message || error);
