@@ -171,7 +171,7 @@ const sendOrderConfirmationEmail = async (order, language = "vi") => {
     const orderNumber = order._id.toString().slice(-8).toUpperCase();
 
     const emailData = {
-      sender: { name: "EFT Technology", email: "vtu21102000@gmail.com" },
+      sender: { name: "EFT Technology", email: "eft.gretech@gmail.com" },
       to: [{ email: order.customerInfo.email, name: order.customerInfo.fullName }],
       subject: `${isVietnamese ? "Xác nhận đơn hàng" : "Order Confirmation"} #${orderNumber} - EFT Technology`,
       htmlContent: generateOrderEmailHTML(order, language),
@@ -208,7 +208,7 @@ const sendAdminNotificationEmail = async (order, language = "vi") => {
     const adminEmail = process.env.EMAIL_TO || "eft.gretech@gmail.com";
 
     const emailData = {
-      sender: { name: "EFT Technology", email: "vtu21102000@gmail.com" },
+      sender: { name: "EFT Technology", email: "eft.gretech@gmail.com" },
       to: [{ email: adminEmail }],
       subject: isVietnamese
         ? `Đơn hàng mới #${orderNumber} - ${order.customerInfo.email}`
