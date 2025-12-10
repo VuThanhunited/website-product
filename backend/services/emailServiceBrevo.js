@@ -1,13 +1,13 @@
-const brevo = require("@getbrevo/brevo");
+const { ApiClient, TransactionalEmailsApi, SendSmtpEmail } = require("@getbrevo/brevo");
 
 // Initialize Brevo API
 let apiInstance;
 
 if (process.env.BREVO_API_KEY) {
-  const defaultClient = brevo.ApiClient.instance;
+  const defaultClient = ApiClient.instance;
   const apiKey = defaultClient.authentications["api-key"];
   apiKey.apiKey = process.env.BREVO_API_KEY;
-  apiInstance = new brevo.TransactionalEmailsApi();
+  apiInstance = new TransactionalEmailsApi();
   console.log("✅ Brevo email service initialized");
 } else {
   console.warn("⚠️  BREVO_API_KEY not found");
@@ -172,7 +172,7 @@ const sendOrderConfirmationEmail = async (order, language = "vi") => {
     const isVietnamese = language === "vi";
     const orderNumber = order._id.toString().slice(-8).toUpperCase();
 
-    const sendSmtpEmail = new brevo.SendSmtpEmail();
+    const sendSmtpEmail = new SendSmtpEmail();
     sendSmtpEmail.sender = { name: "EFT Technology", email: "no-reply@eft-chem.com" };
     sendSmtpEmail.to = [{ email: order.customerInfo.email, name: order.customerInfo.fullName }];
     sendSmtpEmail.subject = `${
@@ -205,7 +205,7 @@ const sendAdminNotificationEmail = async (order, language = "vi") => {
     const orderNumber = order._id.toString().slice(-8).toUpperCase();
     const adminEmail = process.env.EMAIL_TO || "eft.gretech@gmail.com";
 
-    const sendSmtpEmail = new brevo.SendSmtpEmail();
+    const sendSmtpEmail = new SendSmtpEmail();
     sendSmtpEmail.sender = { name: "EFT Technology", email: "no-reply@eft-chem.com" };
     sendSmtpEmail.to = [{ email: adminEmail }];
     sendSmtpEmail.subject = isVietnamese
