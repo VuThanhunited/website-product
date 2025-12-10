@@ -1,22 +1,17 @@
-const formData = require("form-data");
-const Mailgun = require("mailgun.js");
+const brevo = require("@getbrevo/brevo");
 
-// Initialize Mailgun
-let mailgun;
-let mg;
-let domain;
+// Initialize Brevo API
+let apiInstance;
+let defaultClient;
 
-if (process.env.MAILGUN_API_KEY && process.env.MAILGUN_DOMAIN) {
-  mailgun = new Mailgun(formData);
-  mg = mailgun.client({
-    username: "api",
-    key: process.env.MAILGUN_API_KEY,
-  });
-  domain = process.env.MAILGUN_DOMAIN;
-  console.log("✅ Mailgun email service initialized");
-  console.log(`   Domain: ${domain}`);
+if (process.env.BREVO_API_KEY) {
+  defaultClient = brevo.ApiClient.instance;
+  const apiKey = defaultClient.authentications["api-key"];
+  apiKey.apiKey = process.env.BREVO_API_KEY;
+  apiInstance = new brevo.TransactionalEmailsApi();
+  console.log("✅ Brevo email service initialized");
 } else {
-  console.warn("⚠️  MAILGUN_API_KEY or MAILGUN_DOMAIN not found");
+  console.warn("⚠️  BREVO_API_KEY not found");
 }
 
 // Generate order email HTML
@@ -167,29 +162,30 @@ const generateOrderEmailHTML = (order, language = "vi") => {
 // Send order confirmation email to customer
 const sendOrderConfirmationEmail = async (order, language = "vi") => {
   try {
-    if (!mg || !domain) {
-      throw new Error("Mailgun not configured - MAILGUN_API_KEY or MAILGUN_DOMAIN missing");
+    if (!apiInstance) {
+      throw new Error("Brevo not configured - BREVO_API_KEY missing");
     }
 
-    console.log("📧 Sending order confirmation email via Mailgun...");
+    console.log("📧 Sending order confirmation email via Brevo...");
     console.log("   Order ID:", order._id);
     console.log("   Customer email:", order.customerInfo.email);
 
     const isVietnamese = language === "vi";
     const orderNumber = order._id.toString().slice(-8).toUpperCase();
 
-    const messageData = {
-      from: `EFT Technology <no-reply@${domain}>`,
-      to: [order.customerInfo.email],
-      subject: `${isVietnamese ? "Xác nhận đơn hàng" : "Order Confirmation"} #${orderNumber} - EFT Technology`,
-      html: generateOrderEmailHTML(order, language),
-    };
+    const sendSmtpEmail = new brevo.SendSmtpEmail();
+    sendSmtpEmail.sender = { name: "EFT Technology", email: "no-reply@eft-chem.com" };
+    sendSmtpEmail.to = [{ email: order.customerInfo.email, name: order.customerInfo.fullName }];
+    sendSmtpEmail.subject = `${
+      isVietnamese ? "Xác nhận đơn hàng" : "Order Confirmation"
+    } #${orderNumber} - EFT Technology`;
+    sendSmtpEmail.htmlContent = generateOrderEmailHTML(order, language);
 
-    const response = await mg.messages.create(domain, messageData);
+    const data = await apiInstance.sendTransacEmail(sendSmtpEmail);
 
     console.log("✅ Order confirmation email sent successfully!");
-    console.log("   Message ID:", response.id);
-    return { success: true, messageId: response.id };
+    console.log("   Message ID:", data.messageId);
+    return { success: true, messageId: data.messageId };
   } catch (error) {
     console.error("❌ Error sending order confirmation email:");
     console.error("   Error:", error.message || error);
@@ -200,30 +196,29 @@ const sendOrderConfirmationEmail = async (order, language = "vi") => {
 // Send admin notification email
 const sendAdminNotificationEmail = async (order, language = "vi") => {
   try {
-    if (!mg || !domain) {
-      throw new Error("Mailgun not configured - MAILGUN_API_KEY or MAILGUN_DOMAIN missing");
+    if (!apiInstance) {
+      throw new Error("Brevo not configured - BREVO_API_KEY missing");
     }
 
-    console.log("📧 Sending admin notification via Mailgun...");
+    console.log("📧 Sending admin notification via Brevo...");
 
     const isVietnamese = language === "vi";
     const orderNumber = order._id.toString().slice(-8).toUpperCase();
     const adminEmail = process.env.EMAIL_TO || "eft.gretech@gmail.com";
 
-    const messageData = {
-      from: `EFT Technology <no-reply@${domain}>`,
-      to: [adminEmail],
-      subject: isVietnamese
-        ? `Đơn hàng mới #${orderNumber} - ${order.customerInfo.email}`
-        : `New Order #${orderNumber} - ${order.customerInfo.email}`,
-      html: generateOrderEmailHTML(order, language),
-    };
+    const sendSmtpEmail = new brevo.SendSmtpEmail();
+    sendSmtpEmail.sender = { name: "EFT Technology", email: "no-reply@eft-chem.com" };
+    sendSmtpEmail.to = [{ email: adminEmail }];
+    sendSmtpEmail.subject = isVietnamese
+      ? `Đơn hàng mới #${orderNumber} - ${order.customerInfo.email}`
+      : `New Order #${orderNumber} - ${order.customerInfo.email}`;
+    sendSmtpEmail.htmlContent = generateOrderEmailHTML(order, language);
 
-    const response = await mg.messages.create(domain, messageData);
+    const data = await apiInstance.sendTransacEmail(sendSmtpEmail);
 
     console.log("✅ Admin notification sent successfully!");
-    console.log("   Message ID:", response.id);
-    return { success: true, messageId: response.id };
+    console.log("   Message ID:", data.messageId);
+    return { success: true, messageId: data.messageId };
   } catch (error) {
     console.error("❌ Error sending admin notification:");
     console.error("   Error:", error.message || error);

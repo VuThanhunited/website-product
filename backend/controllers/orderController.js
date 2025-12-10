@@ -2,15 +2,15 @@ const Order = require("../models/Order");
 const Product = require("../models/Product");
 
 // ============================================
-// EMAIL SERVICE CONFIGURATION - MAILGUN
+// EMAIL SERVICE CONFIGURATION - BREVO
 // ============================================
-// Sử dụng Mailgun vì:
-// - Free tier: 5,000 emails/tháng
-// - Không cần verify domain (dùng sandbox)
+// Sử dụng Brevo (Sendinblue) vì:
+// - Free tier: 300 emails/ngày
+// - KHÔNG cần verify domain
 // - API đơn giản, reliable
 // ============================================
-const emailService = require("../services/emailServiceMailgun");
-console.log("✅ Email Service: Mailgun initialized");
+const emailService = require("../services/emailServiceBrevo");
+console.log("✅ Email Service: Brevo initialized");
 
 const { sendOrderConfirmationEmail: sendCustomerEmail } = emailService;
 
@@ -116,8 +116,8 @@ exports.createOrder = async (req, res) => {
     await order.save();
     console.log("✅ Order saved to database:", order._id);
 
-    // Gửi email xác nhận cho khách hàng qua Mailgun
-    console.log("📧 Sending customer confirmation email via Mailgun...");
+    // Gửi email xác nhận cho khách hàng qua Brevo
+    console.log("📧 Sending customer confirmation email via Brevo...");
     console.log("   To:", order.customerInfo.email);
     sendCustomerEmail(order, language || "vi")
       .then((result) => {
