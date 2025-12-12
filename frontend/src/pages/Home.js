@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Slider from "react-slick";
 import { Link } from "react-router-dom";
-import { getProducts } from "../services/api";
+import { getMediaSlides } from "../services/api";
 import { useLanguage } from "../contexts/LanguageContext";
 import { translations } from "../utils/translations";
 import LazyImage from "../components/LazyImage";
@@ -24,9 +24,9 @@ const Home = () => {
 
   const fetchHomeData = async () => {
     try {
-      const [productsResponse, contentResponse, techArticlesResponse] =
+      const [mediaSlidesResponse, contentResponse, techArticlesResponse] =
         await Promise.all([
-          getProducts(),
+          getMediaSlides(),
           fetch(
             `${
               process.env.REACT_APP_API_URL || "http://localhost:5000/api"
@@ -38,19 +38,9 @@ const Home = () => {
             }/tech-articles?limit=100`
           ).then((res) => res.json()),
         ]);
-      // Lấy 6 sản phẩm featured hoặc 6 sản phẩm đầu tiên có hình ảnh
-      const productsWithImages = productsResponse.data.filter(
-        (product) => product.images && product.images.length > 0
-      );
-      // Ưu tiên sản phẩm featured, nếu không đủ thì lấy thêm sản phẩm khác
-      const featuredProducts = productsWithImages.filter((p) => p.featured);
-      const remainingProducts = productsWithImages.filter((p) => !p.featured);
-      const selectedProducts = [
-        ...featuredProducts,
-        ...remainingProducts,
-      ].slice(0, 6);
-
-      setSlides(selectedProducts);
+      
+      // Use media slides data (already populated with product info)
+      setSlides(mediaSlidesResponse.data || []);
 
       // Use tech articles from API
       const articles = techArticlesResponse.articles || [];
@@ -85,49 +75,62 @@ const Home = () => {
           <div className="loading">{t.loading}</div>
         ) : slides.length > 0 ? (
           <Slider {...sliderSettings}>
-            {slides.map((product, index) => (
-              <div key={product._id} className="slide-item">
-                <Link
-                  to={`/products/${product._id}`}
-                  className="slide-link-wrapper"
-                >
-                  <div className="slide-layout">
-                    {/* Cột trái - Hình ảnh sản phẩm */}
-                    <div className="slide-image-container">
-                      <LazyImage
-                        src={product.images[0]}
-                        alt={product.name}
-                        className="slide-image"
-                      />
-                    </div>
+            {slides.map((slide, index) => {
+              const product = slide.linkToProduct;
+              const imageUrl = slide.url || (product?.images && product.images[0]);
+              const productId = product?._id;
+              
+              return (
+                <div key={slide._id} className="slide-item">
+                  <Link
+                    to={productId ? `/products/${productId}` : '#'}
+                    className="slide-link-wrapper"
+                  >
+                    <div className="slide-layout">
+                      {/* Cột trái - Hình ảnh slide */}
+                      <div className="slide-image-container">
+                        <LazyImage
+                          src={imageUrl}
+                          alt={slide.caption || product?.name || 'Slide'}
+                          className="slide-image"
+                        />
+                      </div>
 
-                    {/* Cột phải - Mô tả sản phẩm */}
-                    <div className="slide-content-container">
-                      <div className="slide-content">
-                        <h3 className="slide-title">
-                          {language === "en" && product.nameEn
-                            ? product.nameEn
-                            : product.name}
-                        </h3>
-                        <p className="slide-description">
-                          {language === "en" && product.descriptionEn
-                            ? product.descriptionEn
-                            : product.description}
-                        </p>
-                        <button className="slide-cta">
-                          {t.viewDetailsButton}
-                        </button>
+                      {/* Cột phải - Mô tả */}
+                      <div className="slide-content-container">
+                        <div className="slide-content">
+                          {slide.caption && (
+                            <h3 className="slide-title">{slide.caption}</h3>
+                          )}
+                          {product && (
+                            <>
+                              <h3 className="slide-title">
+                                {language === "en" && product.nameEn
+                                  ? product.nameEn
+                                  : product.name}
+                              </h3>
+                              <p className="slide-description">
+                                {language === "en" && product.descriptionEn
+                                  ? product.descriptionEn
+                                  : product.description}
+                              </p>
+                              <button className="slide-cta">
+                                {t.viewDetailsButton}
+                              </button>
+                            </>
+                          )}
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  {/* Số thứ tự slide */}
-                  <div className="slide-number">
-                    {index + 1} {t.slideNumber} {slides.length}
-                  </div>
-                </Link>
-              </div>
-            ))}
+                    {/* Số thứ tự slide */}
+                    <div className="slide-number">
+                      {index + 1} {t.slideNumber} {slides.length}
+                    </div>
+                  </Link>
+                </div>
+              );
+            })}
           </Slider>
         ) : (
           <div className="no-slides">

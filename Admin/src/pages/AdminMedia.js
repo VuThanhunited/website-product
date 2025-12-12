@@ -27,6 +27,7 @@ const AdminMedia = () => {
     url: "",
     caption: "",
     linkToProduct: "",
+    syncWithProduct: false,
   });
 
   useEffect(() => {
@@ -57,10 +58,10 @@ const AdminMedia = () => {
   };
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
     setFormData({
       ...formData,
-      [name]: value,
+      [name]: type === 'checkbox' ? checked : value,
     });
   };
 
@@ -69,6 +70,13 @@ const AdminMedia = () => {
     setLoading(true);
 
     try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại.");
+        window.location.href = "/admin/login";
+        return;
+      }
+
       const dataToSend = {
         ...formData,
         linkToProduct: formData.linkToProduct || null,
@@ -76,16 +84,24 @@ const AdminMedia = () => {
 
       if (editingMedia) {
         await updateMediaSlide(editingMedia._id, dataToSend);
-        alert("✅ Cập nhật media thành công!");
+        alert("✅ Cập nhật media thành công!" + 
+          (formData.syncWithProduct ? " Sản phẩm đã được đồng bộ." : ""));
       } else {
         await createMediaSlide(dataToSend);
-        alert("✅ Thêm media thành công!");
+        alert("✅ Thêm media thành công!" + 
+          (formData.syncWithProduct ? " Sản phẩm đã được đồng bộ." : ""));
       }
       resetForm();
       fetchMediaSlides();
     } catch (error) {
       console.error("Error saving media:", error);
-      alert("❌ Lỗi: " + (error.response?.data?.error || error.message));
+      if (error.response?.status === 401) {
+        alert("Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại.");
+        localStorage.removeItem("token");
+        window.location.href = "/admin/login";
+      } else {
+        alert("❌ Lỗi: " + (error.response?.data?.error || error.message));
+      }
     } finally {
       setLoading(false);
     }
@@ -124,6 +140,7 @@ const AdminMedia = () => {
       url: "",
       caption: "",
       linkToProduct: "",
+      syncWithProduct: false,
     });
     setEditingMedia(null);
     setShowForm(false);
@@ -215,6 +232,25 @@ const AdminMedia = () => {
                   ))}
                 </select>
               </div>
+
+              {formData.linkToProduct && (
+                <div className="form-group">
+                  <label className="checkbox-label">
+                    <input
+                      type="checkbox"
+                      name="syncWithProduct"
+                      checked={formData.syncWithProduct}
+                      onChange={handleInputChange}
+                    />
+                    <span>
+                      🔄 Đồng bộ với sản phẩm (cập nhật hình ảnh và đánh dấu featured)
+                    </span>
+                  </label>
+                  <small>
+                    Nếu chọn, hình ảnh slide sẽ được thêm vào sản phẩm và sản phẩm sẽ được đánh dấu featured
+                  </small>
+                </div>
+              )}
 
               <div className="form-actions">
                 <button type="submit" className="btn-submit" disabled={loading}>

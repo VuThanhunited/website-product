@@ -47,8 +47,8 @@ const AdminCompany = () => {
       const response = await axios.get(`${API_URL}/company`, {
         headers: {
           Authorization: `Bearer ${token}`,
-          'Cache-Control': 'no-cache'
-        }
+          "Cache-Control": "no-cache",
+        },
       });
       setCompanyInfo(response.data);
       setFormData({
@@ -109,12 +109,14 @@ const AdminCompany = () => {
       }
       const response = await axios.put(`${API_URL}/company`, formData, {
         headers: {
-          Authorization: `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
       setCompanyInfo(response.data);
       setIsEditing(false);
-      setMessage("✅ Cập nhật thông tin công ty thành công! Trang user sẽ cập nhật sau khi refresh.");
+      setMessage(
+        "✅ Cập nhật thông tin công ty thành công! Trang user sẽ cập nhật sau khi refresh."
+      );
       setTimeout(() => setMessage(""), 3000);
     } catch (error) {
       console.error("Error updating company info:", error);

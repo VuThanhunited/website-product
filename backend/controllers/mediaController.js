@@ -1,5 +1,6 @@
 const MediaSlide = require("../models/MediaSlide");
 const Slogan = require("../models/Slogan");
+const Product = require("../models/Product");
 
 // Get all active media slides
 exports.getMediaSlides = async (req, res) => {
@@ -8,6 +9,11 @@ exports.getMediaSlides = async (req, res) => {
       .populate("linkToProduct")
       .sort({ order: 1 })
       .limit(6);
+    
+    // Disable caching for dynamic content
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+    res.set('Pragma', 'no-cache');
+    res.set('Expires', '0');
     res.json(slides);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -19,7 +25,14 @@ exports.createMediaSlide = async (req, res) => {
   try {
     const slide = new MediaSlide(req.body);
     await slide.save();
-    res.status(201).json(slide);
+    
+    // If linked to product and syncWithProduct is true, update product
+    if (req.body.linkToProduct && req.body.syncWithProduct) {
+      await syncSlideToProduct(slide);
+    }
+    
+    const populatedSlide = await MediaSlide.findById(slide._id).populate("linkToProduct");
+    res.status(201).json(populatedSlide);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -30,15 +43,44 @@ exports.updateMediaSlide = async (req, res) => {
   try {
     const slide = await MediaSlide.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
-    });
+    }).populate("linkToProduct");
+    
     if (!slide) {
       return res.status(404).json({ error: "Không tìm thấy slide" });
     }
+    
+    // If linked to product and syncWithProduct is true, update product
+    if (req.body.linkToProduct && req.body.syncWithProduct) {
+      await syncSlideToProduct(slide);
+    }
+    
     res.json(slide);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
 };
+
+// Helper function to sync slide data to product
+async function syncSlideToProduct(slide) {
+  if (!slide.linkToProduct) return;
+  
+  try {
+    const product = await Product.findById(slide.linkToProduct);
+    if (!product) return;
+    
+    // Update product image if slide has custom image
+    if (slide.url && !product.images.includes(slide.url)) {
+      product.images.unshift(slide.url); // Add to beginning
+    }
+    
+    // Mark as featured
+    product.featured = true;
+    
+    await product.save();
+  } catch (error) {
+    console.error("Error syncing slide to product:", error);
+  }
+}
 
 // Delete media slide
 exports.deleteMediaSlide = async (req, res) => {
