@@ -61,7 +61,7 @@ const AdminMedia = () => {
     const { name, value, type, checked } = e.target;
     setFormData({
       ...formData,
-      [name]: type === 'checkbox' ? checked : value,
+      [name]: type === "checkbox" ? checked : value,
     });
   };
 
@@ -84,12 +84,16 @@ const AdminMedia = () => {
 
       if (editingMedia) {
         await updateMediaSlide(editingMedia._id, dataToSend);
-        alert("✅ Cập nhật media thành công!" + 
-          (formData.syncWithProduct ? " Sản phẩm đã được đồng bộ." : ""));
+        alert(
+          "✅ Cập nhật media thành công!" +
+            (formData.syncWithProduct ? " Sản phẩm đã được đồng bộ." : "")
+        );
       } else {
         await createMediaSlide(dataToSend);
-        alert("✅ Thêm media thành công!" + 
-          (formData.syncWithProduct ? " Sản phẩm đã được đồng bộ." : ""));
+        alert(
+          "✅ Thêm media thành công!" +
+            (formData.syncWithProduct ? " Sản phẩm đã được đồng bộ." : "")
+        );
       }
       resetForm();
       fetchMediaSlides();
@@ -243,11 +247,13 @@ const AdminMedia = () => {
                       onChange={handleInputChange}
                     />
                     <span>
-                      🔄 Đồng bộ với sản phẩm (cập nhật hình ảnh và đánh dấu featured)
+                      🔄 Đồng bộ với sản phẩm (cập nhật hình ảnh và đánh dấu
+                      featured)
                     </span>
                   </label>
                   <small>
-                    Nếu chọn, hình ảnh slide sẽ được thêm vào sản phẩm và sản phẩm sẽ được đánh dấu featured
+                    Nếu chọn, hình ảnh slide sẽ được thêm vào sản phẩm và sản
+                    phẩm sẽ được đánh dấu featured
                   </small>
                 </div>
               )}

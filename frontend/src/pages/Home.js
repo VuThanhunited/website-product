@@ -38,7 +38,7 @@ const Home = () => {
             }/tech-articles?limit=100`
           ).then((res) => res.json()),
         ]);
-      
+
       // Use media slides data (already populated with product info)
       setSlides(mediaSlidesResponse.data || []);
 
@@ -77,13 +77,14 @@ const Home = () => {
           <Slider {...sliderSettings}>
             {slides.map((slide, index) => {
               const product = slide.linkToProduct;
-              const imageUrl = slide.url || (product?.images && product.images[0]);
+              const imageUrl =
+                slide.url || (product?.images && product.images[0]);
               const productId = product?._id;
-              
+
               return (
                 <div key={slide._id} className="slide-item">
                   <Link
-                    to={productId ? `/products/${productId}` : '#'}
+                    to={productId ? `/products/${productId}` : "#"}
                     className="slide-link-wrapper"
                   >
                     <div className="slide-layout">
@@ -91,7 +92,7 @@ const Home = () => {
                       <div className="slide-image-container">
                         <LazyImage
                           src={imageUrl}
-                          alt={slide.caption || product?.name || 'Slide'}
+                          alt={slide.caption || product?.name || "Slide"}
                           className="slide-image"
                         />
                       </div>

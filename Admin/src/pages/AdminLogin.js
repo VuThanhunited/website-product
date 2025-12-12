@@ -42,6 +42,9 @@ const AdminLogin = ({ onLoginSuccess }) => {
         localStorage.setItem("adminToken", response.data.token);
         localStorage.setItem("adminUser", JSON.stringify(response.data.user));
 
+        // Show success message with token expiry info
+        alert("✅ Đăng nhập thành công! Token sẽ có hiệu lực trong 30 ngày.");
+
         // Gọi callback
         if (onLoginSuccess) {
           onLoginSuccess(response.data.user);
@@ -53,6 +56,7 @@ const AdminLogin = ({ onLoginSuccess }) => {
     } catch (error) {
       console.error("Login error:", error);
       setError(
+        error.response?.data?.error || 
         error.response?.data?.message ||
           "Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin."
       );

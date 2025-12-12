@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 // Generate JWT Token
 const generateToken = (userId) => {
   return jwt.sign({ id: userId }, process.env.JWT_SECRET || "your-secret-key", {
-    expiresIn: "7d",
+    expiresIn: process.env.JWT_EXPIRE || "30d",
   });
 };
 
@@ -57,9 +57,7 @@ exports.register = async (req, res) => {
     });
   } catch (error) {
     if (error.code === 11000) {
-      return res
-        .status(400)
-        .json({ error: "Email hoặc tên đăng nhập đã tồn tại" });
+      return res.status(400).json({ error: "Email hoặc tên đăng nhập đã tồn tại" });
     }
     res.status(500).json({ error: error.message });
   }
@@ -172,25 +170,41 @@ exports.protect = async (req, res, next) => {
     }
 
     if (!token) {
-      return res.status(401).json({ error: "Vui lòng đăng nhập" });
+      return res.status(401).json({ 
+        error: "Vui lòng đăng nhập",
+        message: "Không tìm thấy token xác thực" 
+      });
     }
 
     // Verify token
-    const decoded = jwt.verify(
-      token,
-      process.env.JWT_SECRET || "your-secret-key"
-    );
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || "your-secret-key");
 
     // Get user
     req.user = await User.findById(decoded.id);
 
     if (!req.user) {
-      return res.status(401).json({ error: "Người dùng không tồn tại" });
+      return res.status(401).json({ 
+        error: "Người dùng không tồn tại",
+        message: "Tài khoản đã bị xóa hoặc không còn tồn tại"
+      });
     }
 
     next();
   } catch (error) {
-    res.status(401).json({ error: "Token không hợp lệ" });
+    // Check if token expired
+    if (error.name === 'TokenExpiredError') {
+      return res.status(401).json({ 
+        error: "Phiên đăng nhập đã hết hạn",
+        message: "Token đã hết hạn. Vui lòng đăng nhập lại.",
+        expired: true
+      });
+    }
+    
+    // Other JWT errors
+    return res.status(401).json({ 
+      error: "Token không hợp lệ",
+      message: error.message || "Xác thực thất bại"
+    });
   }
 };
 
@@ -223,10 +237,7 @@ exports.verifyToken = async (req, res) => {
       });
     }
 
-    const decoded = jwt.verify(
-      token,
-      process.env.JWT_SECRET || "your-secret-key"
-    );
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || "your-secret-key");
     const user = await User.findById(decoded.id).select("-password");
 
     if (!user) {
