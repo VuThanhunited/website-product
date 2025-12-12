@@ -100,16 +100,14 @@ const Home = () => {
                       {/* Cột phải - Mô tả */}
                       <div className="slide-content-container">
                         <div className="slide-content">
-                          {slide.caption && (
-                            <h3 className="slide-title">{slide.caption}</h3>
-                          )}
+                          <h3 className="slide-title">
+                            {slide.caption ||
+                              (language === "en" && product?.nameEn
+                                ? product.nameEn
+                                : product?.name || "Slide")}
+                          </h3>
                           {product && (
                             <>
-                              <h3 className="slide-title">
-                                {language === "en" && product.nameEn
-                                  ? product.nameEn
-                                  : product.name}
-                              </h3>
                               <p className="slide-description">
                                 {language === "en" && product.descriptionEn
                                   ? product.descriptionEn
