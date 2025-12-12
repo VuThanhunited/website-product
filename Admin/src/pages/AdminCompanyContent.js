@@ -17,14 +17,28 @@ function AdminCompanyContent() {
   const fetchContent = async () => {
     try {
       const token = localStorage.getItem("token");
+      if (!token) {
+        alert("Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại.");
+        window.location.href = "/admin/login";
+        return;
+      }
       const response = await axios.get(`${API_URL}/company-content`, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Cache-Control": "no-cache",
+        },
       });
       setContent(response.data);
       setLoading(false);
     } catch (error) {
       console.error("Error fetching content:", error);
-      alert("Lỗi khi tải nội dung");
+      if (error.response?.status === 401) {
+        alert("Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại.");
+        localStorage.removeItem("token");
+        window.location.href = "/admin/login";
+      } else {
+        alert(`Lỗi: ${error.response?.data?.message || error.message}`);
+      }
       setLoading(false);
     }
   };
@@ -33,14 +47,26 @@ function AdminCompanyContent() {
     try {
       setSaving(true);
       const token = localStorage.getItem("token");
-      await axios.put(`${API_URL}/company-content`, content, {
+      if (!token) {
+        alert("Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại.");
+        window.location.href = "/admin/login";
+        return;
+      }
+      const response = await axios.put(`${API_URL}/company-content`, content, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      alert("Lưu thành công!");
+      alert("Lưu thành công! Trang user sẽ cập nhật sau khi refresh.");
+      console.log("Saved:", response.data);
       fetchContent();
     } catch (error) {
       console.error("Error saving content:", error);
-      alert("Lỗi khi lưu nội dung");
+      if (error.response?.status === 401) {
+        alert("Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại.");
+        localStorage.removeItem("token");
+        window.location.href = "/admin/login";
+      } else {
+        alert(`Lỗi lưu: ${error.response?.data?.message || error.message}`);
+      }
     } finally {
       setSaving(false);
     }

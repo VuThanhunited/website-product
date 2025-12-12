@@ -38,7 +38,18 @@ const AdminCompany = () => {
 
   const fetchCompanyInfo = async () => {
     try {
-      const response = await axios.get(`${API_URL}/company`);
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại.");
+        window.location.href = "/admin/login";
+        return;
+      }
+      const response = await axios.get(`${API_URL}/company`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Cache-Control': 'no-cache'
+        }
+      });
       setCompanyInfo(response.data);
       setFormData({
         companyName: response.data.companyName || "",
@@ -60,7 +71,13 @@ const AdminCompany = () => {
       setLoading(false);
     } catch (error) {
       console.error("Error fetching company info:", error);
-      setMessage("Lỗi khi tải thông tin công ty");
+      if (error.response?.status === 401) {
+        alert("Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại.");
+        localStorage.removeItem("token");
+        window.location.href = "/admin/login";
+      } else {
+        setMessage(`Lỗi: ${error.response?.data?.message || error.message}`);
+      }
       setLoading(false);
     }
   };
@@ -84,14 +101,30 @@ const AdminCompany = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.put(`${API_URL}/company`, formData);
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại.");
+        window.location.href = "/admin/login";
+        return;
+      }
+      const response = await axios.put(`${API_URL}/company`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       setCompanyInfo(response.data);
       setIsEditing(false);
-      setMessage("✅ Cập nhật thông tin công ty thành công!");
+      setMessage("✅ Cập nhật thông tin công ty thành công! Trang user sẽ cập nhật sau khi refresh.");
       setTimeout(() => setMessage(""), 3000);
     } catch (error) {
       console.error("Error updating company info:", error);
-      setMessage("❌ Lỗi khi cập nhật thông tin công ty");
+      if (error.response?.status === 401) {
+        alert("Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại.");
+        localStorage.removeItem("token");
+        window.location.href = "/admin/login";
+      } else {
+        setMessage(`❌ Lỗi: ${error.response?.data?.message || error.message}`);
+      }
     }
   };
 

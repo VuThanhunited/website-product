@@ -10,15 +10,17 @@ exports.getHomePageContent = async (req, res) => {
       content = await HomePageContent.create({});
     }
 
+    // Disable caching for dynamic content
+    res.set("Cache-Control", "no-store, no-cache, must-revalidate, private");
+    res.set("Pragma", "no-cache");
+    res.set("Expires", "0");
     res.json(content);
   } catch (error) {
     console.error("Error fetching home page content:", error);
-    res
-      .status(500)
-      .json({
-        message: "Lỗi khi tải nội dung trang chủ",
-        error: error.message,
-      });
+    res.status(500).json({
+      message: "Lỗi khi tải nội dung trang chủ",
+      error: error.message,
+    });
   }
 };
 
@@ -39,12 +41,10 @@ exports.updateHomePageContent = async (req, res) => {
     res.json({ message: "Cập nhật nội dung trang chủ thành công", content });
   } catch (error) {
     console.error("Error updating home page content:", error);
-    res
-      .status(500)
-      .json({
-        message: "Lỗi khi cập nhật nội dung trang chủ",
-        error: error.message,
-      });
+    res.status(500).json({
+      message: "Lỗi khi cập nhật nội dung trang chủ",
+      error: error.message,
+    });
   }
 };
 
@@ -53,9 +53,7 @@ exports.addFeature = async (req, res) => {
   try {
     const content = await HomePageContent.findOne();
     if (!content) {
-      return res
-        .status(404)
-        .json({ message: "Không tìm thấy nội dung trang chủ" });
+      return res.status(404).json({ message: "Không tìm thấy nội dung trang chủ" });
     }
 
     content.features.push(req.body);
@@ -64,9 +62,7 @@ exports.addFeature = async (req, res) => {
     res.json({ message: "Thêm tính năng thành công", content });
   } catch (error) {
     console.error("Error adding feature:", error);
-    res
-      .status(500)
-      .json({ message: "Lỗi khi thêm tính năng", error: error.message });
+    res.status(500).json({ message: "Lỗi khi thêm tính năng", error: error.message });
   }
 };
 
@@ -77,9 +73,7 @@ exports.updateFeature = async (req, res) => {
     const content = await HomePageContent.findOne();
 
     if (!content) {
-      return res
-        .status(404)
-        .json({ message: "Không tìm thấy nội dung trang chủ" });
+      return res.status(404).json({ message: "Không tìm thấy nội dung trang chủ" });
     }
 
     const feature = content.features.id(featureId);
@@ -93,9 +87,7 @@ exports.updateFeature = async (req, res) => {
     res.json({ message: "Cập nhật tính năng thành công", content });
   } catch (error) {
     console.error("Error updating feature:", error);
-    res
-      .status(500)
-      .json({ message: "Lỗi khi cập nhật tính năng", error: error.message });
+    res.status(500).json({ message: "Lỗi khi cập nhật tính năng", error: error.message });
   }
 };
 
@@ -106,9 +98,7 @@ exports.deleteFeature = async (req, res) => {
     const content = await HomePageContent.findOne();
 
     if (!content) {
-      return res
-        .status(404)
-        .json({ message: "Không tìm thấy nội dung trang chủ" });
+      return res.status(404).json({ message: "Không tìm thấy nội dung trang chủ" });
     }
 
     content.features.pull(featureId);
@@ -117,9 +107,7 @@ exports.deleteFeature = async (req, res) => {
     res.json({ message: "Xóa tính năng thành công", content });
   } catch (error) {
     console.error("Error deleting feature:", error);
-    res
-      .status(500)
-      .json({ message: "Lỗi khi xóa tính năng", error: error.message });
+    res.status(500).json({ message: "Lỗi khi xóa tính năng", error: error.message });
   }
 };
 
@@ -128,9 +116,7 @@ exports.addWhyChooseUsItem = async (req, res) => {
   try {
     const content = await HomePageContent.findOne();
     if (!content) {
-      return res
-        .status(404)
-        .json({ message: "Không tìm thấy nội dung trang chủ" });
+      return res.status(404).json({ message: "Không tìm thấy nội dung trang chủ" });
     }
 
     content.whyChooseUs.items.push(req.body);
@@ -150,9 +136,7 @@ exports.updateWhyChooseUsItem = async (req, res) => {
     const content = await HomePageContent.findOne();
 
     if (!content) {
-      return res
-        .status(404)
-        .json({ message: "Không tìm thấy nội dung trang chủ" });
+      return res.status(404).json({ message: "Không tìm thấy nội dung trang chủ" });
     }
 
     const item = content.whyChooseUs.items.id(itemId);
@@ -166,9 +150,7 @@ exports.updateWhyChooseUsItem = async (req, res) => {
     res.json({ message: "Cập nhật mục thành công", content });
   } catch (error) {
     console.error("Error updating why choose us item:", error);
-    res
-      .status(500)
-      .json({ message: "Lỗi khi cập nhật mục", error: error.message });
+    res.status(500).json({ message: "Lỗi khi cập nhật mục", error: error.message });
   }
 };
 
@@ -179,9 +161,7 @@ exports.deleteWhyChooseUsItem = async (req, res) => {
     const content = await HomePageContent.findOne();
 
     if (!content) {
-      return res
-        .status(404)
-        .json({ message: "Không tìm thấy nội dung trang chủ" });
+      return res.status(404).json({ message: "Không tìm thấy nội dung trang chủ" });
     }
 
     content.whyChooseUs.items.pull(itemId);

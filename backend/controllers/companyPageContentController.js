@@ -10,15 +10,17 @@ exports.getCompanyPageContent = async (req, res) => {
       content = await CompanyPageContent.create({});
     }
 
+    // Disable caching for dynamic content
+    res.set("Cache-Control", "no-store, no-cache, must-revalidate, private");
+    res.set("Pragma", "no-cache");
+    res.set("Expires", "0");
     res.json(content);
   } catch (error) {
     console.error("Error fetching company page content:", error);
-    res
-      .status(500)
-      .json({
-        message: "Lỗi khi tải nội dung trang công ty",
-        error: error.message,
-      });
+    res.status(500).json({
+      message: "Lỗi khi tải nội dung trang công ty",
+      error: error.message,
+    });
   }
 };
 
@@ -42,12 +44,10 @@ exports.updateCompanyPageContent = async (req, res) => {
     });
   } catch (error) {
     console.error("Error updating company page content:", error);
-    res
-      .status(500)
-      .json({
-        message: "Lỗi khi cập nhật nội dung trang công ty",
-        error: error.message,
-      });
+    res.status(500).json({
+      message: "Lỗi khi cập nhật nội dung trang công ty",
+      error: error.message,
+    });
   }
 };
 
@@ -56,9 +56,7 @@ exports.addCoreValue = async (req, res) => {
   try {
     const content = await CompanyPageContent.findOne();
     if (!content) {
-      return res
-        .status(404)
-        .json({ message: "Không tìm thấy nội dung trang công ty" });
+      return res.status(404).json({ message: "Không tìm thấy nội dung trang công ty" });
     }
 
     content.values.items.push(req.body);
@@ -67,9 +65,7 @@ exports.addCoreValue = async (req, res) => {
     res.json({ message: "Thêm giá trị cốt lõi thành công", content });
   } catch (error) {
     console.error("Error adding core value:", error);
-    res
-      .status(500)
-      .json({ message: "Lỗi khi thêm giá trị cốt lõi", error: error.message });
+    res.status(500).json({ message: "Lỗi khi thêm giá trị cốt lõi", error: error.message });
   }
 };
 
@@ -80,9 +76,7 @@ exports.updateCoreValue = async (req, res) => {
     const content = await CompanyPageContent.findOne();
 
     if (!content) {
-      return res
-        .status(404)
-        .json({ message: "Không tìm thấy nội dung trang công ty" });
+      return res.status(404).json({ message: "Không tìm thấy nội dung trang công ty" });
     }
 
     const value = content.values.items.id(valueId);
@@ -96,12 +90,10 @@ exports.updateCoreValue = async (req, res) => {
     res.json({ message: "Cập nhật giá trị cốt lõi thành công", content });
   } catch (error) {
     console.error("Error updating core value:", error);
-    res
-      .status(500)
-      .json({
-        message: "Lỗi khi cập nhật giá trị cốt lõi",
-        error: error.message,
-      });
+    res.status(500).json({
+      message: "Lỗi khi cập nhật giá trị cốt lõi",
+      error: error.message,
+    });
   }
 };
 
@@ -112,9 +104,7 @@ exports.deleteCoreValue = async (req, res) => {
     const content = await CompanyPageContent.findOne();
 
     if (!content) {
-      return res
-        .status(404)
-        .json({ message: "Không tìm thấy nội dung trang công ty" });
+      return res.status(404).json({ message: "Không tìm thấy nội dung trang công ty" });
     }
 
     content.values.items.pull(valueId);
@@ -123,9 +113,7 @@ exports.deleteCoreValue = async (req, res) => {
     res.json({ message: "Xóa giá trị cốt lõi thành công", content });
   } catch (error) {
     console.error("Error deleting core value:", error);
-    res
-      .status(500)
-      .json({ message: "Lỗi khi xóa giá trị cốt lõi", error: error.message });
+    res.status(500).json({ message: "Lỗi khi xóa giá trị cốt lõi", error: error.message });
   }
 };
 
@@ -134,9 +122,7 @@ exports.addAchievement = async (req, res) => {
   try {
     const content = await CompanyPageContent.findOne();
     if (!content) {
-      return res
-        .status(404)
-        .json({ message: "Không tìm thấy nội dung trang công ty" });
+      return res.status(404).json({ message: "Không tìm thấy nội dung trang công ty" });
     }
 
     content.achievements.items.push(req.body);
@@ -145,9 +131,7 @@ exports.addAchievement = async (req, res) => {
     res.json({ message: "Thêm thành tựu thành công", content });
   } catch (error) {
     console.error("Error adding achievement:", error);
-    res
-      .status(500)
-      .json({ message: "Lỗi khi thêm thành tựu", error: error.message });
+    res.status(500).json({ message: "Lỗi khi thêm thành tựu", error: error.message });
   }
 };
 
@@ -158,9 +142,7 @@ exports.updateAchievement = async (req, res) => {
     const content = await CompanyPageContent.findOne();
 
     if (!content) {
-      return res
-        .status(404)
-        .json({ message: "Không tìm thấy nội dung trang công ty" });
+      return res.status(404).json({ message: "Không tìm thấy nội dung trang công ty" });
     }
 
     const achievement = content.achievements.items.id(achievementId);
@@ -174,9 +156,7 @@ exports.updateAchievement = async (req, res) => {
     res.json({ message: "Cập nhật thành tựu thành công", content });
   } catch (error) {
     console.error("Error updating achievement:", error);
-    res
-      .status(500)
-      .json({ message: "Lỗi khi cập nhật thành tựu", error: error.message });
+    res.status(500).json({ message: "Lỗi khi cập nhật thành tựu", error: error.message });
   }
 };
 
@@ -187,9 +167,7 @@ exports.deleteAchievement = async (req, res) => {
     const content = await CompanyPageContent.findOne();
 
     if (!content) {
-      return res
-        .status(404)
-        .json({ message: "Không tìm thấy nội dung trang công ty" });
+      return res.status(404).json({ message: "Không tìm thấy nội dung trang công ty" });
     }
 
     content.achievements.items.pull(achievementId);
@@ -198,8 +176,6 @@ exports.deleteAchievement = async (req, res) => {
     res.json({ message: "Xóa thành tựu thành công", content });
   } catch (error) {
     console.error("Error deleting achievement:", error);
-    res
-      .status(500)
-      .json({ message: "Lỗi khi xóa thành tựu", error: error.message });
+    res.status(500).json({ message: "Lỗi khi xóa thành tựu", error: error.message });
   }
 };
