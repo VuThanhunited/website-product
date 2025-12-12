@@ -20,14 +20,14 @@ let isRefreshing = false;
 let failedQueue = [];
 
 const processQueue = (error, token = null) => {
-  failedQueue.forEach(prom => {
+  failedQueue.forEach((prom) => {
     if (error) {
       prom.reject(error);
     } else {
       prom.resolve(token);
     }
   });
-  
+
   failedQueue = [];
 };
 
@@ -43,42 +43,44 @@ api.interceptors.response.use(
         // If already refreshing, queue this request
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject });
-        }).then(token => {
-          originalRequest.headers['Authorization'] = 'Bearer ' + token;
-          return api(originalRequest);
-        }).catch(err => {
-          return Promise.reject(err);
-        });
+        })
+          .then((token) => {
+            originalRequest.headers["Authorization"] = "Bearer " + token;
+            return api(originalRequest);
+          })
+          .catch((err) => {
+            return Promise.reject(err);
+          });
       }
 
       originalRequest._retry = true;
       isRefreshing = true;
 
-      const refreshToken = localStorage.getItem('refreshToken');
+      const refreshToken = localStorage.getItem("refreshToken");
 
       if (!refreshToken) {
         // No refresh token, redirect to login
-        localStorage.removeItem('token');
-        localStorage.removeItem('refreshToken');
-        window.location.href = '/admin/login';
+        localStorage.removeItem("token");
+        localStorage.removeItem("refreshToken");
+        window.location.href = "/admin/login";
         return Promise.reject(error);
       }
 
       try {
         // Call refresh token endpoint
         const response = await axios.post(`${API_URL}/auth/refresh-token`, {
-          refreshToken: refreshToken
+          refreshToken: refreshToken,
         });
 
         const { token, refreshToken: newRefreshToken } = response.data;
 
         // Save new tokens
-        localStorage.setItem('token', token);
-        localStorage.setItem('refreshToken', newRefreshToken);
+        localStorage.setItem("token", token);
+        localStorage.setItem("refreshToken", newRefreshToken);
 
         // Update authorization header
-        api.defaults.headers.common['Authorization'] = 'Bearer ' + token;
-        originalRequest.headers['Authorization'] = 'Bearer ' + token;
+        api.defaults.headers.common["Authorization"] = "Bearer " + token;
+        originalRequest.headers["Authorization"] = "Bearer " + token;
 
         // Process queued requests
         processQueue(null, token);
@@ -90,12 +92,12 @@ api.interceptors.response.use(
         // Refresh failed, redirect to login
         processQueue(refreshError, null);
         isRefreshing = false;
-        
-        localStorage.removeItem('token');
-        localStorage.removeItem('refreshToken');
-        alert('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
-        window.location.href = '/admin/login';
-        
+
+        localStorage.removeItem("token");
+        localStorage.removeItem("refreshToken");
+        alert("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
+        window.location.href = "/admin/login";
+
         return Promise.reject(refreshError);
       }
     }
@@ -107,9 +109,9 @@ api.interceptors.response.use(
 // Request interceptor to add token to headers
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     if (token) {
-      config.headers['Authorization'] = `Bearer ${token}`;
+      config.headers["Authorization"] = `Bearer ${token}`;
     }
     return config;
   },

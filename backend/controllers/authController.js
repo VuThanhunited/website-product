@@ -3,18 +3,14 @@ const jwt = require("jsonwebtoken");
 
 // Generate JWT Tokens (Access + Refresh)
 const generateTokens = (userId) => {
-  const accessToken = jwt.sign(
-    { id: userId },
-    process.env.JWT_SECRET || "your-secret-key",
-    { expiresIn: process.env.JWT_EXPIRE || "1h" }
-  );
-  
-  const refreshToken = jwt.sign(
-    { id: userId },
-    process.env.JWT_REFRESH_SECRET || "your-refresh-secret-key",
-    { expiresIn: process.env.JWT_REFRESH_EXPIRE || "90d" }
-  );
-  
+  const accessToken = jwt.sign({ id: userId }, process.env.JWT_SECRET || "your-secret-key", {
+    expiresIn: process.env.JWT_EXPIRE || "1h",
+  });
+
+  const refreshToken = jwt.sign({ id: userId }, process.env.JWT_REFRESH_SECRET || "your-refresh-secret-key", {
+    expiresIn: process.env.JWT_REFRESH_EXPIRE || "90d",
+  });
+
   return { accessToken, refreshToken };
 };
 
@@ -109,7 +105,7 @@ exports.login = async (req, res) => {
 
     // Generate access and refresh tokens
     const { accessToken, refreshToken } = generateTokens(user._id);
-    
+
     // Save refresh token to database
     user.refreshToken = refreshToken;
     await user.save();
@@ -121,7 +117,7 @@ exports.login = async (req, res) => {
       maxAge: 60 * 60 * 1000, // 1 hour
       sameSite: "strict",
     });
-    
+
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
@@ -152,13 +148,13 @@ exports.logout = async (req, res) => {
     if (req.user) {
       await User.findByIdAndUpdate(req.user._id, { refreshToken: null });
     }
-    
+
     // Clear cookies
     res.cookie("token", "", {
       httpOnly: true,
       expires: new Date(0),
     });
-    
+
     res.cookie("refreshToken", "", {
       httpOnly: true,
       expires: new Date(0),
@@ -173,34 +169,31 @@ exports.logout = async (req, res) => {
 // Refresh Access Token
 exports.refreshToken = async (req, res) => {
   try {
-    const refreshToken = req.cookies.refreshToken || req.body.refreshToken || req.headers['x-refresh-token'];
+    const refreshToken = req.cookies.refreshToken || req.body.refreshToken || req.headers["x-refresh-token"];
 
     if (!refreshToken) {
-      return res.status(401).json({ 
+      return res.status(401).json({
         error: "Không tìm thấy refresh token",
-        message: "Vui lòng đăng nhập lại" 
+        message: "Vui lòng đăng nhập lại",
       });
     }
 
     // Verify refresh token
-    const decoded = jwt.verify(
-      refreshToken,
-      process.env.JWT_REFRESH_SECRET || "your-refresh-secret-key"
-    );
+    const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET || "your-refresh-secret-key");
 
     // Find user and check if refresh token matches
     const user = await User.findById(decoded.id).select("+refreshToken");
 
     if (!user || user.refreshToken !== refreshToken) {
-      return res.status(401).json({ 
+      return res.status(401).json({
         error: "Refresh token không hợp lệ",
-        message: "Vui lòng đăng nhập lại"
+        message: "Vui lòng đăng nhập lại",
       });
     }
 
     // Generate new access token
     const { accessToken, refreshToken: newRefreshToken } = generateTokens(user._id);
-    
+
     // Update refresh token in database
     user.refreshToken = newRefreshToken;
     await user.save();
@@ -212,7 +205,7 @@ exports.refreshToken = async (req, res) => {
       maxAge: 60 * 60 * 1000, // 1 hour
       sameSite: "strict",
     });
-    
+
     res.cookie("refreshToken", newRefreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
@@ -227,17 +220,17 @@ exports.refreshToken = async (req, res) => {
       refreshToken: newRefreshToken,
     });
   } catch (error) {
-    if (error.name === 'TokenExpiredError') {
-      return res.status(401).json({ 
+    if (error.name === "TokenExpiredError") {
+      return res.status(401).json({
         error: "Refresh token đã hết hạn",
         message: "Vui lòng đăng nhập lại",
-        expired: true
+        expired: true,
       });
     }
-    
-    return res.status(401).json({ 
+
+    return res.status(401).json({
       error: "Refresh token không hợp lệ",
-      message: error.message
+      message: error.message,
     });
   }
 };

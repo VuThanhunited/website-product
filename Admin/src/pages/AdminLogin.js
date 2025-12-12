@@ -45,7 +45,9 @@ const AdminLogin = ({ onLoginSuccess }) => {
         localStorage.setItem("adminUser", JSON.stringify(response.data.user));
 
         // Show success message
-        alert("✅ Đăng nhập thành công! Token sẽ tự động làm mới, bạn không cần đăng nhập lại.");
+        alert(
+          "✅ Đăng nhập thành công! Token sẽ tự động làm mới, bạn không cần đăng nhập lại."
+        );
 
         // Gọi callback
         if (onLoginSuccess) {

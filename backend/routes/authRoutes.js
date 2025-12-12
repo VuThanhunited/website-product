@@ -32,12 +32,7 @@ router.post("/change-password", protect, changePassword);
 // Admin only routes
 router.get("/users", protect, authorize("admin"), getAllUsers);
 router.put("/users/:userId/role", protect, authorize("admin"), updateUserRole);
-router.put(
-  "/users/:userId/status",
-  protect,
-  authorize("admin"),
-  updateUserStatus
-);
+router.put("/users/:userId/status", protect, authorize("admin"), updateUserStatus);
 router.delete("/users/:userId", protect, authorize("admin"), deleteUser);
 
 module.exports = router;

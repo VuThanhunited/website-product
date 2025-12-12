@@ -27,7 +27,6 @@ const AdminMedia = () => {
     url: "",
     caption: "",
     linkToProduct: "",
-    syncWithProduct: false,
   });
 
   useEffect(() => {
@@ -68,10 +67,7 @@ const AdminMedia = () => {
           ...formData,
           [name]: type === "checkbox" ? checked : value,
           caption: selectedProduct.name, // Auto-fill caption with product name
-          url:
-            selectedProduct.images && selectedProduct.images[0]
-              ? selectedProduct.images[0]
-              : formData.url, // Auto-fill URL with first product image
+          // URL giữ nguyên, không tự động cập nhật
         });
         return;
       }
@@ -102,16 +98,10 @@ const AdminMedia = () => {
 
       if (editingMedia) {
         await updateMediaSlide(editingMedia._id, dataToSend);
-        alert(
-          "✅ Cập nhật media thành công!" +
-            (formData.syncWithProduct ? " Sản phẩm đã được đồng bộ." : "")
-        );
+        alert("✅ Cập nhật media thành công!");
       } else {
         await createMediaSlide(dataToSend);
-        alert(
-          "✅ Thêm media thành công!" +
-            (formData.syncWithProduct ? " Sản phẩm đã được đồng bộ." : "")
-        );
+        alert("✅ Thêm media thành công!");
       }
       resetForm();
       fetchMediaSlides();
@@ -162,7 +152,6 @@ const AdminMedia = () => {
       url: "",
       caption: "",
       linkToProduct: "",
-      syncWithProduct: false,
     });
     setEditingMedia(null);
     setShowForm(false);
@@ -254,27 +243,6 @@ const AdminMedia = () => {
                   ))}
                 </select>
               </div>
-
-              {formData.linkToProduct && (
-                <div className="form-group">
-                  <label className="checkbox-label">
-                    <input
-                      type="checkbox"
-                      name="syncWithProduct"
-                      checked={formData.syncWithProduct}
-                      onChange={handleInputChange}
-                    />
-                    <span>
-                      🔄 Đồng bộ với sản phẩm (cập nhật hình ảnh và đánh dấu
-                      featured)
-                    </span>
-                  </label>
-                  <small>
-                    Nếu chọn, hình ảnh slide sẽ được thêm vào sản phẩm và sản
-                    phẩm sẽ được đánh dấu featured
-                  </small>
-                </div>
-              )}
 
               <div className="form-actions">
                 <button type="submit" className="btn-submit" disabled={loading}>
