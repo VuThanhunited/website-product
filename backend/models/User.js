@@ -33,7 +33,6 @@ const userSchema = new mongoose.Schema(
       type: String,
       select: false,
     },
-    },
     isActive: {
       type: Boolean,
       default: true,
