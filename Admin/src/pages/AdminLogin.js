@@ -38,12 +38,14 @@ const AdminLogin = ({ onLoginSuccess }) => {
       );
 
       if (response.data.success) {
-        // Lưu token vào localStorage
-        localStorage.setItem("adminToken", response.data.token);
+        // Lưu tokens vào localStorage
+        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("refreshToken", response.data.refreshToken);
+        localStorage.setItem("adminToken", response.data.token); // Backward compatibility
         localStorage.setItem("adminUser", JSON.stringify(response.data.user));
 
-        // Show success message with token expiry info
-        alert("✅ Đăng nhập thành công! Token sẽ có hiệu lực trong 30 ngày.");
+        // Show success message
+        alert("✅ Đăng nhập thành công! Token sẽ tự động làm mới, bạn không cần đăng nhập lại.");
 
         // Gọi callback
         if (onLoginSuccess) {
@@ -56,8 +58,8 @@ const AdminLogin = ({ onLoginSuccess }) => {
     } catch (error) {
       console.error("Login error:", error);
       setError(
-        error.response?.data?.error || 
-        error.response?.data?.message ||
+        error.response?.data?.error ||
+          error.response?.data?.message ||
           "Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin."
       );
     } finally {

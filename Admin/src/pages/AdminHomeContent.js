@@ -33,7 +33,7 @@ function AdminHomeContent() {
     } catch (error) {
       console.error("Error fetching content:", error);
       if (error.response?.status === 401) {
-        const errorMsg = error.response?.data?.expired 
+        const errorMsg = error.response?.data?.expired
           ? "Token đã hết hạn (hết hạn sau 30 ngày). Vui lòng đăng nhập lại để lấy token mới."
           : "Phiên đăng nhập không hợp lệ. Vui lòng đăng nhập lại.";
         alert(errorMsg);

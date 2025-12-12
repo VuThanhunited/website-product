@@ -1,11 +1,26 @@
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 
-// Generate JWT Token
+// Generate JWT Tokens (Access + Refresh)
+const generateTokens = (userId) => {
+  const accessToken = jwt.sign(
+    { id: userId },
+    process.env.JWT_SECRET || "your-secret-key",
+    { expiresIn: process.env.JWT_EXPIRE || "1h" }
+  );
+  
+  const refreshToken = jwt.sign(
+    { id: userId },
+    process.env.JWT_REFRESH_SECRET || "your-refresh-secret-key",
+    { expiresIn: process.env.JWT_REFRESH_EXPIRE || "90d" }
+  );
+  
+  return { accessToken, refreshToken };
+};
+
+// Legacy function for backward compatibility
 const generateToken = (userId) => {
-  return jwt.sign({ id: userId }, process.env.JWT_SECRET || "your-secret-key", {
-    expiresIn: process.env.JWT_EXPIRE || "30d",
-  });
+  return generateTokens(userId).accessToken;
 };
 
 // Register
@@ -92,14 +107,25 @@ exports.login = async (req, res) => {
       return res.status(403).json({ error: "Tài khoản đã bị khóa" });
     }
 
-    // Generate token
-    const token = generateToken(user._id);
+    // Generate access and refresh tokens
+    const { accessToken, refreshToken } = generateTokens(user._id);
+    
+    // Save refresh token to database
+    user.refreshToken = refreshToken;
+    await user.save();
 
-    // Set cookie
-    res.cookie("token", token, {
+    // Set cookies
+    res.cookie("token", accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      maxAge: 60 * 60 * 1000, // 1 hour
+      sameSite: "strict",
+    });
+    
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 90 * 24 * 60 * 60 * 1000, // 90 days
       sameSite: "strict",
     });
 
@@ -111,7 +137,8 @@ exports.login = async (req, res) => {
         email: user.email,
         role: user.role,
       },
-      token,
+      token: accessToken,
+      refreshToken: refreshToken,
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -121,8 +148,18 @@ exports.login = async (req, res) => {
 // Logout
 exports.logout = async (req, res) => {
   try {
-    // Clear cookie
+    // Clear refresh token from database
+    if (req.user) {
+      await User.findByIdAndUpdate(req.user._id, { refreshToken: null });
+    }
+    
+    // Clear cookies
     res.cookie("token", "", {
+      httpOnly: true,
+      expires: new Date(0),
+    });
+    
+    res.cookie("refreshToken", "", {
       httpOnly: true,
       expires: new Date(0),
     });
@@ -130,6 +167,78 @@ exports.logout = async (req, res) => {
     res.json({ message: "Đăng xuất thành công" });
   } catch (error) {
     res.status(500).json({ error: error.message });
+  }
+};
+
+// Refresh Access Token
+exports.refreshToken = async (req, res) => {
+  try {
+    const refreshToken = req.cookies.refreshToken || req.body.refreshToken || req.headers['x-refresh-token'];
+
+    if (!refreshToken) {
+      return res.status(401).json({ 
+        error: "Không tìm thấy refresh token",
+        message: "Vui lòng đăng nhập lại" 
+      });
+    }
+
+    // Verify refresh token
+    const decoded = jwt.verify(
+      refreshToken,
+      process.env.JWT_REFRESH_SECRET || "your-refresh-secret-key"
+    );
+
+    // Find user and check if refresh token matches
+    const user = await User.findById(decoded.id).select("+refreshToken");
+
+    if (!user || user.refreshToken !== refreshToken) {
+      return res.status(401).json({ 
+        error: "Refresh token không hợp lệ",
+        message: "Vui lòng đăng nhập lại"
+      });
+    }
+
+    // Generate new access token
+    const { accessToken, refreshToken: newRefreshToken } = generateTokens(user._id);
+    
+    // Update refresh token in database
+    user.refreshToken = newRefreshToken;
+    await user.save();
+
+    // Set new cookies
+    res.cookie("token", accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 60 * 60 * 1000, // 1 hour
+      sameSite: "strict",
+    });
+    
+    res.cookie("refreshToken", newRefreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 90 * 24 * 60 * 60 * 1000, // 90 days
+      sameSite: "strict",
+    });
+
+    res.json({
+      success: true,
+      message: "Token đã được làm mới",
+      token: accessToken,
+      refreshToken: newRefreshToken,
+    });
+  } catch (error) {
+    if (error.name === 'TokenExpiredError') {
+      return res.status(401).json({ 
+        error: "Refresh token đã hết hạn",
+        message: "Vui lòng đăng nhập lại",
+        expired: true
+      });
+    }
+    
+    return res.status(401).json({ 
+      error: "Refresh token không hợp lệ",
+      message: error.message
+    });
   }
 };
 
@@ -170,9 +279,9 @@ exports.protect = async (req, res, next) => {
     }
 
     if (!token) {
-      return res.status(401).json({ 
+      return res.status(401).json({
         error: "Vui lòng đăng nhập",
-        message: "Không tìm thấy token xác thực" 
+        message: "Không tìm thấy token xác thực",
       });
     }
 
@@ -183,27 +292,27 @@ exports.protect = async (req, res, next) => {
     req.user = await User.findById(decoded.id);
 
     if (!req.user) {
-      return res.status(401).json({ 
+      return res.status(401).json({
         error: "Người dùng không tồn tại",
-        message: "Tài khoản đã bị xóa hoặc không còn tồn tại"
+        message: "Tài khoản đã bị xóa hoặc không còn tồn tại",
       });
     }
 
     next();
   } catch (error) {
     // Check if token expired
-    if (error.name === 'TokenExpiredError') {
-      return res.status(401).json({ 
+    if (error.name === "TokenExpiredError") {
+      return res.status(401).json({
         error: "Phiên đăng nhập đã hết hạn",
         message: "Token đã hết hạn. Vui lòng đăng nhập lại.",
-        expired: true
+        expired: true,
       });
     }
-    
+
     // Other JWT errors
-    return res.status(401).json({ 
+    return res.status(401).json({
       error: "Token không hợp lệ",
-      message: error.message || "Xác thực thất bại"
+      message: error.message || "Xác thực thất bại",
     });
   }
 };

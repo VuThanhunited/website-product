@@ -13,6 +13,7 @@ const {
   updateUserStatus,
   changePassword,
   deleteUser,
+  refreshToken,
 } = require("../controllers/authController");
 const { authorize } = require("../middleware/auth");
 
@@ -22,6 +23,7 @@ router.post("/login", login);
 router.post("/admin/login", adminLogin);
 router.post("/logout", logout);
 router.get("/verify", verifyToken);
+router.post("/refresh-token", refreshToken);
 
 // Protected routes
 router.get("/me", protect, getCurrentUser);
