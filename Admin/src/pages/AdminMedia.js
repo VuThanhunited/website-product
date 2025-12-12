@@ -59,6 +59,21 @@ const AdminMedia = () => {
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
+    
+    // If changing product selection, auto-update caption and url
+    if (name === "linkToProduct" && value) {
+      const selectedProduct = products.find(p => p._id === value);
+      if (selectedProduct) {
+        setFormData({
+          ...formData,
+          [name]: type === "checkbox" ? checked : value,
+          caption: selectedProduct.name, // Auto-fill caption with product name
+          url: selectedProduct.images && selectedProduct.images[0] ? selectedProduct.images[0] : formData.url, // Auto-fill URL with first product image
+        });
+        return;
+      }
+    }
+    
     setFormData({
       ...formData,
       [name]: type === "checkbox" ? checked : value,
