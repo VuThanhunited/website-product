@@ -24,20 +24,8 @@ router.put("/", protect, authorize("admin"), companyController.updateCompanyInfo
 
 // Partners routes
 router.get("/partners", companyController.getPartners);
-router.post(
-  "/partners",
-  protect,
-  authorize("admin"),
-  upload.single("logo"),
-  companyController.createPartner
-);
-router.put(
-  "/partners/:id",
-  protect,
-  authorize("admin"),
-  upload.single("logo"),
-  companyController.updatePartner
-);
+router.post("/partners", protect, authorize("admin"), upload.single("logo"), companyController.createPartner);
+router.put("/partners/:id", protect, authorize("admin"), upload.single("logo"), companyController.updatePartner);
 router.delete("/partners/:id", protect, authorize("admin"), companyController.deletePartner);
 
 module.exports = router;

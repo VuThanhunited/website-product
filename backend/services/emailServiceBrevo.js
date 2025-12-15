@@ -243,6 +243,11 @@ const sendPasswordResetEmail = async (email, code, username) => {
     return { success: true, message: "Email sent (dev mode)" };
   }
 
+  console.log("📧 Preparing password reset email...");
+  console.log("   To:", email);
+  console.log("   Code:", code);
+  console.log("   Username:", username);
+
   const htmlContent = `
 <!DOCTYPE html>
 <html>
@@ -250,8 +255,8 @@ const sendPasswordResetEmail = async (email, code, username) => {
 <body style="margin: 0; padding: 20px; font-family: Arial, sans-serif; background-color: #f4f4f4;">
   <div style="max-width: 600px; margin: 0 auto; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
     <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; text-align: center;">
-      <h1 style="margin: 0; color: white; font-size: 28px;">🔐 Đặt Lại Mật Khẩu</h1>
-      <p style="margin: 10px 0 0 0; color: white; font-size: 16px;">EFT Technology</p>
+      <h1 style="margin: 0; color: white; font-size: 28px;">EFT Technology</h1>
+      <p style="margin: 10px 0 0 0; color: white; font-size: 16px;">Đặt Lại Mật Khẩu</p>
     </div>
     
     <div style="padding: 40px 30px;">
@@ -267,13 +272,13 @@ const sendPasswordResetEmail = async (email, code, username) => {
           ${code}
         </div>
         <p style="font-size: 13px; color: #999; margin-top: 15px;">
-          ⏱️ Mã này sẽ hết hạn sau <strong>15 phút</strong>
+          Mã này sẽ hết hạn sau <strong>15 phút</strong>
         </p>
       </div>
       
       <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 25px 0;">
         <p style="margin: 0; font-size: 14px; color: #856404;">
-          ⚠️ <strong>Lưu ý bảo mật:</strong> Không chia sẻ mã này với bất kỳ ai. Nếu bạn không yêu cầu đặt lại mật khẩu, vui lòng bỏ qua email này.
+          <strong>Lưu ý bảo mật:</strong> Không chia sẻ mã này với bất kỳ ai. Nếu bạn không yêu cầu đặt lại mật khẩu, vui lòng bỏ qua email này.
         </p>
       </div>
       
@@ -285,7 +290,7 @@ const sendPasswordResetEmail = async (email, code, username) => {
     
     <div style="background: #f8f9fa; padding: 20px 30px; text-align: center; border-top: 1px solid #eee;">
       <p style="margin: 0; font-size: 13px; color: #999;">
-        © ${new Date().getFullYear()} EFT Applied Technology Development Co. Ltd.<br>
+        EFT Applied Technology Development Co. Ltd.<br>
         Đông Xuất, Vạn Môn, Bắc Ninh
       </p>
     </div>
@@ -295,30 +300,43 @@ const sendPasswordResetEmail = async (email, code, username) => {
   `;
 
   try {
+    const emailData = {
+      sender: {
+        name: "EFT Technology",
+        email: "eft.gretech@gmail.com",
+      },
+      to: [{ email: email, name: username }],
+      subject: "Mã xác thực đặt lại mật khẩu - EFT Technology",
+      htmlContent: htmlContent,
+    };
+
+    console.log("📤 Sending to Brevo API...");
+    console.log("   Sender:", emailData.sender.email);
+    console.log("   Recipient:", emailData.to[0].email);
+    console.log("   Subject:", emailData.subject);
+
     const response = await axios.post(
       BREVO_API_URL,
-      {
-        sender: {
-          name: "EFT Technology",
-          email: process.env.EMAIL_USER || "eft.gretech@gmail.com",
-        },
-        to: [{ email: email }],
-        subject: "🔐 Mã Xác Thực Đặt Lại Mật Khẩu - EFT Technology",
-        htmlContent: htmlContent,
-      },
+      emailData,
       {
         headers: {
           "api-key": process.env.BREVO_API_KEY,
           "Content-Type": "application/json",
-          accept: "application/json",
         },
       }
     );
 
-    console.log("✅ Password reset email sent successfully to:", email);
+    console.log("✅ Password reset email sent successfully!");
+    console.log("   To:", email);
+    console.log("   Message ID:", response.data.messageId);
+    console.log("   Status:", response.status);
+    console.log("   Response:", JSON.stringify(response.data));
     return { success: true, messageId: response.data.messageId };
   } catch (error) {
-    console.error("❌ Error sending password reset email:", error.response?.data || error.message);
+    console.error("❌ Error sending password reset email:");
+    console.error("   Status:", error.response?.status);
+    console.error("   Data:", JSON.stringify(error.response?.data));
+    console.error("   Message:", error.message);
     throw new Error("Không thể gửi email. Vui lòng thử lại sau.");
   }
 };
