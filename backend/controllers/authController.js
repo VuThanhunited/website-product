@@ -314,11 +314,6 @@ exports.updateProfile = async (req, res) => {
     });
   }
 };
-      success: false,
-      message: error.message,
-    });
-  }
-};
 
 // Verify token middleware
 exports.protect = async (req, res, next) => {
