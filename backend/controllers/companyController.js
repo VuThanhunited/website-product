@@ -68,15 +68,35 @@ exports.createPartner = async (req, res) => {
         partners: [],
       });
     }
+
+    let logoData;
+    if (req.file) {
+      // If file is uploaded, convert to base64
+      const base64Logo = req.file.buffer.toString("base64");
+      logoData = `data:${req.file.mimetype};base64,${base64Logo}`;
+    } else if (req.body.logoUrl) {
+      // If URL is provided
+      logoData = req.body.logoUrl;
+    } else {
+      logoData = req.body.logo; // Fallback to legacy field
+    }
+
     const newPartner = {
       name: req.body.name,
-      logo: req.body.logo || req.body.logoUrl,
+      logo: logoData,
       website: req.body.link,
     };
+
     companyInfo.partners.push(newPartner);
     await companyInfo.save();
-    res.status(201).json(newPartner);
+
+    res.status(201).json({
+      success: true,
+      message: "Partner created successfully",
+      partner: companyInfo.partners[companyInfo.partners.length - 1],
+    });
   } catch (error) {
+    console.error("Create partner error:", error);
     res.status(400).json({ error: error.message });
   }
 };
@@ -88,16 +108,34 @@ exports.updatePartner = async (req, res) => {
     if (!companyInfo) {
       return res.status(404).json({ error: "Company info not found" });
     }
+
     const partner = companyInfo.partners.id(req.params.id);
     if (!partner) {
       return res.status(404).json({ error: "Partner not found" });
     }
-    partner.name = req.body.name || partner.name;
-    partner.logo = req.body.logo || req.body.logoUrl || partner.logo;
-    partner.website = req.body.link || partner.website;
+
+    // Update fields
+    if (req.body.name) partner.name = req.body.name;
+    if (req.body.link) partner.website = req.body.link;
+
+    // Handle logo update
+    if (req.file) {
+      // If file is uploaded, convert to base64
+      const base64Logo = req.file.buffer.toString("base64");
+      partner.logo = `data:${req.file.mimetype};base64,${base64Logo}`;
+    } else if (req.body.logoUrl) {
+      // If URL is provided
+      partner.logo = req.body.logoUrl;
+    }
+
     await companyInfo.save();
-    res.json(partner);
+    res.json({
+      success: true,
+      message: "Partner updated successfully",
+      partner: partner,
+    });
   } catch (error) {
+    console.error("Update partner error:", error);
     res.status(400).json({ error: error.message });
   }
 };
