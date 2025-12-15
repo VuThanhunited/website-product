@@ -737,7 +737,7 @@ exports.forgotPassword = async (req, res) => {
 
     // Save reset token
     const PasswordResetToken = require("../models/PasswordResetToken");
-    
+
     // Delete old tokens for this user
     await PasswordResetToken.deleteMany({ userId: user._id, isUsed: false });
 
@@ -754,7 +754,7 @@ exports.forgotPassword = async (req, res) => {
     if (method === "email") {
       const { sendPasswordResetEmail } = require("../services/emailServiceBrevo");
       await sendPasswordResetEmail(identifier, code, user.username);
-      
+
       res.json({
         success: true,
         message: "Mã xác thực đã được gửi đến email của bạn",
@@ -763,7 +763,7 @@ exports.forgotPassword = async (req, res) => {
     } else {
       const { sendPasswordResetSMS } = require("../services/smsService");
       await sendPasswordResetSMS(identifier, code);
-      
+
       res.json({
         success: true,
         message: "Mã xác thực đã được gửi đến số điện thoại của bạn",
@@ -792,7 +792,7 @@ exports.verifyResetCode = async (req, res) => {
     }
 
     const PasswordResetToken = require("../models/PasswordResetToken");
-    
+
     // Find valid token
     const resetToken = await PasswordResetToken.findOne({
       contactInfo: identifier,
@@ -842,7 +842,7 @@ exports.resetPasswordWithCode = async (req, res) => {
     }
 
     const PasswordResetToken = require("../models/PasswordResetToken");
-    
+
     // Find valid token
     const resetToken = await PasswordResetToken.findOne({
       contactInfo: identifier,
