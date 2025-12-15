@@ -233,7 +233,98 @@ const sendAdminNotificationEmail = async (order, language = "vi") => {
   }
 };
 
+// Send password reset email
+const sendPasswordResetEmail = async (email, code, username) => {
+  if (!brevoConfigured) {
+    console.log("=== Password Reset Email (Development Mode) ===");
+    console.log("To:", email);
+    console.log("Code:", code);
+    console.log("==============================================");
+    return { success: true, message: "Email sent (dev mode)" };
+  }
+
+  const htmlContent = `
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"></head>
+<body style="margin: 0; padding: 20px; font-family: Arial, sans-serif; background-color: #f4f4f4;">
+  <div style="max-width: 600px; margin: 0 auto; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; text-align: center;">
+      <h1 style="margin: 0; color: white; font-size: 28px;">🔐 Đặt Lại Mật Khẩu</h1>
+      <p style="margin: 10px 0 0 0; color: white; font-size: 16px;">EFT Technology</p>
+    </div>
+    
+    <div style="padding: 40px 30px;">
+      <p style="font-size: 16px; color: #333; margin-bottom: 20px;">Xin chào <strong>${username}</strong>,</p>
+      
+      <p style="font-size: 15px; color: #555; line-height: 1.6;">
+        Bạn đã yêu cầu đặt lại mật khẩu cho tài khoản của mình. Sử dụng mã xác thực bên dưới để tiếp tục:
+      </p>
+      
+      <div style="background: #f8f9fa; border-radius: 8px; padding: 30px; text-align: center; margin: 30px 0;">
+        <p style="font-size: 14px; color: #666; margin-bottom: 10px;">Mã xác thực của bạn:</p>
+        <div style="font-size: 36px; font-weight: bold; color: #667eea; letter-spacing: 8px; font-family: 'Courier New', monospace;">
+          ${code}
+        </div>
+        <p style="font-size: 13px; color: #999; margin-top: 15px;">
+          ⏱️ Mã này sẽ hết hạn sau <strong>15 phút</strong>
+        </p>
+      </div>
+      
+      <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 25px 0;">
+        <p style="margin: 0; font-size: 14px; color: #856404;">
+          ⚠️ <strong>Lưu ý bảo mật:</strong> Không chia sẻ mã này với bất kỳ ai. Nếu bạn không yêu cầu đặt lại mật khẩu, vui lòng bỏ qua email này.
+        </p>
+      </div>
+      
+      <p style="font-size: 14px; color: #777; margin-top: 30px;">
+        Nếu bạn gặp vấn đề, vui lòng liên hệ với chúng tôi qua email: 
+        <a href="mailto:eft.gretech@gmail.com" style="color: #667eea; text-decoration: none;">eft.gretech@gmail.com</a>
+      </p>
+    </div>
+    
+    <div style="background: #f8f9fa; padding: 20px 30px; text-align: center; border-top: 1px solid #eee;">
+      <p style="margin: 0; font-size: 13px; color: #999;">
+        © ${new Date().getFullYear()} EFT Applied Technology Development Co. Ltd.<br>
+        Đông Xuất, Vạn Môn, Bắc Ninh
+      </p>
+    </div>
+  </div>
+</body>
+</html>
+  `;
+
+  try {
+    const response = await axios.post(
+      BREVO_API_URL,
+      {
+        sender: {
+          name: "EFT Technology",
+          email: process.env.EMAIL_USER || "eft.gretech@gmail.com",
+        },
+        to: [{ email: email }],
+        subject: "🔐 Mã Xác Thực Đặt Lại Mật Khẩu - EFT Technology",
+        htmlContent: htmlContent,
+      },
+      {
+        headers: {
+          "api-key": process.env.BREVO_API_KEY,
+          "Content-Type": "application/json",
+          accept: "application/json",
+        },
+      }
+    );
+
+    console.log("✅ Password reset email sent successfully to:", email);
+    return { success: true, messageId: response.data.messageId };
+  } catch (error) {
+    console.error("❌ Error sending password reset email:", error.response?.data || error.message);
+    throw new Error("Không thể gửi email. Vui lòng thử lại sau.");
+  }
+};
+
 module.exports = {
   sendOrderConfirmationEmail,
   sendAdminNotificationEmail,
+  sendPasswordResetEmail,
 };

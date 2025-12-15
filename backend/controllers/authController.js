@@ -695,3 +695,199 @@ exports.deleteUser = async (req, res) => {
     });
   }
 };
+
+// Forgot Password - Request reset code
+exports.forgotPassword = async (req, res) => {
+  try {
+    const { identifier, method } = req.body; // identifier can be email or phone
+
+    if (!identifier || !method) {
+      return res.status(400).json({
+        success: false,
+        message: "Vui lòng nhập email hoặc số điện thoại và chọn phương thức nhận mã",
+      });
+    }
+
+    if (!["email", "sms"].includes(method)) {
+      return res.status(400).json({
+        success: false,
+        message: "Phương thức không hợp lệ",
+      });
+    }
+
+    // Find user by email or phone
+    let user;
+    if (method === "email") {
+      user = await User.findOne({ email: identifier });
+      if (!user) {
+        return res.status(404).json({
+          success: false,
+          message: "Không tìm thấy tài khoản với email này",
+        });
+      }
+    } else {
+      // SMS method - find by phone
+      user = await User.findOne({ phone: identifier });
+      if (!user) {
+        return res.status(404).json({
+          success: false,
+          message: "Không tìm thấy tài khoản với số điện thoại này",
+        });
+      }
+    }
+
+    // Generate 6-digit code
+    const { generateVerificationCode } = require("../services/smsService");
+    const code = generateVerificationCode();
+
+    // Save reset token
+    const PasswordResetToken = require("../models/PasswordResetToken");
+    
+    // Delete old tokens for this user
+    await PasswordResetToken.deleteMany({ userId: user._id, isUsed: false });
+
+    // Create new token
+    await PasswordResetToken.create({
+      userId: user._id,
+      code: code,
+      method: method,
+      contactInfo: identifier,
+      expiresAt: new Date(Date.now() + 15 * 60 * 1000), // 15 minutes
+    });
+
+    // Send code via email or SMS
+    if (method === "email") {
+      const { sendPasswordResetEmail } = require("../services/emailServiceBrevo");
+      await sendPasswordResetEmail(identifier, code, user.username);
+      
+      res.json({
+        success: true,
+        message: "Mã xác thực đã được gửi đến email của bạn",
+        method: "email",
+      });
+    } else {
+      const { sendPasswordResetSMS } = require("../services/smsService");
+      await sendPasswordResetSMS(identifier, code);
+      
+      res.json({
+        success: true,
+        message: "Mã xác thực đã được gửi đến số điện thoại của bạn",
+        method: "sms",
+      });
+    }
+  } catch (error) {
+    console.error("Forgot password error:", error);
+    res.status(500).json({
+      success: false,
+      message: error.message || "Lỗi khi gửi mã xác thực",
+    });
+  }
+};
+
+// Verify reset code
+exports.verifyResetCode = async (req, res) => {
+  try {
+    const { identifier, code } = req.body;
+
+    if (!identifier || !code) {
+      return res.status(400).json({
+        success: false,
+        message: "Vui lòng nhập đầy đủ thông tin",
+      });
+    }
+
+    const PasswordResetToken = require("../models/PasswordResetToken");
+    
+    // Find valid token
+    const resetToken = await PasswordResetToken.findOne({
+      contactInfo: identifier,
+      code: code,
+      isUsed: false,
+      expiresAt: { $gt: new Date() },
+    });
+
+    if (!resetToken) {
+      return res.status(400).json({
+        success: false,
+        message: "Mã xác thực không hợp lệ hoặc đã hết hạn",
+      });
+    }
+
+    res.json({
+      success: true,
+      message: "Mã xác thực hợp lệ",
+      resetTokenId: resetToken._id,
+    });
+  } catch (error) {
+    console.error("Verify reset code error:", error);
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// Reset password with code
+exports.resetPasswordWithCode = async (req, res) => {
+  try {
+    const { identifier, code, newPassword } = req.body;
+
+    if (!identifier || !code || !newPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "Vui lòng nhập đầy đủ thông tin",
+      });
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({
+        success: false,
+        message: "Mật khẩu mới phải có ít nhất 6 ký tự",
+      });
+    }
+
+    const PasswordResetToken = require("../models/PasswordResetToken");
+    
+    // Find valid token
+    const resetToken = await PasswordResetToken.findOne({
+      contactInfo: identifier,
+      code: code,
+      isUsed: false,
+      expiresAt: { $gt: new Date() },
+    }).populate("userId");
+
+    if (!resetToken) {
+      return res.status(400).json({
+        success: false,
+        message: "Mã xác thực không hợp lệ hoặc đã hết hạn",
+      });
+    }
+
+    // Update password
+    const user = await User.findById(resetToken.userId).select("+password");
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "Không tìm thấy người dùng",
+      });
+    }
+
+    user.password = newPassword;
+    await user.save();
+
+    // Mark token as used
+    resetToken.isUsed = true;
+    await resetToken.save();
+
+    res.json({
+      success: true,
+      message: "Đặt lại mật khẩu thành công! Bạn có thể đăng nhập với mật khẩu mới.",
+    });
+  } catch (error) {
+    console.error("Reset password error:", error);
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};

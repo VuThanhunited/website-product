@@ -15,6 +15,9 @@ const {
   updateProfile,
   deleteUser,
   refreshToken,
+  forgotPassword,
+  verifyResetCode,
+  resetPasswordWithCode,
 } = require("../controllers/authController");
 const { authorize } = require("../middleware/auth");
 
@@ -25,6 +28,11 @@ router.post("/admin/login", adminLogin);
 router.post("/logout", logout);
 router.get("/verify", verifyToken);
 router.post("/refresh-token", refreshToken);
+
+// Password reset routes (public)
+router.post("/forgot-password", forgotPassword);
+router.post("/verify-reset-code", verifyResetCode);
+router.post("/reset-password", resetPasswordWithCode);
 
 // Protected routes
 router.get("/me", protect, getCurrentUser);
