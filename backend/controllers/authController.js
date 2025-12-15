@@ -250,10 +250,67 @@ exports.getCurrentUser = async (req, res) => {
         username: user.username,
         email: user.email,
         role: user.role,
+        address: user.address || "",
+        phone: user.phone || "",
+        fullName: user.fullName || "",
       },
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
+  }
+};
+
+// Update user profile
+exports.updateProfile = async (req, res) => {
+  try {
+    const { fullName, phone, address, email } = req.body;
+
+    const user = await User.findById(req.user.id);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "Không tìm thấy người dùng",
+      });
+    }
+
+    // Update fields (only if provided)
+    if (fullName !== undefined) user.fullName = fullName;
+    if (phone !== undefined) user.phone = phone;
+    if (address !== undefined) user.address = address;
+
+    // Check if email is being changed and if it's already taken
+    if (email && email !== user.email) {
+      const existingUser = await User.findOne({ email });
+      if (existingUser) {
+        return res.status(400).json({
+          success: false,
+          message: "Email này đã được sử dụng",
+        });
+      }
+      user.email = email;
+    }
+
+    await user.save();
+
+    res.json({
+      success: true,
+      message: "Cập nhật thông tin thành công",
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+        role: user.role,
+        address: user.address,
+        phone: user.phone,
+        fullName: user.fullName,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
   }
 };
 

@@ -12,6 +12,7 @@ const {
   updateUserRole,
   updateUserStatus,
   changePassword,
+  updateProfile,
   deleteUser,
   refreshToken,
 } = require("../controllers/authController");
@@ -27,6 +28,7 @@ router.post("/refresh-token", refreshToken);
 
 // Protected routes
 router.get("/me", protect, getCurrentUser);
+router.put("/profile", protect, updateProfile);
 router.post("/change-password", protect, changePassword);
 
 // Admin only routes

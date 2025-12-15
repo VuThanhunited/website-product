@@ -17,13 +17,24 @@ function AdminTechArticles() {
   const fetchArticles = async () => {
     try {
       const token = localStorage.getItem("token");
+      if (!token) {
+        alert("Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại.");
+        window.location.href = "/admin/login";
+        return;
+      }
       const response = await axios.get(`${API_URL}/tech-articles?limit=100`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setArticles(response.data.articles || []);
     } catch (error) {
       console.error("Error fetching articles:", error);
-      alert("Lỗi khi tải danh sách bài viết");
+      if (error.response?.status === 401) {
+        alert("Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại.");
+        localStorage.removeItem("token");
+        window.location.href = "/admin/login";
+      } else {
+        alert("Lỗi khi tải danh sách bài viết");
+      }
     } finally {
       setLoading(false);
     }
@@ -33,6 +44,12 @@ function AdminTechArticles() {
     e.preventDefault();
     try {
       const token = localStorage.getItem("token");
+      if (!token) {
+        alert("Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại.");
+        window.location.href = "/admin/login";
+        return;
+      }
+
       const formData = new FormData(e.target);
 
       const articleData = {
@@ -74,7 +91,13 @@ function AdminTechArticles() {
       fetchArticles();
     } catch (error) {
       console.error("Error saving article:", error);
-      alert("Lỗi khi lưu bài viết");
+      if (error.response?.status === 401) {
+        alert("Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại.");
+        localStorage.removeItem("token");
+        window.location.href = "/admin/login";
+      } else {
+        alert("Lỗi khi lưu bài viết");
+      }
     }
   };
 
@@ -88,6 +111,11 @@ function AdminTechArticles() {
 
     try {
       const token = localStorage.getItem("token");
+      if (!token) {
+        alert("Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại.");
+        window.location.href = "/admin/login";
+        return;
+      }
       await axios.delete(`${API_URL}/tech-articles/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -95,7 +123,13 @@ function AdminTechArticles() {
       fetchArticles();
     } catch (error) {
       console.error("Error deleting article:", error);
-      alert("Lỗi khi xóa bài viết");
+      if (error.response?.status === 401) {
+        alert("Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại.");
+        localStorage.removeItem("token");
+        window.location.href = "/admin/login";
+      } else {
+        alert("Lỗi khi xóa bài viết");
+      }
     }
   };
 

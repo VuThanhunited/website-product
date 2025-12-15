@@ -47,12 +47,28 @@ const AdminPartners = () => {
 
   const fetchPartners = async () => {
     try {
-      const response = await axios.get(`${API_URL}/company/partners`);
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại.");
+        window.location.href = "/admin/login";
+        return;
+      }
+      const response = await axios.get(`${API_URL}/company/partners`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setPartners(response.data);
       setLoading(false);
     } catch (error) {
       console.error("Error fetching partners:", error);
-      setMessage("Lỗi khi tải đối tác");
+      if (error.response?.status === 401) {
+        alert("Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại.");
+        localStorage.removeItem("token");
+        window.location.href = "/admin/login";
+      } else {
+        setMessage("Lỗi khi tải đối tác");
+      }
       setLoading(false);
     }
   };
@@ -76,6 +92,13 @@ const AdminPartners = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại.");
+        window.location.href = "/admin/login";
+        return;
+      }
+
       const submitData = new FormData();
       submitData.append("name", formData.name);
       submitData.append("link", formData.link);
@@ -91,13 +114,19 @@ const AdminPartners = () => {
           `${API_URL}/company/partners/${editingId}`,
           submitData,
           {
-            headers: { "Content-Type": "multipart/form-data" },
+            headers: {
+              "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${token}`,
+            },
           }
         );
         setMessage("✅ Cập nhật đối tác thành công!");
       } else {
         await axios.post(`${API_URL}/company/partners`, submitData, {
-          headers: { "Content-Type": "multipart/form-data" },
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
         });
         setMessage("✅ Thêm đối tác mới thành công!");
       }
@@ -106,7 +135,13 @@ const AdminPartners = () => {
       setTimeout(() => setMessage(""), 3000);
     } catch (error) {
       console.error("Error saving partner:", error);
-      setMessage("❌ Lỗi khi lưu đối tác");
+      if (error.response?.status === 401) {
+        alert("Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại.");
+        localStorage.removeItem("token");
+        window.location.href = "/admin/login";
+      } else {
+        setMessage("❌ Lỗi khi lưu đối tác");
+      }
     }
   };
 
@@ -127,13 +162,28 @@ const AdminPartners = () => {
     if (!window.confirm("Bạn có chắc muốn xóa đối tác này?")) return;
 
     try {
-      await axios.delete(`${API_URL}/company/partners/${id}`);
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại.");
+        window.location.href = "/admin/login";
+        return;
+      }
+
+      await axios.delete(`${API_URL}/company/partners/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       setMessage("✅ Xóa đối tác thành công!");
       fetchPartners();
       setTimeout(() => setMessage(""), 3000);
     } catch (error) {
       console.error("Error deleting partner:", error);
-      setMessage("❌ Lỗi khi xóa đối tác");
+      if (error.response?.status === 401) {
+        alert("Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại.");
+        localStorage.removeItem("token");
+        window.location.href = "/admin/login";
+      } else {
+        setMessage("❌ Lỗi khi xóa đối tác");
+      }
     }
   };
 
