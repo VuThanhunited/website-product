@@ -7,9 +7,8 @@ const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000/api";
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
-  const [step, setStep] = useState(1); // 1: Enter email/phone, 2: Enter code, 3: New password
-  const [method, setMethod] = useState("email"); // email or sms
-  const [identifier, setIdentifier] = useState(""); // email or phone
+  const [step, setStep] = useState(1); // 1: Enter email, 2: Enter code, 3: New password
+  const [identifier, setIdentifier] = useState(""); // email
   const [code, setCode] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -25,7 +24,7 @@ const ForgotPassword = () => {
     try {
       const response = await axios.post(`${API_URL}/auth/forgot-password`, {
         identifier,
-        method,
+        method: "email",
       });
 
       if (response.data.success) {
@@ -128,9 +127,8 @@ const ForgotPassword = () => {
           <div className="forgot-password-header">
             <h1>🔐 Quên Mật Khẩu</h1>
             <p>
-              {step === 1 &&
-                "Nhập email hoặc số điện thoại để nhận mã xác thực"}
-              {step === 2 && "Nhập mã xác thực đã được gửi đến bạn"}
+              {step === 1 && "Nhập email của bạn để nhận mã xác thực"}
+              {step === 2 && "Nhập mã xác thực đã được gửi đến email"}
               {step === 3 && "Đặt mật khẩu mới cho tài khoản"}
             </p>
           </div>
@@ -158,44 +156,16 @@ const ForgotPassword = () => {
           )}
 
           {/* Step 1: Enter Email/Phone */}
+          {step === 1 && ( */}
           {step === 1 && (
             <form onSubmit={handleRequestCode} className="forgot-password-form">
-              <div className="method-selector">
-                <label>Chọn phương thức nhận mã:</label>
-                <div className="method-buttons">
-                  <button
-                    type="button"
-                    className={`method-btn ${
-                      method === "email" ? "active" : ""
-                    }`}
-                    onClick={() => setMethod("email")}
-                  >
-                    📧 Email
-                  </button>
-                  <button
-                    type="button"
-                    className={`method-btn ${method === "sms" ? "active" : ""}`}
-                    onClick={() => setMethod("sms")}
-                  >
-                    📱 SMS
-                  </button>
-                </div>
-              </div>
-
               <div className="form-group">
-                <label>
-                  {method === "email" ? "Email:" : "Số điện thoại:"}
-                </label>
+                <label>Email:</label>
                 <input
-                  type={method === "email" ? "email" : "tel"}
+                  type="email"
                   value={identifier}
                   onChange={(e) => setIdentifier(e.target.value)}
-                  placeholder={
-                    method === "email"
-                      ? "Nhập email của bạn"
-                      : "Nhập số điện thoại"
-                  }
-                  required
+                  placeholder="Nhập email của bạn"equired
                 />
               </div>
 
@@ -224,9 +194,7 @@ const ForgotPassword = () => {
                   required
                 />
                 <small>
-                  Mã đã được gửi đến{" "}
-                  {method === "email" ? "email" : "số điện thoại"}:{" "}
-                  <strong>{identifier}</strong>
+                  Mã đã được gửi đến email: <strong>{identifier}</strong>
                 </small>
               </div>
 
