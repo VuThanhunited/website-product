@@ -265,7 +265,7 @@ exports.updateProfile = async (req, res) => {
   try {
     const { fullName, phone, address, email } = req.body;
 
-    const user = await User.findById(req.user.id);
+    const user = await User.findById(req.user.id).select("+password");
 
     if (!user) {
       return res.status(404).json({
@@ -307,7 +307,13 @@ exports.updateProfile = async (req, res) => {
       },
     });
   } catch (error) {
+    console.error("Update profile error:", error);
     res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
       success: false,
       message: error.message,
     });
