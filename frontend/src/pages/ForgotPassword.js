@@ -156,7 +156,7 @@ const ForgotPassword = () => {
           )}
 
           {/* Step 1: Enter Email/Phone */}
-          {step === 1 && ( */}
+
           {step === 1 && (
             <form onSubmit={handleRequestCode} className="forgot-password-form">
               <div className="form-group">
@@ -165,10 +165,10 @@ const ForgotPassword = () => {
                   type="email"
                   value={identifier}
                   onChange={(e) => setIdentifier(e.target.value)}
-                  placeholder="Nhập email của bạn"equired
+                  placeholder="Nhập email của bạn"
+                  equired
                 />
-              </div>
-
+              </div>{" "}
               <button
                 type="submit"
                 className="btn-primary btn-block"
