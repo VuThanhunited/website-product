@@ -53,9 +53,15 @@ const Profile = () => {
 
     try {
       const token = localStorage.getItem("token");
+      console.log("🔄 Updating profile...");
+      console.log("   Data:", profileData);
+      console.log("   Token:", token ? "✅ Present" : "❌ Missing");
+
       const response = await axios.put(`${API_URL}/auth/profile`, profileData, {
         headers: { Authorization: `Bearer ${token}` },
       });
+
+      console.log("✅ Response:", response.data);
 
       if (response.data.success) {
         setUser(response.data.user);
@@ -63,6 +69,11 @@ const Profile = () => {
         setIsEditingProfile(false);
       }
     } catch (error) {
+      console.error("❌ Update profile error:");
+      console.error("   Status:", error.response?.status);
+      console.error("   Data:", error.response?.data);
+      console.error("   Message:", error.message);
+      
       setMessage({
         type: "error",
         text: error.response?.data?.message || "Lỗi khi cập nhật thông tin",
