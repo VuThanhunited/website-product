@@ -75,12 +75,8 @@ const Profile = () => {
       const data = await res.json();
 
       if (data.user) {
-        // Update successful
+        // Update successful - just update state, no localStorage
         setUser(data.user);
-
-        // Update localStorage
-        const userStr = JSON.stringify(data.user);
-        localStorage.setItem("user", userStr);
 
         // Success message
         const msg =
@@ -107,9 +103,10 @@ const Profile = () => {
       }
     } catch (err) {
       console.error("Profile update error:", err);
-      const msg = language === "vi" 
-        ? "Lỗi khi cập nhật thông tin" 
-        : "Error updating profile";
+      const msg =
+        language === "vi"
+          ? "Lỗi khi cập nhật thông tin"
+          : "Error updating profile";
 
       setMessage({
         type: "error",
