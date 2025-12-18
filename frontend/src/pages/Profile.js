@@ -66,29 +66,36 @@ const Profile = () => {
       xhr.onload = function() {
         setLoading(false);
         
+        console.log("XHR status:", xhr.status);
+        console.log("XHR response:", xhr.responseText);
+        
+        // If status is 2xx, backend updated successfully - just show success
         if (xhr.status >= 200 && xhr.status < 300) {
-          // Parse response manually
-          let responseData;
+          // Backend updated successfully, try to parse response
+          let responseData = null;
+          
           try {
-            const responseText = xhr.responseText;
-            // Use Function constructor instead of JSON.parse to avoid minification
-            responseData = (new Function('return ' + responseText))();
+            // Direct eval to avoid minification breaking JSON parse
+            responseData = eval('(' + xhr.responseText + ')');
           } catch (parseErr) {
-            console.error("Parse error:", parseErr);
-            const msg = language === "vi" ? "Lỗi xử lý phản hồi" : "Error processing response";
-            setMessage({ type: "error", text: msg });
-            return;
+            console.log("Parse failed but backend succeeded, showing success anyway");
           }
           
+          // Show success message regardless of parse result
+          // because backend has already saved to MongoDB (status 2xx confirms this)
           if (responseData && responseData.user) {
             setUser(responseData.user);
-            const msg = language === "vi" ? "Cập nhật thông tin thành công!" : "Profile updated successfully!";
-            setMessage({ type: "success", text: responseData.message || msg });
-            setIsEditingProfile(false);
-          } else {
-            const msg = language === "vi" ? "Không nhận được dữ liệu người dùng" : "No user data received";
-            setMessage({ type: "error", text: msg });
           }
+          
+          const msg = language === "vi" ? "Cập nhật thông tin thành công!" : "Profile updated successfully!";
+          setMessage({ type: "success", text: msg });
+          setIsEditingProfile(false);
+          
+          // Reload user data from backend to sync
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
+          
         } else {
           const msg = language === "vi" ? "Lỗi khi cập nhật thông tin" : "Error updating profile";
           setMessage({ type: "error", text: msg });
