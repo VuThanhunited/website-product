@@ -58,69 +58,88 @@ const Profile = () => {
     try {
       // Use XMLHttpRequest instead of fetch to avoid minification issues
       const xhr = new XMLHttpRequest();
-      
+
       xhr.open("PUT", `${API_URL}/auth/profile`, true);
       xhr.setRequestHeader("Authorization", `Bearer ${token}`);
       xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-      
-      xhr.onload = function() {
+
+      // Use arrow function to preserve context and access React state setters
+      xhr.onload = () => {
         setLoading(false);
-        
+
         console.log("XHR status:", xhr.status);
         console.log("XHR response:", xhr.responseText);
-        
+
         // If status is 2xx, backend updated successfully - just show success
         if (xhr.status >= 200 && xhr.status < 300) {
           // Backend updated successfully, try to parse response
           let responseData = null;
-          
+
           try {
             // Direct eval to avoid minification breaking JSON parse
-            responseData = eval('(' + xhr.responseText + ')');
+            responseData = eval("(" + xhr.responseText + ")");
           } catch (parseErr) {
-            console.log("Parse failed but backend succeeded, showing success anyway");
+            console.log(
+              "Parse failed but backend succeeded, showing success anyway"
+            );
           }
-          
+
           // Show success message regardless of parse result
           // because backend has already saved to MongoDB (status 2xx confirms this)
           if (responseData && responseData.user) {
             setUser(responseData.user);
           }
-          
-          const msg = language === "vi" ? "Cập nhật thông tin thành công!" : "Profile updated successfully!";
+
+          const msg =
+            language === "vi"
+              ? "Cập nhật thông tin thành công!"
+              : "Profile updated successfully!";
           setMessage({ type: "success", text: msg });
           setIsEditingProfile(false);
-          
+
           // Reload user data from backend to sync
           setTimeout(() => {
             window.location.reload();
           }, 1000);
-          
         } else {
-          const msg = language === "vi" ? "Lỗi khi cập nhật thông tin" : "Error updating profile";
+          const msg =
+            language === "vi"
+              ? "Lỗi khi cập nhật thông tin"
+              : "Error updating profile";
           setMessage({ type: "error", text: msg });
         }
       };
-      
-      xhr.onerror = function() {
+
+      xhr.onerror = () => {
         setLoading(false);
         const msg = language === "vi" ? "Lỗi kết nối" : "Connection error";
         setMessage({ type: "error", text: msg });
       };
-      
+
       // Build body string manually
-      const fn = profileData.fullName || '';
-      const em = profileData.email || '';
-      const ph = profileData.phone || '';
-      const ad = profileData.address || '';
-      
-      const bodyString = 'fullName=' + encodeURIComponent(fn) + '&email=' + encodeURIComponent(em) + '&phone=' + encodeURIComponent(ph) + '&address=' + encodeURIComponent(ad);
-      
+      const fn = profileData.fullName || "";
+      const em = profileData.email || "";
+      const ph = profileData.phone || "";
+      const ad = profileData.address || "";
+
+      const bodyString =
+        "fullName=" +
+        encodeURIComponent(fn) +
+        "&email=" +
+        encodeURIComponent(em) +
+        "&phone=" +
+        encodeURIComponent(ph) +
+        "&address=" +
+        encodeURIComponent(ad);
+
       xhr.send(bodyString);
     } catch (err) {
       console.error("Profile update error:", err);
       setLoading(false);
-      const msg = language === "vi" ? "Lỗi khi cập nhật thông tin" : "Error updating profile";
+      const msg =
+        language === "vi"
+          ? "Lỗi khi cập nhật thông tin"
+          : "Error updating profile";
       setMessage({ type: "error", text: msg });
     }
   };
