@@ -7,7 +7,7 @@ import "../styles/Profile.css";
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000/api";
 
 const Profile = () => {
-  const { user, setUser } = useAuth();
+  const { user, updateUser } = useAuth();
   const { language } = useLanguage();
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [isChangingPassword, setIsChangingPassword] = useState(false);
@@ -87,7 +87,7 @@ const Profile = () => {
           // Show success message regardless of parse result
           // because backend has already saved to MongoDB (status 2xx confirms this)
           if (responseData && responseData.user) {
-            setUser(responseData.user);
+            updateUser(responseData.user);
           }
 
           const msg =
