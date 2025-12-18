@@ -56,17 +56,27 @@ const Profile = () => {
     try {
       const token = localStorage.getItem("token");
 
-      const response = await axios.put(`${API_URL}/auth/profile`, profileData, {
+      const response = await axios({
+        method: 'put',
+        url: `${API_URL}/auth/profile`,
+        data: profileData,
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
+        validateStatus: () => true, // Accept all status codes
       });
 
-      // Check if update was successful
-      if (response.status >= 200 && response.status < 300 && response.data) {
+      console.log("📨 Profile Update Response:", {
+        status: response.status,
+        statusText: response.statusText,
+        data: response.data,
+      });
+
+      // Check if update was successful (200-299)
+      if (response.status >= 200 && response.status < 300) {
         // Update user state
-        if (response.data.user) {
+        if (response.data && response.data.user) {
           setUser(response.data.user);
           localStorage.setItem("user", JSON.stringify(response.data.user));
         } else {
@@ -87,7 +97,7 @@ const Profile = () => {
         });
         setIsEditingProfile(false);
       } else {
-        // Server returned error status
+        // Server returned error status (400+)
         const errorMsg =
           language === "vi"
             ? `Lỗi: ${response.status}`
@@ -98,13 +108,14 @@ const Profile = () => {
         });
       }
     } catch (error) {
+      console.error("❌ Network Error:", error);
       const errorMsg =
         language === "vi"
-          ? "Lỗi khi cập nhật thông tin"
-          : "Error updating profile";
+          ? "Lỗi kết nối mạng"
+          : "Network error";
       setMessage({
         type: "error",
-        text: error.response?.data?.message || errorMsg,
+        text: error.message || errorMsg,
       });
     } finally {
       setLoading(false);
