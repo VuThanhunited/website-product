@@ -54,53 +54,63 @@ const Profile = () => {
     setMessage({ type: "", text: "" });
 
     const token = localStorage.getItem("token");
-    
+
     try {
       const res = await fetch(`${API_URL}/auth/profile`, {
-        method: 'PUT',
+        method: "PUT",
+        mode: "cors",
+        credentials: "include",
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+          Accept: "application/json",
         },
         body: JSON.stringify(profileData),
       });
 
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}`);
+      }
+
       const data = await res.json();
 
-      if (res.ok && data.user) {
+      if (data.user) {
         // Update successful
         setUser(data.user);
-        
-        // Update localStorage without JSON.stringify to avoid minify issues
+
+        // Update localStorage
         const userStr = JSON.stringify(data.user);
         localStorage.setItem("user", userStr);
 
         // Success message
-        const msg = language === "vi" 
-          ? "Cập nhật thông tin thành công!" 
-          : "Profile updated successfully!";
-        
+        const msg =
+          language === "vi"
+            ? "Cập nhật thông tin thành công!"
+            : "Profile updated successfully!";
+
         setMessage({
           type: "success",
           text: data.message || msg,
         });
         setIsEditingProfile(false);
       } else {
-        // Error
-        const msg = language === "vi"
-          ? "Lỗi khi cập nhật thông tin"
-          : "Error updating profile";
-        
+        // No user data
+        const msg =
+          language === "vi"
+            ? "Không nhận được dữ liệu người dùng"
+            : "No user data received";
+
         setMessage({
           type: "error",
-          text: data.message || msg,
+          text: msg,
         });
       }
     } catch (err) {
-      const msg = language === "vi"
-        ? "Lỗi kết nối"
-        : "Connection error";
-      
+      console.error("Profile update error:", err);
+      const msg = language === "vi" 
+        ? "Lỗi khi cập nhật thông tin" 
+        : "Error updating profile";
+
       setMessage({
         type: "error",
         text: msg,
@@ -132,12 +142,15 @@ const Profile = () => {
 
     try {
       const token = localStorage.getItem("token");
-      
+
       const res = await fetch(`${API_URL}/auth/change-password`, {
-        method: 'POST',
+        method: "POST",
+        mode: "cors",
+        credentials: "include",
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+          Accept: "application/json",
         },
         body: JSON.stringify({
           currentPassword: passwordData.currentPassword,
@@ -145,9 +158,13 @@ const Profile = () => {
         }),
       });
 
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}`);
+      }
+
       const data = await res.json();
 
-      if (res.ok && data.success) {
+      if (data.success) {
         setMessage({ type: "success", text: text.passwordSuccess });
         setPasswordData({
           currentPassword: "",
@@ -162,6 +179,7 @@ const Profile = () => {
         });
       }
     } catch (error) {
+      console.error("Change password error:", error);
       setMessage({
         type: "error",
         text: text.passwordError,
