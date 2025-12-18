@@ -315,16 +315,12 @@ const sendPasswordResetEmail = async (email, code, username) => {
     console.log("   Recipient:", emailData.to[0].email);
     console.log("   Subject:", emailData.subject);
 
-    const response = await axios.post(
-      BREVO_API_URL,
-      emailData,
-      {
-        headers: {
-          "api-key": process.env.BREVO_API_KEY,
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const response = await axios.post(BREVO_API_URL, emailData, {
+      headers: {
+        "api-key": process.env.BREVO_API_KEY,
+        "Content-Type": "application/json",
+      },
+    });
 
     console.log("✅ Password reset email sent successfully!");
     console.log("   To:", email);

@@ -263,16 +263,27 @@ exports.getCurrentUser = async (req, res) => {
 // Update user profile
 exports.updateProfile = async (req, res) => {
   try {
+    console.log("📝 Updating profile...");
+    console.log("   User ID:", req.user.id);
+    console.log("   Request body:", req.body);
+
     const { fullName, phone, address, email } = req.body;
 
     const user = await User.findById(req.user.id).select("+password");
 
     if (!user) {
+      console.error("❌ User not found:", req.user.id);
       return res.status(404).json({
         success: false,
         message: "Không tìm thấy người dùng",
       });
     }
+
+    console.log("   Current user:", {
+      username: user.username,
+      email: user.email,
+      fullName: user.fullName,
+    });
 
     // Update fields (only if provided)
     if (fullName !== undefined) user.fullName = fullName;
@@ -283,6 +294,7 @@ exports.updateProfile = async (req, res) => {
     if (email && email !== user.email) {
       const existingUser = await User.findOne({ email });
       if (existingUser) {
+        console.error("❌ Email already in use:", email);
         return res.status(400).json({
           success: false,
           message: "Email này đã được sử dụng",
@@ -291,7 +303,10 @@ exports.updateProfile = async (req, res) => {
       user.email = email;
     }
 
-    await user.save();
+    console.log("   Saving updated user...");
+    await user.save({ validateBeforeSave: true });
+
+    console.log("✅ Profile updated successfully!");
 
     res.json({
       success: true,
@@ -307,10 +322,23 @@ exports.updateProfile = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("Update profile error:", error);
+    console.error("❌ Update profile error:");
+    console.error("   Error name:", error.name);
+    console.error("   Error message:", error.message);
+    console.error("   Error stack:", error.stack);
+
+    // Handle mongoose validation errors
+    if (error.name === "ValidationError") {
+      const errors = Object.values(error.errors).map((e) => e.message);
+      return res.status(400).json({
+        success: false,
+        message: errors.join(", "),
+      });
+    }
+
     res.status(500).json({
       success: false,
-      message: error.message,
+      message: error.message || "Lỗi khi cập nhật thông tin",
     });
   }
 };
