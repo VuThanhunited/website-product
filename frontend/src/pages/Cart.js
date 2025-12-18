@@ -146,52 +146,21 @@ const Cart = () => {
               <span>{getCartTotal().toLocaleString("vi-VN")} ₫</span>
             </div>
 
-            <div className="summary-row">
-              <span>{t.shipping || "Phí vận chuyển"}:</span>
-              <span className="shipping-fee">
-                {getCartTotal() >= 500000 ? (
-                  <span className="free-badge">{t.free || "Miễn phí"}</span>
-                ) : (
-                  "30.000 ₫"
-                )}
-              </span>
-            </div>
-
-            {getCartTotal() < 500000 && (
-              <div className="shipping-progress">
-                <div className="progress-text">
-                  <span>{t.freeShippingProgress || "Mua thêm"}</span>
-                  <strong>
-                    {(500000 - getCartTotal()).toLocaleString("vi-VN")} ₫
-                  </strong>
-                  <span>
-                    {t.toGetFreeShipping || "để được miễn phí vận chuyển"}
-                  </span>
-                </div>
-                <div className="progress-bar">
-                  <div
-                    className="progress-fill"
-                    style={{
-                      width: `${Math.min(
-                        (getCartTotal() / 500000) * 100,
-                        100
-                      )}%`,
-                    }}
-                  ></div>
-                </div>
-              </div>
-            )}
-
             <div className="summary-divider"></div>
 
             <div className="summary-row summary-total">
               <span>{t.total || "Tổng cộng"}:</span>
               <span className="total-amount">
-                {(
-                  getCartTotal() + (getCartTotal() >= 500000 ? 0 : 30000)
-                ).toLocaleString("vi-VN")}{" "}
-                ₫
+                {getCartTotal().toLocaleString("vi-VN")} ₫
               </span>
+            </div>
+
+            <div className="shipping-note">
+              <p style={{ fontSize: "0.9em", color: "#666", marginTop: "10px" }}>
+                {language === "vi" 
+                  ? "* Phí vận chuyển sẽ được tính ở bước thanh toán dựa trên địa chỉ giao hàng"
+                  : "* Shipping fee will be calculated at checkout based on delivery address"}
+              </p>
             </div>
 
             <button className="btn-checkout" onClick={handleCheckout}>
