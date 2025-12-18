@@ -61,19 +61,35 @@ const Profile = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      console.log("✅ Response:", response.data);
+      console.log("✅ Response:", response);
+      console.log("   Status:", response.status);
+      console.log("   Data:", response.data);
+      console.log("   Success flag:", response.data.success);
 
-      if (response.data.success) {
+      // Update user if we got valid user data back
+      if (response.data.user) {
         setUser(response.data.user);
-        setMessage({ type: "success", text: "Cập nhật thông tin thành công!" });
+        setMessage({
+          type: "success",
+          text: response.data.message || "Cập nhật thông tin thành công!",
+        });
         setIsEditingProfile(false);
+
+        // Also update localStorage if using context
+        localStorage.setItem("user", JSON.stringify(response.data.user));
+      } else {
+        console.warn("⚠️ No user data in response:", response.data);
+        setMessage({
+          type: "error",
+          text: "Không nhận được dữ liệu người dùng",
+        });
       }
     } catch (error) {
       console.error("❌ Update profile error:");
       console.error("   Status:", error.response?.status);
       console.error("   Data:", error.response?.data);
       console.error("   Message:", error.message);
-      
+
       setMessage({
         type: "error",
         text: error.response?.data?.message || "Lỗi khi cập nhật thông tin",
