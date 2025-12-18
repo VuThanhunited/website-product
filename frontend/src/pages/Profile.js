@@ -56,44 +56,68 @@ const Profile = () => {
       console.log("🔄 Updating profile...");
       console.log("   Data:", profileData);
       console.log("   Token:", token ? "✅ Present" : "❌ Missing");
+      console.log("   API URL:", `${API_URL}/auth/profile`);
 
-      const response = await axios.put(`${API_URL}/auth/profile`, profileData, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await axios.put(
+        `${API_URL}/auth/profile`, 
+        profileData, 
+        {
+          headers: { 
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json"
+          },
+          validateStatus: (status) => status >= 200 && status < 500, // Don't throw on any status
+        }
+      );
 
-      console.log("✅ Response received:");
+      console.log("📨 Full Response:");
       console.log("   Status:", response.status);
-      console.log("   Data:", response.data);
+      console.log("   StatusText:", response.statusText);
+      console.log("   Headers:", response.headers);
+      console.log("   Data:", JSON.stringify(response.data, null, 2));
 
-      // If we got here without error, the update was successful
-      // Update user state with the returned user data or refetch
-      if (response.data && response.data.user) {
-        setUser(response.data.user);
-        localStorage.setItem("user", JSON.stringify(response.data.user));
-      } else if (response.status === 200) {
-        // If no user data but status 200, refetch user data
-        const updatedUser = { ...user, ...profileData };
-        setUser(updatedUser);
-        localStorage.setItem("user", JSON.stringify(updatedUser));
+      // Check if update was successful (status 200-299)
+      if (response.status >= 200 && response.status < 300) {
+        console.log("✅ Status indicates success!");
+
+        // Update user state
+        if (response.data && response.data.user) {
+          setUser(response.data.user);
+          localStorage.setItem("user", JSON.stringify(response.data.user));
+          console.log("✅ User state updated from response");
+        } else {
+          // Fallback: merge profileData into current user
+          const updatedUser = { ...user, ...profileData };
+          setUser(updatedUser);
+          localStorage.setItem("user", JSON.stringify(updatedUser));
+          console.log("✅ User state updated from form data");
+        }
+
+        // Show success message
+        setMessage({
+          type: "success",
+          text: response.data?.message || "Cập nhật thông tin thành công!",
+        });
+        setIsEditingProfile(false);
+        console.log("✅ Profile update completed successfully!");
+      } else {
+        // Server returned error status
+        console.error("❌ Server returned error status:", response.status);
+        setMessage({
+          type: "error",
+          text: response.data?.message || `Lỗi: ${response.status} - ${response.statusText}`,
+        });
       }
-
-      // Always show success message if we reach here
-      setMessage({
-        type: "success",
-        text: response.data?.message || "Cập nhật thông tin thành công!",
-      });
-      setIsEditingProfile(false);
-
-      console.log("✅ Profile updated successfully!");
     } catch (error) {
-      console.error("❌ Update profile error:");
-      console.error("   Status:", error.response?.status);
-      console.error("   Data:", error.response?.data);
+      console.error("❌ Network or unexpected error:");
+      console.error("   Error type:", error.constructor.name);
       console.error("   Message:", error.message);
+      console.error("   Stack:", error.stack);
+      console.error("   Response:", error.response);
 
       setMessage({
         type: "error",
-        text: error.response?.data?.message || "Lỗi khi cập nhật thông tin",
+        text: error.response?.data?.message || error.message || "Lỗi khi cập nhật thông tin",
       });
     } finally {
       setLoading(false);
