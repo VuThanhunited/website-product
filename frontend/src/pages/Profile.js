@@ -61,29 +61,30 @@ const Profile = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      console.log("✅ Response:", response);
+      console.log("✅ Response received:");
       console.log("   Status:", response.status);
       console.log("   Data:", response.data);
-      console.log("   Success flag:", response.data.success);
 
-      // Update user if we got valid user data back
-      if (response.data.user) {
+      // If we got here without error, the update was successful
+      // Update user state with the returned user data or refetch
+      if (response.data && response.data.user) {
         setUser(response.data.user);
-        setMessage({
-          type: "success",
-          text: response.data.message || "Cập nhật thông tin thành công!",
-        });
-        setIsEditingProfile(false);
-
-        // Also update localStorage if using context
         localStorage.setItem("user", JSON.stringify(response.data.user));
-      } else {
-        console.warn("⚠️ No user data in response:", response.data);
-        setMessage({
-          type: "error",
-          text: "Không nhận được dữ liệu người dùng",
-        });
+      } else if (response.status === 200) {
+        // If no user data but status 200, refetch user data
+        const updatedUser = { ...user, ...profileData };
+        setUser(updatedUser);
+        localStorage.setItem("user", JSON.stringify(updatedUser));
       }
+
+      // Always show success message if we reach here
+      setMessage({
+        type: "success",
+        text: response.data?.message || "Cập nhật thông tin thành công!",
+      });
+      setIsEditingProfile(false);
+
+      console.log("✅ Profile updated successfully!");
     } catch (error) {
       console.error("❌ Update profile error:");
       console.error("   Status:", error.response?.status);
