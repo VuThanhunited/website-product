@@ -56,12 +56,19 @@ const Profile = () => {
     const token = localStorage.getItem("token");
 
     try {
-      // Use URLSearchParams to avoid JSON.stringify
-      const params = new URLSearchParams();
-      params.append('fullName', profileData.fullName || '');
-      params.append('email', profileData.email || '');
-      params.append('phone', profileData.phone || '');
-      params.append('address', profileData.address || '');
+      // Build query string manually to avoid all constructors that minification breaks
+      const fn = profileData.fullName || '';
+      const em = profileData.email || '';
+      const ph = profileData.phone || '';
+      const ad = profileData.address || '';
+      
+      // Manual URL encoding
+      const encodeFn = encodeURIComponent(fn);
+      const encodeEm = encodeURIComponent(em);
+      const encodePh = encodeURIComponent(ph);
+      const encodeAd = encodeURIComponent(ad);
+      
+      const bodyString = 'fullName=' + encodeFn + '&email=' + encodeEm + '&phone=' + encodePh + '&address=' + encodeAd;
 
       const res = await fetch(`${API_URL}/auth/profile`, {
         method: "PUT",
@@ -72,7 +79,7 @@ const Profile = () => {
           "Content-Type": "application/x-www-form-urlencoded",
           Accept: "application/json",
         },
-        body: params.toString(),
+        body: bodyString,
       });
 
       if (!res.ok) {
