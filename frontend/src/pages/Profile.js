@@ -56,78 +56,65 @@ const Profile = () => {
     const token = localStorage.getItem("token");
 
     try {
-      // Build query string manually to avoid all constructors that minification breaks
+      // Use XMLHttpRequest instead of fetch to avoid minification issues
+      const xhr = new XMLHttpRequest();
+      
+      xhr.open("PUT", `${API_URL}/auth/profile`, true);
+      xhr.setRequestHeader("Authorization", `Bearer ${token}`);
+      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+      
+      xhr.onload = function() {
+        setLoading(false);
+        
+        if (xhr.status >= 200 && xhr.status < 300) {
+          // Parse response manually
+          let responseData;
+          try {
+            const responseText = xhr.responseText;
+            // Use Function constructor instead of JSON.parse to avoid minification
+            responseData = (new Function('return ' + responseText))();
+          } catch (parseErr) {
+            console.error("Parse error:", parseErr);
+            const msg = language === "vi" ? "Lỗi xử lý phản hồi" : "Error processing response";
+            setMessage({ type: "error", text: msg });
+            return;
+          }
+          
+          if (responseData && responseData.user) {
+            setUser(responseData.user);
+            const msg = language === "vi" ? "Cập nhật thông tin thành công!" : "Profile updated successfully!";
+            setMessage({ type: "success", text: responseData.message || msg });
+            setIsEditingProfile(false);
+          } else {
+            const msg = language === "vi" ? "Không nhận được dữ liệu người dùng" : "No user data received";
+            setMessage({ type: "error", text: msg });
+          }
+        } else {
+          const msg = language === "vi" ? "Lỗi khi cập nhật thông tin" : "Error updating profile";
+          setMessage({ type: "error", text: msg });
+        }
+      };
+      
+      xhr.onerror = function() {
+        setLoading(false);
+        const msg = language === "vi" ? "Lỗi kết nối" : "Connection error";
+        setMessage({ type: "error", text: msg });
+      };
+      
+      // Build body string manually
       const fn = profileData.fullName || '';
       const em = profileData.email || '';
       const ph = profileData.phone || '';
       const ad = profileData.address || '';
       
-      // Manual URL encoding
-      const encodeFn = encodeURIComponent(fn);
-      const encodeEm = encodeURIComponent(em);
-      const encodePh = encodeURIComponent(ph);
-      const encodeAd = encodeURIComponent(ad);
+      const bodyString = 'fullName=' + encodeURIComponent(fn) + '&email=' + encodeURIComponent(em) + '&phone=' + encodeURIComponent(ph) + '&address=' + encodeURIComponent(ad);
       
-      const bodyString = 'fullName=' + encodeFn + '&email=' + encodeEm + '&phone=' + encodePh + '&address=' + encodeAd;
-
-      const res = await fetch(`${API_URL}/auth/profile`, {
-        method: "PUT",
-        mode: "cors",
-        credentials: "include",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/x-www-form-urlencoded",
-          Accept: "application/json",
-        },
-        body: bodyString,
-      });
-
-      if (!res.ok) {
-        throw new Error(`HTTP ${res.status}`);
-      }
-
-      const data = await res.json();
-
-      if (data.user) {
-        // Update successful - MongoDB already updated by backend
-        setUser(data.user);
-
-        // Success message
-        const msg =
-          language === "vi"
-            ? "Cập nhật thông tin thành công!"
-            : "Profile updated successfully!";
-
-        setMessage({
-          type: "success",
-          text: data.message || msg,
-        });
-        setIsEditingProfile(false);
-      } else {
-        // No user data
-        const msg =
-          language === "vi"
-            ? "Không nhận được dữ liệu người dùng"
-            : "No user data received";
-
-        setMessage({
-          type: "error",
-          text: msg,
-        });
-      }
+      xhr.send(bodyString);
     } catch (err) {
       console.error("Profile update error:", err);
-      const msg =
-        language === "vi"
-          ? "Lỗi khi cập nhật thông tin"
-          : "Error updating profile";
-
-      setMessage({
-        type: "error",
-        text: msg,
-      });
-    } finally {
       setLoading(false);
+      const msg = language === "vi" ? "Lỗi khi cập nhật thông tin" : "Error updating profile";
+      setMessage({ type: "error", text: msg });
     }
   };
     } catch (err) {
