@@ -56,16 +56,23 @@ const Profile = () => {
     const token = localStorage.getItem("token");
 
     try {
+      // Use URLSearchParams to avoid JSON.stringify
+      const params = new URLSearchParams();
+      params.append('fullName', profileData.fullName || '');
+      params.append('email', profileData.email || '');
+      params.append('phone', profileData.phone || '');
+      params.append('address', profileData.address || '');
+
       const res = await fetch(`${API_URL}/auth/profile`, {
         method: "PUT",
         mode: "cors",
         credentials: "include",
         headers: {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
+          "Content-Type": "application/x-www-form-urlencoded",
           Accept: "application/json",
         },
-        body: JSON.stringify(profileData),
+        body: params.toString(),
       });
 
       if (!res.ok) {
@@ -75,7 +82,7 @@ const Profile = () => {
       const data = await res.json();
 
       if (data.user) {
-        // Update successful - just update state, no localStorage
+        // Update successful - MongoDB already updated by backend
         setUser(data.user);
 
         // Success message
@@ -101,6 +108,21 @@ const Profile = () => {
           text: msg,
         });
       }
+    } catch (err) {
+      console.error("Profile update error:", err);
+      const msg =
+        language === "vi"
+          ? "Lỗi khi cập nhật thông tin"
+          : "Error updating profile";
+
+      setMessage({
+        type: "error",
+        text: msg,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
     } catch (err) {
       console.error("Profile update error:", err);
       const msg =
