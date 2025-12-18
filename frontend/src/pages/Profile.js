@@ -53,69 +53,57 @@ const Profile = () => {
     setLoading(true);
     setMessage({ type: "", text: "" });
 
+    const token = localStorage.getItem("token");
+    
     try {
-      const token = localStorage.getItem("token");
-
-      const response = await axios({
-        method: 'put',
-        url: `${API_URL}/auth/profile`,
-        data: profileData,
+      const res = await fetch(`${API_URL}/auth/profile`, {
+        method: 'PUT',
         headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
         },
-        validateStatus: () => true, // Accept all status codes
+        body: JSON.stringify(profileData),
       });
 
-      console.log("📨 Profile Update Response:", {
-        status: response.status,
-        statusText: response.statusText,
-        data: response.data,
-      });
+      const data = await res.json();
 
-      // Check if update was successful (200-299)
-      if (response.status >= 200 && response.status < 300) {
-        // Update user state
-        if (response.data && response.data.user) {
-          setUser(response.data.user);
-          localStorage.setItem("user", JSON.stringify(response.data.user));
-        } else {
-          // Fallback: merge profileData into current user
-          const updatedUser = { ...user, ...profileData };
-          setUser(updatedUser);
-          localStorage.setItem("user", JSON.stringify(updatedUser));
-        }
+      if (res.ok && data.user) {
+        // Update successful
+        setUser(data.user);
+        
+        // Update localStorage without JSON.stringify to avoid minify issues
+        const userStr = JSON.stringify(data.user);
+        localStorage.setItem("user", userStr);
 
-        // Show success message
-        const successMsg =
-          language === "vi"
-            ? "Cập nhật thông tin thành công!"
-            : "Profile updated successfully!";
+        // Success message
+        const msg = language === "vi" 
+          ? "Cập nhật thông tin thành công!" 
+          : "Profile updated successfully!";
+        
         setMessage({
           type: "success",
-          text: response.data?.message || successMsg,
+          text: data.message || msg,
         });
         setIsEditingProfile(false);
       } else {
-        // Server returned error status (400+)
-        const errorMsg =
-          language === "vi"
-            ? `Lỗi: ${response.status}`
-            : `Error: ${response.status}`;
+        // Error
+        const msg = language === "vi"
+          ? "Lỗi khi cập nhật thông tin"
+          : "Error updating profile";
+        
         setMessage({
           type: "error",
-          text: response.data?.message || errorMsg,
+          text: data.message || msg,
         });
       }
-    } catch (error) {
-      console.error("❌ Network Error:", error);
-      const errorMsg =
-        language === "vi"
-          ? "Lỗi kết nối mạng"
-          : "Network error";
+    } catch (err) {
+      const msg = language === "vi"
+        ? "Lỗi kết nối"
+        : "Connection error";
+      
       setMessage({
         type: "error",
-        text: error.message || errorMsg,
+        text: msg,
       });
     } finally {
       setLoading(false);
@@ -144,18 +132,22 @@ const Profile = () => {
 
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.post(
-        `${API_URL}/auth/change-password`,
-        {
+      
+      const res = await fetch(`${API_URL}/auth/change-password`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
           currentPassword: passwordData.currentPassword,
           newPassword: passwordData.newPassword,
-        },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+        }),
+      });
 
-      if (response.data.success) {
+      const data = await res.json();
+
+      if (res.ok && data.success) {
         setMessage({ type: "success", text: text.passwordSuccess });
         setPasswordData({
           currentPassword: "",
@@ -163,11 +155,16 @@ const Profile = () => {
           confirmPassword: "",
         });
         setIsChangingPassword(false);
+      } else {
+        setMessage({
+          type: "error",
+          text: data.message || text.passwordError,
+        });
       }
     } catch (error) {
       setMessage({
         type: "error",
-        text: error.response?.data?.message || text.passwordError,
+        text: text.passwordError,
       });
     } finally {
       setLoading(false);
