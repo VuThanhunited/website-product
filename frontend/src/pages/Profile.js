@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../contexts/AuthContext";
+import { useLanguage } from "../contexts/LanguageContext";
 import axios from "axios";
 import "../styles/Profile.css";
 
@@ -7,6 +8,7 @@ const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000/api";
 
 const Profile = () => {
   const { user, setUser } = useAuth();
+  const { language } = useLanguage();
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [isChangingPassword, setIsChangingPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -53,71 +55,56 @@ const Profile = () => {
 
     try {
       const token = localStorage.getItem("token");
-      console.log("🔄 Updating profile...");
-      console.log("   Data:", profileData);
-      console.log("   Token:", token ? "✅ Present" : "❌ Missing");
-      console.log("   API URL:", `${API_URL}/auth/profile`);
 
-      const response = await axios.put(
-        `${API_URL}/auth/profile`, 
-        profileData, 
-        {
-          headers: { 
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json"
-          },
-          validateStatus: (status) => status >= 200 && status < 500, // Don't throw on any status
-        }
-      );
+      const response = await axios.put(`${API_URL}/auth/profile`, profileData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
 
-      console.log("📨 Full Response:");
-      console.log("   Status:", response.status);
-      console.log("   StatusText:", response.statusText);
-      console.log("   Headers:", response.headers);
-      console.log("   Data:", JSON.stringify(response.data, null, 2));
-
-      // Check if update was successful (status 200-299)
-      if (response.status >= 200 && response.status < 300) {
-        console.log("✅ Status indicates success!");
-
+      // Check if update was successful
+      if (response.status >= 200 && response.status < 300 && response.data) {
         // Update user state
-        if (response.data && response.data.user) {
+        if (response.data.user) {
           setUser(response.data.user);
           localStorage.setItem("user", JSON.stringify(response.data.user));
-          console.log("✅ User state updated from response");
         } else {
           // Fallback: merge profileData into current user
           const updatedUser = { ...user, ...profileData };
           setUser(updatedUser);
           localStorage.setItem("user", JSON.stringify(updatedUser));
-          console.log("✅ User state updated from form data");
         }
 
         // Show success message
+        const successMsg =
+          language === "vi"
+            ? "Cập nhật thông tin thành công!"
+            : "Profile updated successfully!";
         setMessage({
           type: "success",
-          text: response.data?.message || "Cập nhật thông tin thành công!",
+          text: response.data?.message || successMsg,
         });
         setIsEditingProfile(false);
-        console.log("✅ Profile update completed successfully!");
       } else {
         // Server returned error status
-        console.error("❌ Server returned error status:", response.status);
+        const errorMsg =
+          language === "vi"
+            ? `Lỗi: ${response.status}`
+            : `Error: ${response.status}`;
         setMessage({
           type: "error",
-          text: response.data?.message || `Lỗi: ${response.status} - ${response.statusText}`,
+          text: response.data?.message || errorMsg,
         });
       }
     } catch (error) {
-      console.error("❌ Network or unexpected error:");
-      console.error("   Error type:", error.constructor.name);
-      console.error("   Message:", error.message);
-      console.error("   Stack:", error.stack);
-      console.error("   Response:", error.response);
-
+      const errorMsg =
+        language === "vi"
+          ? "Lỗi khi cập nhật thông tin"
+          : "Error updating profile";
       setMessage({
         type: "error",
-        text: error.response?.data?.message || error.message || "Lỗi khi cập nhật thông tin",
+        text: error.response?.data?.message || errorMsg,
       });
     } finally {
       setLoading(false);
@@ -130,7 +117,7 @@ const Profile = () => {
     setMessage({ type: "", text: "" });
 
     if (passwordData.newPassword !== passwordData.confirmPassword) {
-      setMessage({ type: "error", text: "Mật khẩu mới không khớp!" });
+      setMessage({ type: "error", text: text.passwordMismatch });
       setLoading(false);
       return;
     }
@@ -138,7 +125,7 @@ const Profile = () => {
     if (passwordData.newPassword.length < 6) {
       setMessage({
         type: "error",
-        text: "Mật khẩu mới phải có ít nhất 6 ký tự!",
+        text: text.passwordLength,
       });
       setLoading(false);
       return;
@@ -158,7 +145,7 @@ const Profile = () => {
       );
 
       if (response.data.success) {
-        setMessage({ type: "success", text: "Đổi mật khẩu thành công!" });
+        setMessage({ type: "success", text: text.passwordSuccess });
         setPasswordData({
           currentPassword: "",
           newPassword: "",
@@ -169,12 +156,80 @@ const Profile = () => {
     } catch (error) {
       setMessage({
         type: "error",
-        text: error.response?.data?.message || "Lỗi khi đổi mật khẩu",
+        text: error.response?.data?.message || text.passwordError,
       });
     } finally {
       setLoading(false);
     }
   };
+
+  // Translations
+  const t = {
+    vi: {
+      username: "Tên đăng nhập",
+      fullName: "Họ và tên",
+      email: "Email",
+      phone: "Số điện thoại",
+      address: "Địa chỉ",
+      role: "Vai trò",
+      admin: "Quản trị viên",
+      customer: "Khách hàng",
+      notUpdated: "Chưa cập nhật",
+      editProfile: "Chỉnh sửa thông tin",
+      changePassword: "Đổi mật khẩu",
+      editProfileTitle: "Chỉnh sửa thông tin",
+      fullNamePlaceholder: "Nhập họ và tên",
+      phonePlaceholder: "Nhập số điện thoại",
+      addressPlaceholder: "Nhập địa chỉ (không bắt buộc)",
+      saving: "Đang lưu...",
+      saveChanges: "Lưu thay đổi",
+      cancel: "Hủy",
+      changePasswordTitle: "Đổi mật khẩu",
+      currentPassword: "Mật khẩu hiện tại",
+      newPassword: "Mật khẩu mới",
+      confirmPassword: "Xác nhận mật khẩu mới",
+      changing: "Đang đổi...",
+      updateSuccess: "Cập nhật thông tin thành công!",
+      passwordSuccess: "Đổi mật khẩu thành công!",
+      updateError: "Lỗi khi cập nhật thông tin",
+      passwordError: "Lỗi khi đổi mật khẩu",
+      passwordMismatch: "Mật khẩu mới không khớp!",
+      passwordLength: "Mật khẩu mới phải có ít nhất 6 ký tự!",
+    },
+    en: {
+      username: "Username",
+      fullName: "Full Name",
+      email: "Email",
+      phone: "Phone Number",
+      address: "Address",
+      role: "Role",
+      admin: "Administrator",
+      customer: "Customer",
+      notUpdated: "Not updated",
+      editProfile: "Edit Profile",
+      changePassword: "Change Password",
+      editProfileTitle: "Edit Profile",
+      fullNamePlaceholder: "Enter full name",
+      phonePlaceholder: "Enter phone number",
+      addressPlaceholder: "Enter address (optional)",
+      saving: "Saving...",
+      saveChanges: "Save Changes",
+      cancel: "Cancel",
+      changePasswordTitle: "Change Password",
+      currentPassword: "Current Password",
+      newPassword: "New Password",
+      confirmPassword: "Confirm New Password",
+      changing: "Changing...",
+      updateSuccess: "Profile updated successfully!",
+      passwordSuccess: "Password changed successfully!",
+      updateError: "Error updating profile",
+      passwordError: "Error changing password",
+      passwordMismatch: "New passwords do not match!",
+      passwordLength: "New password must be at least 6 characters!",
+    },
+  };
+
+  const text = t[language] || t.vi;
 
   return (
     <div className="profile-page">
@@ -197,29 +252,29 @@ const Profile = () => {
             <>
               <div className="profile-info">
                 <div className="info-item">
-                  <label>Tên đăng nhập:</label>
+                  <label>{text.username}:</label>
                   <span>{user.username}</span>
                 </div>
                 <div className="info-item">
-                  <label>Họ và tên:</label>
-                  <span>{user.fullName || "Chưa cập nhật"}</span>
+                  <label>{text.fullName}:</label>
+                  <span>{user.fullName || text.notUpdated}</span>
                 </div>
                 <div className="info-item">
-                  <label>Email:</label>
+                  <label>{text.email}:</label>
                   <span>{user.email}</span>
                 </div>
                 <div className="info-item">
-                  <label>Số điện thoại:</label>
-                  <span>{user.phone || "Chưa cập nhật"}</span>
+                  <label>{text.phone}:</label>
+                  <span>{user.phone || text.notUpdated}</span>
                 </div>
                 <div className="info-item">
-                  <label>Địa chỉ:</label>
-                  <span>{user.address || "Chưa cập nhật"}</span>
+                  <label>{text.address}:</label>
+                  <span>{user.address || text.notUpdated}</span>
                 </div>
                 <div className="info-item">
-                  <label>Vai trò:</label>
+                  <label>{text.role}:</label>
                   <span>
-                    {user.role === "admin" ? "Quản trị viên" : "Khách hàng"}
+                    {user.role === "admin" ? text.admin : text.customer}
                   </span>
                 </div>
               </div>
@@ -229,13 +284,13 @@ const Profile = () => {
                   className="btn-primary"
                   onClick={() => setIsEditingProfile(true)}
                 >
-                  Chỉnh sửa thông tin
+                  {text.editProfile}
                 </button>
                 <button
                   className="btn-secondary"
                   onClick={() => setIsChangingPassword(true)}
                 >
-                  Đổi mật khẩu
+                  {text.changePassword}
                 </button>
               </div>
             </>
@@ -244,19 +299,19 @@ const Profile = () => {
           {/* Edit Profile Form */}
           {isEditingProfile && (
             <form onSubmit={handleUpdateProfile} className="profile-form">
-              <h3>Chỉnh sửa thông tin</h3>
+              <h3>{text.editProfileTitle}</h3>
               <div className="form-group">
-                <label>Họ và tên:</label>
+                <label>{text.fullName}:</label>
                 <input
                   type="text"
                   name="fullName"
                   value={profileData.fullName}
                   onChange={handleProfileChange}
-                  placeholder="Nhập họ và tên"
+                  placeholder={text.fullNamePlaceholder}
                 />
               </div>
               <div className="form-group">
-                <label>Email:</label>
+                <label>{text.email}:</label>
                 <input
                   type="email"
                   name="email"
@@ -266,22 +321,22 @@ const Profile = () => {
                 />
               </div>
               <div className="form-group">
-                <label>Số điện thoại:</label>
+                <label>{text.phone}:</label>
                 <input
                   type="tel"
                   name="phone"
                   value={profileData.phone}
                   onChange={handleProfileChange}
-                  placeholder="Nhập số điện thoại"
+                  placeholder={text.phonePlaceholder}
                 />
               </div>
               <div className="form-group">
-                <label>Địa chỉ:</label>
+                <label>{text.address}:</label>
                 <textarea
                   name="address"
                   value={profileData.address}
                   onChange={handleProfileChange}
-                  placeholder="Nhập địa chỉ (không bắt buộc)"
+                  placeholder={text.addressPlaceholder}
                   rows="3"
                 />
               </div>
@@ -291,7 +346,7 @@ const Profile = () => {
                   className="btn-primary"
                   disabled={loading}
                 >
-                  {loading ? "Đang lưu..." : "Lưu thay đổi"}
+                  {loading ? text.saving : text.saveChanges}
                 </button>
                 <button
                   type="button"
@@ -302,7 +357,7 @@ const Profile = () => {
                   }}
                   disabled={loading}
                 >
-                  Hủy
+                  {text.cancel}
                 </button>
               </div>
             </form>
@@ -311,9 +366,9 @@ const Profile = () => {
           {/* Change Password Form */}
           {isChangingPassword && (
             <form onSubmit={handleChangePassword} className="profile-form">
-              <h3>Đổi mật khẩu</h3>
+              <h3>{text.changePasswordTitle}</h3>
               <div className="form-group">
-                <label>Mật khẩu hiện tại:</label>
+                <label>{text.currentPassword}:</label>
                 <input
                   type="password"
                   name="currentPassword"
@@ -323,7 +378,7 @@ const Profile = () => {
                 />
               </div>
               <div className="form-group">
-                <label>Mật khẩu mới:</label>
+                <label>{text.newPassword}:</label>
                 <input
                   type="password"
                   name="newPassword"
@@ -334,7 +389,7 @@ const Profile = () => {
                 />
               </div>
               <div className="form-group">
-                <label>Xác nhận mật khẩu mới:</label>
+                <label>{text.confirmPassword}:</label>
                 <input
                   type="password"
                   name="confirmPassword"
@@ -350,7 +405,7 @@ const Profile = () => {
                   className="btn-primary"
                   disabled={loading}
                 >
-                  {loading ? "Đang đổi..." : "Đổi mật khẩu"}
+                  {loading ? text.changing : text.changePassword}
                 </button>
                 <button
                   type="button"
@@ -366,7 +421,7 @@ const Profile = () => {
                   }}
                   disabled={loading}
                 >
-                  Hủy
+                  {text.cancel}
                 </button>
               </div>
             </form>
