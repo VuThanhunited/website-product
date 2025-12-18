@@ -124,21 +124,6 @@ const Profile = () => {
       setMessage({ type: "error", text: msg });
     }
   };
-    } catch (err) {
-      console.error("Profile update error:", err);
-      const msg =
-        language === "vi"
-          ? "Lỗi khi cập nhật thông tin"
-          : "Error updating profile";
-
-      setMessage({
-        type: "error",
-        text: msg,
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleChangePassword = async (e) => {
     e.preventDefault();
