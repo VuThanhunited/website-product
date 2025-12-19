@@ -129,7 +129,10 @@ const Cart = () => {
 
                 <button
                   className="cart-item-remove"
-                  onClick={() => removeFromCart(item._id)}
+                  onClick={() => {
+                    console.log("Removing item:", item._id);
+                    removeFromCart(item._id);
+                  }}
                   title={t.remove || "Xóa"}
                 >
                   <FaTrash />

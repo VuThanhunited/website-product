@@ -142,9 +142,11 @@ export const CartProvider = ({ children }) => {
   };
 
   const removeFromCart = async (productId) => {
+    console.log("🗑️ Removing product from cart:", productId);
     if (isLoggedIn) {
       try {
         const response = await api.delete(`/cart/remove/${productId}`);
+        console.log("✅ Remove response:", response.data);
         if (response.data && response.data.items) {
           const formattedItems = response.data.items.map((item) => ({
             _id: item.productId._id || item.productId,
@@ -155,14 +157,17 @@ export const CartProvider = ({ children }) => {
             quantity: item.quantity,
           }));
           setCartItems(formattedItems);
+          console.log("✅ Item removed successfully");
         }
       } catch (error) {
-        console.error("Error removing from cart:", error);
+        console.error("❌ Error removing from cart:", error);
+        alert("Không thể xóa sản phẩm. Vui lòng thử lại!");
       }
     } else {
       setCartItems((prevItems) =>
         prevItems.filter((item) => item._id !== productId)
       );
+      console.log("✅ Item removed from local cart");
     }
   };
 
