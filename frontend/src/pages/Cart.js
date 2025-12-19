@@ -156,8 +156,10 @@ const Cart = () => {
             </div>
 
             <div className="shipping-note">
-              <p style={{ fontSize: "0.9em", color: "#666", marginTop: "10px" }}>
-                {language === "vi" 
+              <p
+                style={{ fontSize: "0.9em", color: "#666", marginTop: "10px" }}
+              >
+                {language === "vi"
                   ? "* Phí vận chuyển sẽ được tính ở bước thanh toán dựa trên địa chỉ giao hàng"
                   : "* Shipping fee will be calculated at checkout based on delivery address"}
               </p>
