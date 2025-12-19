@@ -7,7 +7,7 @@ import "../styles/Profile.css";
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000/api";
 
 const Profile = () => {
-  const { user, updateUser } = useAuth();
+  const { user, updateUser, checkAuth } = useAuth();
   const { language } = useLanguage();
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [isChangingPassword, setIsChangingPassword] = useState(false);
@@ -97,10 +97,11 @@ const Profile = () => {
           setMessage({ type: "success", text: msg });
           setIsEditingProfile(false);
 
-          // Reload user data from backend to sync
-          setTimeout(() => {
-            window.location.reload();
-          }, 1000);
+          // Reload user data from backend to sync - use checkAuth instead of window.reload
+          setTimeout(async () => {
+            await checkAuth();
+            setMessage({ type: "", text: "" }); // Clear message after reload
+          }, 1500);
         } else {
           const msg =
             language === "vi"
