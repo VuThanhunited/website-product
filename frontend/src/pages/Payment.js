@@ -5,8 +5,6 @@ import { useLanguage } from "../contexts/LanguageContext";
 import api from "../services/api";
 import "../styles/Payment.css";
 
-const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000/api";
-
 const Payment = () => {
   const location = useLocation();
   const navigate = useNavigate();

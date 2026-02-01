@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { useLanguage } from "../contexts/LanguageContext";
-import axios from "axios";
 import "../styles/Profile.css";
 
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000/api";
@@ -76,8 +75,8 @@ const Profile = () => {
           let responseData = null;
 
           try {
-            // Direct eval to avoid minification breaking JSON parse
-            responseData = eval("(" + xhr.responseText + ")");
+            // Use JSON.parse to parse response
+            responseData = JSON.parse(xhr.responseText);
           } catch (parseErr) {
             console.log(
               "Parse failed but backend succeeded, showing success anyway"

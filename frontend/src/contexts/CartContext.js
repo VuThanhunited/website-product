@@ -19,6 +19,7 @@ export const CartProvider = ({ children }) => {
   // Initialize cart on mount
   useEffect(() => {
     initializeCart();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const initializeCart = async () => {

@@ -4,7 +4,6 @@ import { useCart } from "../contexts/CartContext";
 import { useAuth } from "../contexts/AuthContext";
 import { useLanguage } from "../contexts/LanguageContext";
 import { translations } from "../utils/translations";
-import api from "../services/api";
 import axios from "axios";
 import "../styles/Checkout.css";
 
@@ -12,7 +11,7 @@ const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000/api";
 
 const Checkout = () => {
   const navigate = useNavigate();
-  const { cart, getCartTotal, clearCart, isLoading: cartLoading } = useCart();
+  const { cart, getCartTotal, isLoading: cartLoading } = useCart();
   const { isAuthenticated, loading: authLoading } = useAuth();
   const { language } = useLanguage();
   const t = translations[language];
@@ -68,6 +67,7 @@ const Checkout = () => {
 
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
   const [paymentMethods, setPaymentMethods] = useState([]);
+  // eslint-disable-next-line no-unused-vars
   const [paymentInfo, setPaymentInfo] = useState({
     bankName: "",
     accountNumber: "",
@@ -75,9 +75,11 @@ const Checkout = () => {
     transactionId: "",
   });
   const [errors, setErrors] = useState({});
+  // eslint-disable-next-line no-unused-vars
   const [loading, setLoading] = useState(false);
   const [shippingFee, setShippingFee] = useState(30000);
   const [estimatedDays, setEstimatedDays] = useState("2-3 ngày");
+  // eslint-disable-next-line no-unused-vars
   const [provinces, setProvinces] = useState([]);
 
   // Danh sách 34 tỉnh thành Việt Nam theo Nghị quyết sắp xếp ĐVHC năm 2025
