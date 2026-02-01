@@ -3,6 +3,8 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { FaEnvelope, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
 import { useAuth } from "../contexts/AuthContext";
 import { useCart } from "../contexts/CartContext";
+import { useLanguage } from "../contexts/LanguageContext";
+import { translations } from "../utils/translations";
 import "../styles/Auth.css";
 
 const Login = () => {
@@ -18,6 +20,8 @@ const Login = () => {
   const location = useLocation();
   const { login, isAuthenticated } = useAuth();
   const { syncCartToBackend, setIsLoggedIn } = useCart();
+  const { language } = useLanguage();
+  const t = translations[language];
 
   // Redirect if already logged in
   useEffect(() => {
@@ -41,7 +45,7 @@ const Login = () => {
 
     // Validation
     if (!formData.email || !formData.password) {
-      setError("Vui lòng nhập email và mật khẩu");
+      setError(t.pleaseEnterEmailAndPassword);
       return;
     }
 
@@ -62,7 +66,7 @@ const Login = () => {
         setError(result.message);
       }
     } catch (err) {
-      setError("Đăng nhập thất bại. Vui lòng thử lại.");
+      setError(t.loginFailed);
     } finally {
       setLoading(false);
     }
@@ -73,8 +77,8 @@ const Login = () => {
       <div className="auth-container">
         <div className="auth-card">
           <div className="auth-header">
-            <h1>Đăng Nhập</h1>
-            <p>Chào mừng bạn quay trở lại!</p>
+            <h1>{t.login}</h1>
+            <p>{t.welcomeBack}</p>
           </div>
 
           {error && <div className="error-message">{error}</div>}
@@ -89,14 +93,14 @@ const Login = () => {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="Nhập email"
+                placeholder={t.enterEmail}
                 disabled={loading}
               />
             </div>
 
             <div className="form-group">
               <label>
-                <FaLock /> Mật khẩu
+                <FaLock /> {t.password}
               </label>
               <div className="password-input">
                 <input
@@ -104,7 +108,7 @@ const Login = () => {
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  placeholder="Nhập mật khẩu"
+                  placeholder={t.enterPassword}
                   disabled={loading}
                 />
                 <button
@@ -124,21 +128,21 @@ const Login = () => {
                   checked={rememberMe}
                   onChange={(e) => setRememberMe(e.target.checked)}
                 />
-                <span>Ghi nhớ đăng nhập</span>
+                <span>{t.rememberMe}</span>
               </label>
               <Link to="/forgot-password" className="forgot-password">
-                Quên mật khẩu?
+                {t.forgotPassword}
               </Link>
             </div>
 
             <button type="submit" className="auth-button" disabled={loading}>
-              {loading ? "Đang xử lý..." : "Đăng Nhập"}
+              {loading ? t.processing : t.login}
             </button>
           </form>
 
           <div className="auth-footer">
             <p>
-              Chưa có tài khoản? <Link to="/register">Đăng ký ngay</Link>
+              {t.noAccount} <Link to="/register">{t.signUpNow}</Link>
             </p>
           </div>
         </div>

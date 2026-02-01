@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaUser, FaEnvelope, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
 import { useAuth } from "../contexts/AuthContext";
+import { useLanguage } from "../contexts/LanguageContext";
+import { translations } from "../utils/translations";
 import "../styles/Auth.css";
 
 const Register = () => {
@@ -17,6 +19,8 @@ const Register = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { register, isAuthenticated } = useAuth();
+  const { language } = useLanguage();
+  const t = translations[language];
 
   // Redirect if already logged in
   useEffect(() => {
@@ -44,22 +48,22 @@ const Register = () => {
       !formData.password ||
       !formData.confirmPassword
     ) {
-      setError("Vui lòng điền đầy đủ thông tin");
+      setError(t.pleaseFillAllInfo);
       return;
     }
 
     if (formData.username.length < 3) {
-      setError("Tên đăng nhập phải có ít nhất 3 ký tự");
+      setError(t.usernameMinLength);
       return;
     }
 
     if (formData.password.length < 6) {
-      setError("Mật khẩu phải có ít nhất 6 ký tự");
+      setError(t.passwordMinLength);
       return;
     }
 
     if (formData.password !== formData.confirmPassword) {
-      setError("Mật khẩu xác nhận không khớp");
+      setError(t.passwordNotMatch);
       return;
     }
 
@@ -79,7 +83,7 @@ const Register = () => {
         setError(result.message);
       }
     } catch (err) {
-      setError("Đăng ký thất bại. Vui lòng thử lại.");
+      setError(t.registerFailed);
     } finally {
       setLoading(false);
     }
@@ -90,8 +94,8 @@ const Register = () => {
       <div className="auth-container">
         <div className="auth-card">
           <div className="auth-header">
-            <h1>Đăng Ký</h1>
-            <p>Tạo tài khoản mới để mua sắm</p>
+            <h1>{t.register}</h1>
+            <p>{t.createAccount}</p>
           </div>
 
           {error && <div className="error-message">{error}</div>}
@@ -99,14 +103,14 @@ const Register = () => {
           <form onSubmit={handleSubmit} className="auth-form">
             <div className="form-group">
               <label>
-                <FaUser /> Tên đăng nhập
+                <FaUser /> {t.username}
               </label>
               <input
                 type="text"
                 name="username"
                 value={formData.username}
                 onChange={handleChange}
-                placeholder="Nhập tên đăng nhập"
+                placeholder={t.enterUsername}
                 disabled={loading}
               />
             </div>
@@ -120,14 +124,14 @@ const Register = () => {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="Nhập email"
+                placeholder={t.enterEmail}
                 disabled={loading}
               />
             </div>
 
             <div className="form-group">
               <label>
-                <FaLock /> Mật khẩu
+                <FaLock /> {t.password}
               </label>
               <div className="password-input">
                 <input
@@ -135,7 +139,7 @@ const Register = () => {
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  placeholder="Nhập mật khẩu (ít nhất 6 ký tự)"
+                  placeholder={t.enterPasswordMin}
                   disabled={loading}
                 />
                 <button
@@ -150,7 +154,7 @@ const Register = () => {
 
             <div className="form-group">
               <label>
-                <FaLock /> Xác nhận mật khẩu
+                <FaLock /> {t.confirmPassword}
               </label>
               <div className="password-input">
                 <input
@@ -158,7 +162,7 @@ const Register = () => {
                   name="confirmPassword"
                   value={formData.confirmPassword}
                   onChange={handleChange}
-                  placeholder="Nhập lại mật khẩu"
+                  placeholder={t.reenterPassword}
                   disabled={loading}
                 />
                 <button
@@ -172,13 +176,13 @@ const Register = () => {
             </div>
 
             <button type="submit" className="auth-button" disabled={loading}>
-              {loading ? "Đang xử lý..." : "Đăng Ký"}
+              {loading ? t.processing : t.register}
             </button>
           </form>
 
           <div className="auth-footer">
             <p>
-              Đã có tài khoản? <Link to="/login">Đăng nhập ngay</Link>
+              {t.alreadyHaveAccount} <Link to="/login">{t.loginNow}</Link>
             </p>
           </div>
         </div>
