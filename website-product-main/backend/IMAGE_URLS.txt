@@ -1,0 +1,58 @@
+DANH SÁCH URL ẢNH CẦN TẢI (15 ảnh):
+
+Product 1: Dung dịch làm bóng cao su và lốp xe Tyre Shine Spray 20L
+https://www.ppp.vn/product_images/s/545/Dung_dịch_bóng_lốp_và_cao_su_20_Lít_Kuiper__63759_thumb.jpg
+
+Product 2: Dung dịch làm bóng cao su và lốp xe Tyre Shine Spray 5L
+https://www.ppp.vn/product_images/a/268/dung_dịch_bóng_lốp_Kuiper_5_Lít__79144_thumb.jpg
+
+Product 3: Dung dịch làm bóng cao su và lốp xe Tyre Shine Spray 500ml
+https://www.ppp.vn/product_images/i/327/Tyre_Shine_Spray_500ml_02__35065_thumb.jpg
+
+Product 4: Dung dịch làm sạch bề mặt ô tô Surface Cleaner
+https://www.ppp.vn/product_images/v/978/Dung_dịch_làm_sạch_bề_mặt_Surface_Cleaner_-_Kuiper_VN__85904_thumb.jpg
+
+Product 5: Dung dịch vệ sinh vành, lốp và cao su Rubber & Wheel Cleaner
+https://www.ppp.vn/product_images/x/168/Rubber_and_Wheel_Cleaner_02__05669_thumb.jpg
+
+Product 6: Nước làm mát động cơ tím GW12 Kuiper 50% 1L
+https://www.ppp.vn/product_images/x/392/Nước_làm_mát_Kuiper_đỏ_1L__82538_thumb.jpg
+
+Product 7: Nước làm mát động cơ tím GW12 Kuiper 50% 5L
+https://www.ppp.vn/product_images/l/677/Nước_làm_mát_Kuiper_Tím_Gw12__54107_thumb.jpg
+
+Product 8: Nước làm mát động cơ tím GW12 30% 1L
+https://www.ppp.vn/product_images/w/608/ea1b9abb5d4a8114d85b__39315_thumb.jpg
+
+Product 9: Nước làm mát động cơ tím GW12 30% 5L
+https://www.ppp.vn/product_images/b/457/17e3254fe2be3ee067af__60897_thumb.jpg
+
+Product 10: Nước làm mát động cơ xanh GW11 Kuiper 30% 1L
+https://www.ppp.vn/product_images/b/998/47b7771bb0ea6cb435fb__76998_thumb.jpg
+
+Product 11: Nước làm mát động cơ xanh GW11 Kuiper 30% 5L
+https://www.ppp.vn/product_images/k/361/f134847442859edbc794__47065_thumb.jpg
+
+Product 12: Nước làm mát động cơ xanh GW11 Kuiper 50% 1L
+https://www.ppp.vn/product_images/y/936/Nước_làm_mát_động_cơ_Kuiper_xanh_1L__73304_thumb.jpg
+
+Product 13: Nước làm mát động cơ xanh GW11 Kuiper 50% 5L
+https://www.ppp.vn/product_images/c/108/Nước_làm_mát_đông_cơ_Kuiper_GW11__94441_thumb.jpg
+
+Product 14: Nước rửa kính ô tô Extreme Clear View
+https://www.ppp.vn/product_images/b/056/Nước_rửa_kính_Extreme_Clear_View_-_Kuiper_01__36021_thumb.jpg
+
+Product 15: Nước rửa xe không chạm 5L Touchless Car Wash Foam
+https://www.ppp.vn/product_images/q/821/Nước_rửa_xe_không_chạm_Kuiper_5_Lít__50180_thumb.png
+
+=======================================================================
+HƯỚNG DẪN TẢI THỦ CÔNG:
+
+1. Mở từng URL trên trong trình duyệt Chrome/Edge
+2. Click chuột phải vào ảnh > Save image as...
+3. Lưu vào thư mục: E:\Work Freelancer\Web bán hàng\backend\uploads\products\
+4. Đặt tên file theo thứ tự: product_1.jpg, product_2.jpg, ... product_15.png
+   (File cuối là .png, các file còn lại là .jpg)
+
+SAU KHI TẢI XONG:
+Chạy lệnh: node updateDatabaseImages.js (script sẽ tạo ngay sau)

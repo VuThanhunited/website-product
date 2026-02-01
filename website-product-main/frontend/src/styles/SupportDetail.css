@@ -1,0 +1,435 @@
+.support-detail-page {
+  padding: 40px 0;
+  background-color: #f9f9f9;
+  min-height: 100vh;
+}
+
+.support-detail-page .container {
+  max-width: 900px;
+  margin: 0 auto;
+  background-color: white;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* Header bài viết */
+.article-header {
+  margin-bottom: 30px;
+}
+
+.article-header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 15px;
+  color: #333;
+  line-height: 1.3;
+}
+
+.article-meta {
+  display: flex;
+  gap: 25px;
+  padding: 15px 0;
+  border-bottom: 2px solid #e0e0e0;
+  color: #666;
+  font-size: 0.95rem;
+}
+
+.article-meta .views,
+.article-meta .date {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Thumbnail chính */
+.article-hero {
+  margin-bottom: 35px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.article-hero img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Nội dung bài viết */
+.article-content {
+  line-height: 1.8;
+  font-size: 1.05rem;
+  color: #444;
+  margin-bottom: 40px;
+}
+
+.article-content h2 {
+  margin-top: 35px;
+  margin-bottom: 18px;
+  color: #333;
+  font-size: 1.8rem;
+  border-left: 4px solid #667eea;
+  padding-left: 15px;
+}
+
+.article-content h3 {
+  margin-top: 28px;
+  margin-bottom: 14px;
+  color: #444;
+  font-size: 1.4rem;
+}
+
+.article-content p {
+  margin-bottom: 18px;
+  text-align: justify;
+}
+
+.article-content img {
+  max-width: 100%;
+  height: auto;
+  margin: 25px 0;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.article-content ul,
+.article-content ol {
+  margin-left: 30px;
+  margin-bottom: 18px;
+}
+
+.article-content li {
+  margin-bottom: 8px;
+}
+
+/* Media sections */
+.article-media-section {
+  margin-top: 40px;
+  margin-bottom: 40px;
+  padding: 25px;
+  background-color: #f8f9fa;
+  border-radius: 12px;
+}
+
+.article-media-section h3 {
+  margin-bottom: 20px;
+  color: #333;
+  font-size: 1.4rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Grid cho hình ảnh */
+.article-images {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.article-images .media-item img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s;
+  cursor: pointer;
+}
+
+.article-images .media-item img:hover {
+  transform: scale(1.05);
+}
+
+/* Video */
+.article-videos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 20px;
+}
+
+.video-wrapper {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%; /* 16:9 aspect ratio */
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  background: #000;
+}
+
+.video-wrapper iframe,
+.video-wrapper video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.article-videos .media-item video {
+  width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* File đính kèm */
+.article-attachments-section {
+  margin-top: 40px;
+  padding: 30px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 12px;
+  color: white;
+}
+
+.article-attachments-section h3 {
+  margin-bottom: 20px;
+  color: white;
+  font-size: 1.4rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.attachments-list {
+  display: grid;
+  gap: 15px;
+}
+
+.attachment-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 18px 20px;
+  background-color: rgba(255, 255, 255, 0.95);
+  border-radius: 8px;
+  text-decoration: none;
+  color: #333;
+  transition: all 0.3s;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.attachment-item:hover {
+  background-color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+.attachment-icon {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 8px;
+  color: white;
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+
+.attachment-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.attachment-info .filename {
+  font-weight: 600;
+  color: #333;
+  font-size: 1rem;
+}
+
+.attachment-info .filesize {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+/* Loading state */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  gap: 20px;
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #667eea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .support-detail-page {
+    padding: clamp(1.5rem, 4vw, 2rem) 0;
+  }
+
+  .support-detail-page .container {
+    padding: clamp(1.5rem, 4vw, 2rem) var(--spacing-md);
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .article-header {
+    margin-bottom: clamp(1.5rem, 4vw, 2rem);
+  }
+
+  .article-header h1 {
+    font-size: clamp(1.6rem, 5vw, 2rem);
+    line-height: 1.3;
+  }
+
+  .article-meta {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+    font-size: clamp(0.85rem, 2vw, 0.9rem);
+    padding: var(--spacing-sm) 0;
+  }
+
+  .article-hero {
+    margin-bottom: clamp(1.5rem, 4vw, 2rem);
+    border-radius: var(--radius-md);
+  }
+
+  .article-content {
+    font-size: clamp(0.95rem, 2.5vw, 1rem);
+    line-height: 1.7;
+    margin-bottom: clamp(2rem, 5vw, 2.5rem);
+  }
+
+  .article-content h2 {
+    font-size: clamp(1.4rem, 4vw, 1.6rem);
+    margin-top: clamp(1.5rem, 4vw, 2rem);
+    margin-bottom: var(--spacing-sm);
+    padding-left: var(--spacing-sm);
+  }
+
+  .article-content h3 {
+    font-size: clamp(1.2rem, 3.5vw, 1.3rem);
+    margin-top: clamp(1.25rem, 3vw, 1.5rem);
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .article-content p {
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .article-content img {
+    margin: var(--spacing-md) 0;
+    border-radius: var(--radius-sm);
+  }
+
+  .article-content ul,
+  .article-content ol {
+    margin-left: var(--spacing-md);
+  }
+
+  .article-media-section {
+    margin: clamp(1.5rem, 4vw, 2rem) 0;
+    padding: var(--spacing-md);
+    border-radius: var(--radius-md);
+  }
+
+  .article-media-section h3 {
+    font-size: clamp(1.2rem, 3.5vw, 1.3rem);
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .article-images {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-sm);
+  }
+
+  .article-images .media-item img {
+    height: clamp(180px, 40vw, 220px);
+    border-radius: var(--radius-sm);
+  }
+
+  .article-videos {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+  }
+
+  .video-wrapper {
+    border-radius: var(--radius-sm);
+  }
+
+  .article-attachments-section {
+    margin-top: clamp(1.5rem, 4vw, 2rem);
+    padding: var(--spacing-md);
+    border-radius: var(--radius-md);
+  }
+
+  .article-attachments-section h3 {
+    font-size: clamp(1.2rem, 3.5vw, 1.3rem);
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .attachments-list {
+    gap: var(--spacing-sm);
+  }
+
+  .attachment-item {
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--radius-sm);
+  }
+
+  .attachment-icon {
+    width: 45px;
+    height: 45px;
+    font-size: 1.2rem;
+  }
+
+  .attachment-info .filename {
+    font-size: clamp(0.9rem, 2.5vw, 0.95rem);
+  }
+
+  .attachment-info .filesize {
+    font-size: clamp(0.8rem, 2vw, 0.85rem);
+  }
+
+  .loading-container {
+    min-height: 300px;
+  }
+}
+
+@media (max-width: 480px) {
+  .support-detail-page .container {
+    padding: var(--spacing-md) var(--spacing-sm);
+  }
+
+  .article-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-xs);
+  }
+
+  .attachment-item {
+    padding: var(--spacing-sm);
+    gap: var(--spacing-sm);
+  }
+
+  .attachment-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 1.1rem;
+  }
+}

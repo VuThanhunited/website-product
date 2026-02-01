@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Test Checkout</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 50px auto;
+        padding: 20px;
+      }
+      .success {
+        color: green;
+        padding: 10px;
+        background: #d4edda;
+        border: 1px solid #c3e6cb;
+        border-radius: 4px;
+        margin: 10px 0;
+      }
+      .error {
+        color: red;
+        padding: 10px;
+        background: #f8d7da;
+        border: 1px solid #f5c6cb;
+        border-radius: 4px;
+        margin: 10px 0;
+      }
+      button {
+        background: #667eea;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+      button:hover {
+        background: #5568d3;
+      }
+      .info {
+        background: #e7f3ff;
+        padding: 15px;
+        border-radius: 4px;
+        margin: 20px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>🧪 Test Checkout & Email</h1>
+
+    <div class="info">
+      <h3>📋 Test Steps:</h3>
+      <ol>
+        <li>
+          Mở website:
+          <a href="http://localhost:3001" target="_blank"
+            >http://localhost:3001</a
+          >
+        </li>
+        <li>Thêm sản phẩm vào giỏ hàng</li>
+        <li>Vào trang Checkout</li>
+        <li>Điền form và nhấn "Đặt hàng"</li>
+        <li>Kiểm tra email</li>
+      </ol>
+    </div>
+
+    <div class="info">
+      <h3>🔧 Quick Test API:</h3>
+      <button onclick="testAPI()">Test Order API</button>
+      <div id="result"></div>
+    </div>
+
+    <script>
+      async function testAPI() {
+        const resultDiv = document.getElementById("result");
+        resultDiv.innerHTML = "<p>⏳ Testing...</p>";
+
+        try {
+          const orderData = {
+            customerInfo: {
+              fullName: "Test User",
+              email: "vtu21102000@gmail.com",
+              phone: "0123456789",
+              address: "123 Test Street",
+              city: "Hanoi",
+              district: "Cau Giay",
+              ward: "Dich Vong",
+              notes: "Test order",
+            },
+            items: [
+              {
+                productId: "test123",
+                productName: "Test Product",
+                quantity: 1,
+                price: 100000,
+              },
+            ],
+            subtotal: 100000,
+            shippingFee: 30000,
+            total: 130000,
+            paymentMethod: "cod",
+            status: "pending",
+            language: "vi",
+          };
+
+          const response = await fetch("http://localhost:5000/api/orders", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(orderData),
+          });
+
+          const data = await response.json();
+
+          if (data.success) {
+            resultDiv.innerHTML = `
+                        <div class="success">
+                            <h4>✅ Order created successfully!</h4>
+                            <p>Order ID: ${data._id}</p>
+                            <p>📧 Check email: vtu21102000@gmail.com</p>
+                        </div>
+                    `;
+          } else {
+            resultDiv.innerHTML = `
+                        <div class="error">
+                            <h4>❌ Failed</h4>
+                            <p>${data.message || "Unknown error"}</p>
+                        </div>
+                    `;
+          }
+        } catch (error) {
+          resultDiv.innerHTML = `
+                    <div class="error">
+                        <h4>❌ Error</h4>
+                        <p>${error.message}</p>
+                        <p>Make sure backend is running on port 5000</p>
+                    </div>
+                `;
+        }
+      }
+    </script>
+
+    <div class="info">
+      <h3>🌐 Links:</h3>
+      <ul>
+        <li>
+          <a href="http://localhost:3001" target="_blank"
+            >Frontend (Port 3001)</a
+          >
+        </li>
+        <li>
+          <a href="http://localhost:5000/api/products" target="_blank"
+            >Backend API (Port 5000)</a
+          >
+        </li>
+      </ul>
+    </div>
+
+    <div class="info">
+      <h3>✅ Fix Applied:</h3>
+      <p>
+        <strong>Issue:</strong> Cannot read properties of undefined (reading
+        'length')
+      </p>
+      <p>
+        <strong>Solution:</strong> Added <code>cart</code> alias to
+        CartContext.js
+      </p>
+      <p>
+        <strong>Status:</strong>
+        <span style="color: green; font-weight: bold">FIXED ✓</span>
+      </p>
+    </div>
+  </body>
+</html>

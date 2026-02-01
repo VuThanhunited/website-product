@@ -1,0 +1,657 @@
+.header {
+  background-color: white;
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.15);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.top-section {
+  /* Background được set từ inline style trong component */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-bottom: 2px solid transparent;
+  border-image: linear-gradient(90deg, #1e3c72, #2a5298, #1e3c72) 1;
+  transition: all 0.3s ease;
+  padding: 15px 0;
+  min-height: auto;
+  position: relative;
+}
+
+/* Overlay cho background image để text dễ đọc hơn */
+.top-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.75);
+  z-index: 0;
+}
+
+.top-section .container {
+  position: relative;
+  z-index: 1;
+}
+
+.top-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 30px;
+}
+
+/* Bên trái - Logo và thông tin công ty */
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  flex: 1;
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  transition: transform 0.3s ease;
+}
+
+.logo-section:hover {
+  transform: scale(1.02);
+}
+
+.logo {
+  height: 60px;
+  width: auto;
+  max-width: 180px;
+  object-fit: contain;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  filter: drop-shadow(2px 2px 6px rgba(30, 60, 114, 0.2));
+}
+
+.logo:hover {
+  transform: scale(1.05) translateY(-2px);
+  filter: drop-shadow(5px 5px 15px rgba(30, 60, 114, 0.4));
+}
+
+.company-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #2c3e50;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.3;
+}
+
+.company-details {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.company-details p {
+  margin: 0;
+  color: #555;
+  font-size: 0.85rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+/* Bên phải - Search, Cart, Login, Register, Language */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* Thanh tìm kiếm */
+.search-form {
+  display: flex;
+  align-items: center;
+  background: white;
+  border: 2px solid #e0e0e0;
+  border-radius: 25px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.search-form:focus-within {
+  border-color: #667eea;
+  box-shadow: 0 0 10px rgba(102, 126, 234, 0.2);
+}
+
+.search-input {
+  border: none;
+  outline: none;
+  padding: 8px 12px;
+  font-size: 0.85rem;
+  width: 200px;
+  transition: width 0.3s ease;
+}
+
+.search-input:focus {
+  width: 250px;
+}
+
+.search-button {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  color: white;
+  padding: 8px 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-button:hover {
+  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+  transform: scale(1.05);
+}
+
+/* Icon buttons */
+.header-icon {
+  position: relative;
+  color: #555;
+  font-size: 1.2rem;
+  padding: 8px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f5f5f5;
+}
+
+.header-icon:hover {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+}
+
+/* Cart badge */
+.cart-icon {
+  position: relative;
+}
+
+.cart-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: #ff4444;
+  color: white;
+  font-size: 0.7rem;
+  font-weight: bold;
+  padding: 3px 6px;
+  border-radius: 50%;
+  min-width: 20px;
+  text-align: center;
+}
+
+/* User info */
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 8px 15px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.user-info:hover {
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.5);
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+}
+
+.user-info svg {
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.user-info span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.logout-icon {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  border: none;
+  cursor: pointer;
+}
+
+.logout-icon:hover {
+  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%) !important;
+  transform: translateY(-3px) !important;
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.5) !important;
+}
+
+/* Language toggle */
+.language-toggle {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: #f5f5f5;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 18px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  color: #555;
+  font-size: 0.85rem;
+}
+
+.language-toggle:hover {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+}
+
+.language-toggle svg {
+  font-size: 1.2rem;
+}
+
+.language-toggle span {
+  font-size: 0.85rem;
+}
+
+/* ===== NAVBAR COLOR OPTIONS ===== */
+/* Uncomment one of the options below to match your logo colors */
+
+/* Option A: Gradient Xanh Dương Hiện Đại (Modern Blue) - ĐANG CHỌN */
+.navbar {
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #1e3c72 100%);
+  padding: 0;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.navbar::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  animation: shine 3s infinite;
+}
+
+@keyframes shine {
+  0% {
+    left: -100%;
+  }
+  50%,
+  100% {
+    left: 100%;
+  }
+}
+
+.navbar .container {
+  position: relative;
+  z-index: 1;
+}
+
+.menu-toggle {
+  display: none;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  color: white;
+  font-size: 1.8rem;
+  cursor: pointer;
+  padding: 12px 15px;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.menu-toggle:hover {
+  transform: scale(1.05);
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.nav-menu {
+  display: flex;
+  list-style: none;
+  justify-content: center;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-menu li {
+  margin: 0;
+  position: relative;
+}
+
+.nav-menu a {
+  display: block;
+  padding: 18px 30px;
+  color: white;
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: 1px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  text-transform: uppercase;
+}
+
+.nav-menu a::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #ffffff, #a8d8ff, #ffffff);
+  border-radius: 2px;
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.nav-menu a::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.1);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.nav-menu a:hover::after {
+  opacity: 1;
+}
+
+.nav-menu a:hover::before,
+.nav-menu a.active::before {
+  width: 85%;
+}
+
+.nav-menu a:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 968px) {
+  .top-content {
+    justify-content: center;
+  }
+
+  .contact-info {
+    text-align: center;
+  }
+
+  .contact-info p {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .top-section {
+    padding: var(--spacing-sm) 0;
+  }
+
+  .menu-toggle {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    background: transparent;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .menu-toggle span {
+    width: 28px;
+    height: 3px;
+    background: white;
+    border-radius: 3px;
+    transition: all 0.3s ease;
+  }
+
+  .menu-toggle.active span:nth-child(1) {
+    transform: rotate(45deg) translate(8px, 8px);
+  }
+
+  .menu-toggle.active span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .menu-toggle.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -7px);
+  }
+
+  .nav-menu {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: 280px;
+    height: 100vh;
+    flex-direction: column;
+    background: linear-gradient(180deg, #2a5298 0%, #1e3c72 100%);
+    overflow-y: auto;
+    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 4px 0 30px rgba(0, 0, 0, 0.5);
+    padding: 0;
+    z-index: 1000;
+    border-radius: 0 0 12px 0;
+    display: flex;
+    justify-content: flex-start;
+  }
+
+  .nav-menu.active {
+    left: 0;
+  }
+
+  /* Overlay khi menu mở */
+  .menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    animation: fadeIn 0.3s ease;
+    cursor: pointer;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  .nav-menu li {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    width: 100%;
+  }
+
+  .nav-menu a {
+    padding: 16px 24px;
+    font-size: 0.95rem;
+    width: 100%;
+    text-align: left;
+    border-left: 3px solid transparent;
+    transition: all 0.2s ease;
+    display: block;
+  }
+
+  .nav-menu a:hover,
+  .nav-menu a.active {
+    background: rgba(255, 255, 255, 0.1);
+    border-left-color: #64b5f6;
+    padding-left: 28px;
+  }
+
+  .nav-menu a::before {
+    display: none;
+  }
+
+  .top-section {
+    padding: 8px 0;
+  }
+
+  .top-content {
+    flex-direction: column;
+    gap: 8px;
+    align-items: stretch;
+  }
+
+  .header-left {
+    flex-direction: row;
+    text-align: left;
+    gap: var(--spacing-sm);
+    align-items: center;
+  }
+
+  .logo-section {
+    flex-shrink: 0;
+  }
+
+  .company-details {
+    align-items: flex-start;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .company-name {
+    font-size: clamp(1rem, 4vw, 1.2rem);
+    line-height: 1.2;
+  }
+
+  .company-name {
+    font-size: clamp(0.95rem, 3.5vw, 1.1rem);
+    line-height: 1.2;
+    margin: 0;
+  }
+
+  .company-details p {
+    display: none;
+  }
+
+  .logo {
+    height: 50px;
+    max-width: 140px;
+  }
+
+  .header-right {
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--spacing-xs);
+    width: 100%;
+  }
+
+  .search-form {
+    order: -1;
+    width: 100%;
+    flex: 1 1 100%;
+  }
+
+  .search-input {
+    width: 100%;
+    flex: 1;
+    font-size: 0.875rem;
+    padding: 0.625rem 0.75rem;
+  }
+
+  .search-input:focus {
+    width: 100%;
+  }
+
+  .search-button {
+    padding: 0.625rem 1rem;
+    font-size: 1rem;
+  }
+
+  .nav-menu {
+    padding: 8px 0;
+  }
+
+  .nav-menu li {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .nav-menu a {
+    padding: 18px 24px;
+    font-size: 1rem;
+    text-align: left;
+    border-left: 4px solid transparent;
+    transition: all 0.3s ease;
+  }
+
+  .nav-menu a:hover,
+  .nav-menu a.active {
+    background: rgba(255, 255, 255, 0.15);
+    border-left-color: #a8d8ff;
+    transform: translateX(8px);
+  }
+
+  .nav-menu a::before {
+    display: none;
+  }
+
+  .header-icon {
+    font-size: 1.15rem;
+    padding: 0.5rem;
+    min-width: 40px;
+    min-height: 40px;
+  }
+
+  .language-toggle {
+    padding: 0.625rem 0.875rem;
+    font-size: 0.875rem;
+    min-height: 44px;
+  }
+
+  .user-info {
+    padding: 0.625rem 1rem;
+    font-size: 0.875rem;
+    max-width: none;
+    flex: 1;
+    justify-content: center;
+  }
+
+  .cart-badge {
+    top: -3px;
+    right: -3px;
+    font-size: 0.65rem;
+    padding: 2px 5px;
+    min-width: 18px;
+  }
+}
